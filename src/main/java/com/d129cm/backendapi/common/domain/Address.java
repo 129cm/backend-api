@@ -3,8 +3,10 @@ package com.d129cm.backendapi.common.domain;
 import com.d129cm.backendapi.member.domain.Member;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.util.Assert;
 
 @Entity
 @Getter
@@ -23,7 +25,13 @@ public class Address {
     @OneToOne(mappedBy = "address")
     private Member member;
 
+    @Builder
     public Address(String zipCode, String roadNameAddress, String addressDetails, Member member) {
+        Assert.notNull(zipCode, "우편번호는 null일 수 없습니다.");
+        Assert.notNull(roadNameAddress, "도로명 주소는 null일 수 없습니다.");
+        Assert.notNull(addressDetails, "상세 주소는 null일 수 없습니다.");
+        Assert.notNull(member, "멤버는 null일 수 없습니다.");
+
         this.zipCode = zipCode;
         this.roadNameAddress = roadNameAddress;
         this.addressDetails = addressDetails;
