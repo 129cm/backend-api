@@ -46,7 +46,6 @@ public class PartnersTest {
         @Test
         void 예외발생_필드가_Null일_때() {
             // given
-            Brand brand = Mockito.any(Brand.class);
             String email = "test@naver.com";
             String password = "asdf1234!";
             String businessNumber = "123-45-67890";
