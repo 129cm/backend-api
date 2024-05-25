@@ -1,11 +1,13 @@
 package com.d129cm.backendapi.member.domain;
 
 import com.d129cm.backendapi.common.domain.Address;
-import com.d129cm.backendapi.partners.domain.Partners;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
 
 public class MemberTest {
 
@@ -29,11 +31,11 @@ public class MemberTest {
 
             // then
             Assertions.assertAll(
-                    () -> Assertions.assertNull(member.getId()),
-                    () -> Assertions.assertEquals(member.getEmail(), email),
-                    () -> Assertions.assertEquals(member.getPassword(), password),
-                    () -> Assertions.assertEquals(member.getName(), name),
-                    () -> Assertions.assertEquals(member.getAddress(), address)
+                    () -> assertThat(member.getId()).isNull(),
+                    () -> assertThat(member.getEmail()).isEqualTo(email),
+                    () -> assertThat(member.getPassword()).isEqualTo(password),
+                    () -> assertThat(member.getName()).isEqualTo(name),
+                    () -> assertThat(member.getAddress()).isEqualTo(address)
             );
         }
 

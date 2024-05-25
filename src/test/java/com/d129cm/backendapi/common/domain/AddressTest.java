@@ -6,6 +6,8 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 public class AddressTest {
     @Nested
     class create {
@@ -27,11 +29,11 @@ public class AddressTest {
 
             // then
             Assertions.assertAll(
-                    () -> Assertions.assertNull(address.getId()),
-                    () -> Assertions.assertEquals(address.getZipCode(), zipCode),
-                    () -> Assertions.assertEquals(address.getRoadNameAddress(), roadNameAddress),
-                    () -> Assertions.assertEquals(address.getAddressDetails(), addressDetails),
-                    () -> Assertions.assertEquals(address.getMember(), member)
+                    () -> assertThat(address.getId()).isNull(),
+                    () -> assertThat(address.getZipCode()).isEqualTo(zipCode),
+                    () -> assertThat(address.getRoadNameAddress()).isEqualTo(roadNameAddress),
+                    () -> assertThat(address.getAddressDetails()).isEqualTo(addressDetails),
+                    () -> assertThat(address.getMember()).isEqualTo(member)
             );
         }
 
