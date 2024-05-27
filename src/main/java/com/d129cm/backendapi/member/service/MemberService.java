@@ -18,7 +18,7 @@ public class MemberService {
 
     public void saveMember(MemberSignupRequest request) {
         if (memberRepository.existsByEmail(request.email())) {
-            throw new BaseException("이미 가입된 이메일입니다.", HttpStatus.CONFLICT.value());
+            throw new BaseException("이미 가입된 이메일입니다.", HttpStatus.CONFLICT);
         }
 
         Member newMember = request.toMemberEntity();
