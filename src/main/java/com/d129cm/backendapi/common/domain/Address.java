@@ -26,15 +26,13 @@ public class Address {
     private Member member;
 
     @Builder
-    public Address(String zipCode, String roadNameAddress, String addressDetails, Member member) {
+    public Address(String zipCode, String roadNameAddress, String addressDetails) {
         Assert.notNull(zipCode, "우편번호는 null일 수 없습니다.");
         Assert.notNull(roadNameAddress, "도로명 주소는 null일 수 없습니다.");
         Assert.notNull(addressDetails, "상세 주소는 null일 수 없습니다.");
-        Assert.notNull(member, "멤버는 null일 수 없습니다.");
 
         this.zipCode = zipCode;
         this.roadNameAddress = roadNameAddress;
         this.addressDetails = addressDetails;
-        this.member = member;
     }
 }

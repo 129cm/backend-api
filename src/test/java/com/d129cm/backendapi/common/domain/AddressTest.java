@@ -1,10 +1,8 @@
 package com.d129cm.backendapi.common.domain;
 
-import com.d129cm.backendapi.member.domain.Member;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -17,14 +15,12 @@ public class AddressTest {
             String zipCode = "1234";
             String roadNameAddress = "주소시 주소구 주소로";
             String addressDetails = "101동 101호";
-            Member member = Mockito.mock(Member.class);
 
             // when
             Address address = Address.builder()
                     .zipCode(zipCode)
                     .roadNameAddress(roadNameAddress)
                     .addressDetails(addressDetails)
-                    .member(member)
                     .build();
 
             // then
@@ -32,8 +28,7 @@ public class AddressTest {
                     () -> assertThat(address.getId()).isNull(),
                     () -> assertThat(address.getZipCode()).isEqualTo(zipCode),
                     () -> assertThat(address.getRoadNameAddress()).isEqualTo(roadNameAddress),
-                    () -> assertThat(address.getAddressDetails()).isEqualTo(addressDetails),
-                    () -> assertThat(address.getMember()).isEqualTo(member)
+                    () -> assertThat(address.getAddressDetails()).isEqualTo(addressDetails)
             );
         }
 
@@ -43,23 +38,20 @@ public class AddressTest {
             String zipCode = "1234";
             String roadNameAddress = "주소시 주소구 주소로";
             String addressDetails = "101동 101호";
-            Member member = Mockito.mock(Member.class);
 
             // when & then
             Assertions.assertAll(
-                    () -> assertThrowsNullPointerException(null, roadNameAddress, addressDetails, member),
-                    () -> assertThrowsNullPointerException(zipCode, null, addressDetails, member),
-                    () -> assertThrowsNullPointerException(zipCode, roadNameAddress, null, member),
-                    () -> assertThrowsNullPointerException(zipCode, roadNameAddress, addressDetails, null)
+                    () -> assertThrowsNullPointerException(null, roadNameAddress, addressDetails),
+                    () -> assertThrowsNullPointerException(zipCode, null, addressDetails),
+                    () -> assertThrowsNullPointerException(zipCode, roadNameAddress, null)
             );
         }
 
-        private void assertThrowsNullPointerException(String zipCode, String roadNameAddress, String addressDetails, Member member) {
+        private void assertThrowsNullPointerException(String zipCode, String roadNameAddress, String addressDetails) {
             Assertions.assertThrows(IllegalArgumentException.class, () -> Address.builder()
                     .zipCode(zipCode)
                     .roadNameAddress(roadNameAddress)
                     .addressDetails(addressDetails)
-                    .member(member)
                     .build());
         }
     }

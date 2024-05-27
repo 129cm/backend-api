@@ -29,7 +29,6 @@ public class AddressRepositoryTest {
                 .zipCode("1234")
                 .addressDetails("주소시 주소구 주소로")
                 .roadNameAddress("101동 101호")
-                .member(Mockito.mock(Member.class))
                 .build();
 
         // when
@@ -41,8 +40,7 @@ public class AddressRepositoryTest {
                 () -> assertThat(savedAddress.getId()).isEqualTo(address.getId()),
                 () -> assertThat(savedAddress.getZipCode()).isEqualTo(address.getZipCode()),
                 () -> assertThat(savedAddress.getAddressDetails()).isEqualTo(address.getAddressDetails()),
-                () -> assertThat(savedAddress.getRoadNameAddress()).isEqualTo(address.getRoadNameAddress()),
-                () -> assertThat(savedAddress.getMember()).isEqualTo(address.getMember())
+                () -> assertThat(savedAddress.getRoadNameAddress()).isEqualTo(address.getRoadNameAddress())
         );
     }
 }
