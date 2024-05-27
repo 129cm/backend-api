@@ -1,7 +1,8 @@
 package com.d129cm.backendapi.member.dto;
 
-import com.d129cm.backendapi.common.domain.Address;
+import com.d129cm.backendapi.common.dto.AddressRequest;
 import com.d129cm.backendapi.member.domain.Member;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
@@ -20,15 +21,15 @@ public record MemberSignupRequest(
         @NotBlank(message = "이름은 필수 입력 값입니다.")
         String name,
 
-        @NotBlank(message = "주소는 필수 입력 값입니다.")
-        Address address) {
+        @Valid
+        AddressRequest address) {
 
     public Member toMemberEntity() {
         return Member.builder()
                 .email(email)
                 .password(password)
                 .name(name)
-                .address(address)
+                .address(address.toAddressEntity())
                 .build();
     }
 }
