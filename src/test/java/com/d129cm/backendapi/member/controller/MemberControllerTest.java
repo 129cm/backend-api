@@ -1,6 +1,7 @@
 package com.d129cm.backendapi.member.controller;
 
 import com.d129cm.backendapi.common.domain.Address;
+import com.d129cm.backendapi.common.dto.AddressRequest;
 import com.d129cm.backendapi.member.dto.MemberSignupRequest;
 import com.d129cm.backendapi.member.service.MemberService;
 import com.d129cm.backendapi.security.CustomSecurityConfig;
@@ -41,7 +42,8 @@ public class MemberControllerTest {
         @WithMockUser(username = "testUser", roles = {"USER"})
         void 성공반환_멤버_회원가입_요청() throws Exception {
             // given
-            MemberSignupRequest request = new MemberSignupRequest("test@naver.com", "Asdf1234!", "이름", mock(Address.class));
+            AddressRequest addressRequest = new AddressRequest("1234", "Seoul", "Seoul");
+            MemberSignupRequest request = new MemberSignupRequest("test@naver.com", "Asdf1234!", "이름", addressRequest);
             doNothing().when(memberService).saveMember(request);
 
             // when

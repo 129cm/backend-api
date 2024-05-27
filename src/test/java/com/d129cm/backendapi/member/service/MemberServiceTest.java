@@ -1,6 +1,7 @@
 package com.d129cm.backendapi.member.service;
 
 import com.d129cm.backendapi.common.domain.Address;
+import com.d129cm.backendapi.common.dto.AddressRequest;
 import com.d129cm.backendapi.common.exception.BaseException;
 import com.d129cm.backendapi.member.domain.Member;
 import com.d129cm.backendapi.member.dto.MemberSignupRequest;
@@ -35,9 +36,9 @@ public class MemberServiceTest {
         @Test
         void 성공반환_멤버_저장() {
             // given
+            AddressRequest addressRequest = new AddressRequest("1234", "Seoul", "Seoul");
             MemberSignupRequest request = new MemberSignupRequest(
-                    "test@naver.com", "asdf1234!", "이름", mock(Address.class)
-            );
+                    "test@naver.com", "Asdf1234!", "이름", addressRequest);
 
             when(memberRepository.save(any(Member.class))).thenReturn(mock(Member.class));
 
@@ -51,9 +52,9 @@ public class MemberServiceTest {
         @Test
         void 예외반환_중복된_멤버() {
             // given
+            AddressRequest addressRequest = new AddressRequest("1234", "Seoul", "Seoul");
             MemberSignupRequest request = new MemberSignupRequest(
-                    "test@naver.com", "Asdf1234!", "이름", mock(Address.class)
-            );
+                    "test@naver.com", "Asdf1234!", "이름", addressRequest);
 
             // when
             when(memberRepository.existsByEmail(request.email())).thenReturn(true);
