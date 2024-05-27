@@ -52,7 +52,7 @@ public class MemberServiceTest {
         void 예외반환_중복된_멤버() {
             // given
             MemberSignupRequest request = new MemberSignupRequest(
-                    "test@naver.com", "asdf1234!", "이름", mock(Address.class)
+                    "test@naver.com", "Asdf1234!", "이름", mock(Address.class)
             );
 
             // when

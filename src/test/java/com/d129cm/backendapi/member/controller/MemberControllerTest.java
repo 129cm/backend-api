@@ -41,7 +41,7 @@ public class MemberControllerTest {
         @WithMockUser(username = "testUser", roles = {"USER"})
         void 성공반환_멤버_회원가입_요청() throws Exception {
             // given
-            MemberSignupRequest request = new MemberSignupRequest("test@naver.com", "asdf1234!", "이름", mock(Address.class));
+            MemberSignupRequest request = new MemberSignupRequest("test@naver.com", "Asdf1234!", "이름", mock(Address.class));
             doNothing().when(memberService).saveMember(request);
 
             // when

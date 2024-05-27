@@ -26,7 +26,7 @@ public class MemberRepositoryTest {
         //given
         Member member = Member.builder()
                 .email("test@naver.com")
-                .password("asdf1234!")
+                .password("Asdf1234!")
                 .name("이름")
                 .address(Mockito.mock(Address.class))
                 .build();

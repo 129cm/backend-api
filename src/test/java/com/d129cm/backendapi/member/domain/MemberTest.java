@@ -17,7 +17,7 @@ public class MemberTest {
         void 생성성공_주어진_필드로_멤버_생성() {
             // given
             String email = "test@naver.com";
-            String password = "asdf1234!";
+            String password = "Asdf1234!";
             String name = "이름";
             Address address = Mockito.mock(Address.class);
 
@@ -43,7 +43,7 @@ public class MemberTest {
         void 예외발생_멤버_필드가_Null일_때() {
             // given
             String email = "test@naver.com";
-            String password = "asdf1234!";
+            String password = "Asdf1234!";
             String name = "이름";
             Address address = Mockito.mock(Address.class);
 
