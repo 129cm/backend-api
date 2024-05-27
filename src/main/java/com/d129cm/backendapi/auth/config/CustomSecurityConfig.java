@@ -1,4 +1,4 @@
-package com.d129cm.backendapi.security;
+package com.d129cm.backendapi.auth.config;
 
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
