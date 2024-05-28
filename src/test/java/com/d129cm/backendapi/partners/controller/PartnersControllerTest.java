@@ -4,7 +4,7 @@ import com.d129cm.backendapi.common.dto.CommonResponse;
 import com.d129cm.backendapi.common.exception.ConflictException;
 import com.d129cm.backendapi.partners.dto.PartnersSignupRequest;
 import com.d129cm.backendapi.partners.service.PartnersService;
-import com.d129cm.backendapi.auth.config.CustomSecurityConfig;
+import com.d129cm.backendapi.auth.config.PartnersSecurityConfig;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -31,7 +31,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(PartnersController.class)
-@Import(CustomSecurityConfig.class)
+@Import(PartnersSecurityConfig.class)
 @SuppressWarnings("NonAsciiCharacters")
 public class PartnersControllerTest {
 
