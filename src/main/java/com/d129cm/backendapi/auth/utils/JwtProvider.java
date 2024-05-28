@@ -21,7 +21,7 @@ public class JwtProvider {
 
     private static final String BEARER_PREFIX = "Bearer ";
     @Value("${jwt.token.expiration.time}")
-    public long JWT_TOKEN_EXPIRATION_TIME;
+    public int JWT_TOKEN_EXPIRATION_TIME;
     @Value("${jwt.token.expiration.secretKey}")
     private String SECRET_KEY;
     private Key key;
