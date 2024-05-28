@@ -24,13 +24,5 @@ public record MemberSignupRequest(
         @Valid
         AddressRequest address) {
 
-    public Member toMemberEntity() {
-        return Member.builder()
-                .email(email)
-                .password(password)
-                .name(name)
-                .address(address.toAddressEntity())
-                .build();
-    }
 }
 
