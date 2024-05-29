@@ -1,21 +1,15 @@
 package com.d129cm.backendapi.member.service;
 
-import com.d129cm.backendapi.common.domain.Address;
 import com.d129cm.backendapi.common.dto.AddressRequest;
 import com.d129cm.backendapi.common.exception.BaseException;
 import com.d129cm.backendapi.member.domain.Member;
 import com.d129cm.backendapi.member.dto.MemberSignupRequest;
 import com.d129cm.backendapi.member.repository.MemberRepository;
-import com.d129cm.backendapi.partners.domain.Partners;
-import com.d129cm.backendapi.partners.dto.PartnersSignupRequest;
-import com.d129cm.backendapi.partners.repository.PartnersRepository;
-import com.d129cm.backendapi.partners.service.PartnersService;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.Assert.assertThrows;
