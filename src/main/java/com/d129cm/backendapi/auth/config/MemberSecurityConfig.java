@@ -1,7 +1,7 @@
 package com.d129cm.backendapi.auth.config;
 
 import com.d129cm.backendapi.auth.filter.JwtAuthorizationFilter;
-import com.d129cm.backendapi.auth.filter.MemberAuthenticationFilter;
+import com.d129cm.backendapi.auth.filter.MemberJwtLoginFilter;
 import com.d129cm.backendapi.auth.service.MemberDetailsService;
 import com.d129cm.backendapi.auth.utils.JwtProvider;
 import lombok.RequiredArgsConstructor;
@@ -54,10 +54,10 @@ public class MemberSecurityConfig {
 
 
     @Bean
-    public MemberAuthenticationFilter memberAuthenticationFilter() {
-        MemberAuthenticationFilter memberAuthenticationFilter = new MemberAuthenticationFilter(jwtProvider);
-        memberAuthenticationFilter.setAuthenticationManager(memberAuthenticationManager());
-        return memberAuthenticationFilter;
+    public MemberJwtLoginFilter memberAuthenticationFilter() {
+        MemberJwtLoginFilter memberJwtLoginFilter = new MemberJwtLoginFilter(jwtProvider);
+        memberJwtLoginFilter.setAuthenticationManager(memberAuthenticationManager());
+        return memberJwtLoginFilter;
     }
 
     @Bean

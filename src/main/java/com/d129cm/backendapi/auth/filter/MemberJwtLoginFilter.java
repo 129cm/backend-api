@@ -26,11 +26,11 @@ import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 
-public class MemberAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
+public class MemberJwtLoginFilter extends UsernamePasswordAuthenticationFilter {
 
     private final JwtProvider jwtProvider;
 
-    public MemberAuthenticationFilter(JwtProvider jwtProvider) {
+    public MemberJwtLoginFilter(JwtProvider jwtProvider) {
         this.jwtProvider = jwtProvider;
         setFilterProcessesUrl("/members/login");
     }
