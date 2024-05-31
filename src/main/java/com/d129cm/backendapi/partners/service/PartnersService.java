@@ -5,6 +5,7 @@ import com.d129cm.backendapi.partners.domain.Partners;
 import com.d129cm.backendapi.partners.dto.PartnersSignupRequest;
 import com.d129cm.backendapi.partners.repository.PartnersRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class PartnersService {
 
     private final PartnersRepository partnersRepository;
+    private final PasswordEncoder passwordEncoder;
 
     public void savePartners(PartnersSignupRequest request) {
         if (partnersRepository.existsByEmail(request.email())) {
@@ -21,6 +23,7 @@ public class PartnersService {
         }
 
         Partners newPartners = request.toPartnersEntity();
+        newPartners.encodePassword(passwordEncoder);
 
         partnersRepository.save(newPartners);
     }

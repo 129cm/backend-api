@@ -11,6 +11,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -21,6 +22,9 @@ public class PartnersServiceTest {
 
     @InjectMocks
     private PartnersService partnersService;
+
+    @Mock
+    private PasswordEncoder passwordEncoder;
 
     @Mock
     private PartnersRepository partnersRepository;
@@ -34,12 +38,14 @@ public class PartnersServiceTest {
                     "email@naver.com", "asdf1234!", "123-45-67890");
 
             when(partnersRepository.save(any(Partners.class))).thenReturn(mock(Partners.class));
+            when(passwordEncoder.encode(any(CharSequence.class))).thenReturn("encodedPassword");
 
             // when
             partnersService.savePartners(request);
 
             // then
             verify(partnersRepository).save(any(Partners.class));
+            verify(passwordEncoder).encode(request.password());
         }
 
         @Test
