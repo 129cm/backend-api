@@ -3,6 +3,7 @@ package com.d129cm.backendapi.partners.domain;
 import com.d129cm.backendapi.brand.domain.Brand;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.util.Assert;
 
 import java.util.regex.Pattern;
@@ -46,5 +47,9 @@ public class Partners {
         if (!BUSINESS_NUMBER_PATTERN.matcher(businessNumber).matches()) {
             throw new IllegalArgumentException("사업자 번호 형식이 올바르지 않습니다.");
         }
+    }
+
+    public void encodePassword(PasswordEncoder passwordEncoder) {
+        this.password = passwordEncoder.encode(password);
     }
 }
