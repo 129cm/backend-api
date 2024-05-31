@@ -1,6 +1,6 @@
 package com.d129cm.backendapi.member.controller;
 
-import com.d129cm.backendapi.auth.config.PartnersSecurityConfig;
+import com.d129cm.backendapi.auth.config.CustomSecurityConfig;
 import com.d129cm.backendapi.common.dto.AddressRequest;
 import com.d129cm.backendapi.member.dto.MemberSignupRequest;
 import com.d129cm.backendapi.member.service.MemberService;
@@ -12,7 +12,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
@@ -22,7 +21,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(MemberController.class)
-@Import(PartnersSecurityConfig.class)
+@Import(CustomSecurityConfig.class)
 @SuppressWarnings("NonAsciiCharacters")
 public class MemberControllerTest {
 
@@ -35,7 +34,6 @@ public class MemberControllerTest {
     @Nested
     class signup {
         @Test
-        @WithMockUser(username = "testUser", roles = {"USER"})
         void 성공반환_멤버_회원가입_요청() throws Exception {
             // given
             AddressRequest addressRequest = new AddressRequest("1234", "Seoul", "Seoul");
