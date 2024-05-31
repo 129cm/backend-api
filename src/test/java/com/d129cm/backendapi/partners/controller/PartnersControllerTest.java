@@ -1,10 +1,14 @@
 package com.d129cm.backendapi.partners.controller;
 
+import com.d129cm.backendapi.auth.config.PartnersSecurityConfig;
+import com.d129cm.backendapi.auth.domain.PartnersUserDetails;
+import com.d129cm.backendapi.auth.dto.PartnersLoginRequest;
+import com.d129cm.backendapi.auth.service.PartnersUserDetailsService;
 import com.d129cm.backendapi.common.dto.CommonResponse;
 import com.d129cm.backendapi.common.exception.ConflictException;
+import com.d129cm.backendapi.partners.domain.Partners;
 import com.d129cm.backendapi.partners.dto.PartnersSignupRequest;
 import com.d129cm.backendapi.partners.service.PartnersService;
-import com.d129cm.backendapi.auth.config.PartnersSecurityConfig;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -17,6 +21,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
@@ -24,8 +29,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.params.provider.Arguments.arguments;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -39,7 +43,34 @@ public class PartnersControllerTest {
     private MockMvc mockMvc;
 
     @MockBean
+    private PartnersUserDetailsService partnersUserDetailsService;
+
+    @MockBean
     private PartnersService partnersService;
+
+    @MockBean
+    private PasswordEncoder passwordEncoder;
+
+    @Nested
+    class login {
+        @Test
+        void 성공_파트너스_로그인_요청() throws Exception {
+            // given
+            PartnersLoginRequest request = new PartnersLoginRequest("email@email.com", "Asdf123!");
+            PartnersUserDetails mockUserDetails = spy(new PartnersUserDetails(mock(Partners.class)));
+            when(passwordEncoder.matches(request.password(), mockUserDetails.getPassword())).thenReturn(true);
+            when(partnersUserDetailsService.loadUserByUsername(request.email())).thenReturn(mockUserDetails);
+
+            // when
+            ResultActions result = mockMvc.perform(post("/partners/login")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .characterEncoding(StandardCharsets.UTF_8)
+                    .content(new ObjectMapper().writeValueAsString(request)));
+
+            // then
+            result.andExpect(status().isOk()).andExpect(content().json("{\"status\":200, \"message\":\"성공\"}"));
+        }
+    }
 
     @Nested
     class signup {
@@ -56,8 +87,8 @@ public class PartnersControllerTest {
                     .content(new ObjectMapper().writeValueAsString(request)));
 
             // then
-            result.andExpect(status().isOk())
-                    .andExpect(content().json("{\"status\":200, \"message\":\"성공\"}"));
+            result.andExpect(status().isCreated())
+                    .andExpect(content().json("{\"status\":201, \"message\":\"성공\"}"));
         }
 
         @Test

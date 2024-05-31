@@ -21,6 +21,6 @@ public class PartnersController {
     public ResponseEntity<CommonResponse<Void>> signup(@Valid @RequestBody PartnersSignupRequest request) {
         partnersService.savePartners(request);
 
-        return ResponseEntity.ok(CommonResponse.success(HttpStatus.OK, null));
+        return ResponseEntity.status(HttpStatus.CREATED).body(CommonResponse.success(HttpStatus.CREATED, null));
     }
 }
