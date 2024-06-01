@@ -90,7 +90,7 @@ public class MemberSecurityConfig {
                 .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll());
 
         http.authorizeHttpRequests(member -> member
-                .requestMatchers(HttpMethod.POST, "members/signup").permitAll()
+                .requestMatchers(HttpMethod.POST, "/members/signup", "/members/login").permitAll()
                 .anyRequest().authenticated());
 
         http.formLogin(AbstractHttpConfigurer::disable)
