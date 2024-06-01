@@ -33,6 +33,7 @@ public class MemberJwtLoginFilter extends UsernamePasswordAuthenticationFilter {
     public MemberJwtLoginFilter(JwtProvider jwtProvider) {
         this.jwtProvider = jwtProvider;
         setFilterProcessesUrl("/members/login");
+        setPostOnly(true);
     }
 
     @Override
