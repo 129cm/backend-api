@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.ProviderManager;
@@ -88,8 +89,9 @@ public class MemberSecurityConfig {
         http.authorizeHttpRequests(common -> common
                 .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll());
 
-        http.authorizeHttpRequests(auth -> auth
-                .anyRequest().permitAll());
+        http.authorizeHttpRequests(member -> member
+                .requestMatchers(HttpMethod.POST, "members/signup").permitAll()
+                .anyRequest().authenticated());
 
         http.formLogin(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable);

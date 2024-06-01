@@ -20,6 +20,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.Collections;
 
 @RequiredArgsConstructor
 public class JwtAuthorizationFilter extends OncePerRequestFilter {
@@ -30,6 +31,11 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest req, HttpServletResponse res, FilterChain filterChain) throws ServletException, IOException {
+        if(req.getRequestURI().equals("/members/signup")) {
+            filterChain.doFilter(req, res);
+            return;
+        }
+
         try {
             CookieUtils.getCookie(req, HttpHeaders.AUTHORIZATION).ifPresent(
                     cookie -> {
@@ -41,13 +47,13 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
                         setAuthentication(username, role);
                     }
             );
+            filterChain.doFilter(req, res);
         } catch (Exception e) {
             SecurityContextHolder.clearContext();
 
             CommonResponse<?> responseDto = CommonResponse.failure(HttpStatus.UNAUTHORIZED, "토큰이 유효하지 않습니다.");
             ServletResponseUtil.servletResponse(res, responseDto);
         }
-        filterChain.doFilter(req, res);
     }
 
     private void setAuthentication(String username, Role role) {
@@ -57,6 +63,6 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
     private Authentication createAuthentication(String username, Role role) {
         UserDetails userDetails = memberService.loadUserByUsername(username);
-        return new UsernamePasswordAuthenticationToken(userDetails, userDetails.getPassword(), userDetails.getAuthorities());
+        return new UsernamePasswordAuthenticationToken(userDetails, null, Collections.singleton(role));
     }
 }
