@@ -1,6 +1,7 @@
 package com.d129cm.backendapi.member.domain;
 
 import com.d129cm.backendapi.common.domain.Address;
+import com.d129cm.backendapi.common.domain.Password;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -17,7 +18,7 @@ public class MemberTest {
         void 생성성공_주어진_필드로_멤버_생성() {
             // given
             String email = "test@naver.com";
-            String password = "Asdf1234!";
+            Password password = Mockito.mock(Password.class);
             String name = "이름";
             Address address = Mockito.mock(Address.class);
 
@@ -43,7 +44,7 @@ public class MemberTest {
         void 예외발생_멤버_필드가_Null일_때() {
             // given
             String email = "test@naver.com";
-            String password = "Asdf1234!";
+            Password password = Mockito.mock(Password.class);
             String name = "이름";
             Address address = Mockito.mock(Address.class);
 
@@ -56,7 +57,7 @@ public class MemberTest {
             );
         }
 
-        private void assertThrowsNullPointerException(String email, String password, String name, Address address) {
+        private void assertThrowsNullPointerException(String email, Password password, String name, Address address) {
             Assertions.assertThrows(IllegalArgumentException.class, () -> Member.builder()
                     .email(email)
                     .password(password)
