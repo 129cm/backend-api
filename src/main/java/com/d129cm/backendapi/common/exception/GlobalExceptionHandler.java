@@ -44,6 +44,15 @@ public class GlobalExceptionHandler {
                 .body(CommonResponse.failure(e.getStatus(), e.getMessage()));
     }
 
+    @ExceptionHandler(AuthenticationException.class)
+    public final ResponseEntity<?> handleAuthenticationException(AuthenticationException e, HttpServletRequest request) {
+        log.warn("source = {} {}, message = {}",
+                request.getMethod(), request.getRequestURI(), e.getMessage());
+        return ResponseEntity
+                .status(e.getStatus())
+                .body(CommonResponse.failure(e.getStatus(), e.getMessage()));
+    }
+
     @ExceptionHandler(BaseException.class)
     public final ResponseEntity<?> handleFinderException(BaseException e, HttpServletRequest request) {
         log.warn("source = {} {}, message = {}",

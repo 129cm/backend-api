@@ -1,8 +1,10 @@
 package com.d129cm.backendapi.member.service;
 
 import com.d129cm.backendapi.common.domain.Address;
+import com.d129cm.backendapi.common.domain.Password;
 import com.d129cm.backendapi.common.dto.AddressRequest;
 import com.d129cm.backendapi.common.exception.BaseException;
+import com.d129cm.backendapi.common.exception.ConflictException;
 import com.d129cm.backendapi.member.domain.Member;
 import com.d129cm.backendapi.member.dto.MemberSignupRequest;
 import com.d129cm.backendapi.member.repository.MemberRepository;
@@ -17,6 +19,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import static org.junit.Assert.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
@@ -30,6 +33,9 @@ public class MemberServiceTest {
 
     @Mock
     private MemberRepository memberRepository;
+
+    @Mock
+    private PasswordEncoder passwordEncoder;
 
     @Nested
     class saveMember {
@@ -60,7 +66,7 @@ public class MemberServiceTest {
             when(memberRepository.existsByEmail(request.email())).thenReturn(true);
 
             // then
-            assertThrows(BaseException.class, () -> memberService.saveMember(request));
+            assertThrows(ConflictException.class, () -> memberService.saveMember(request));
         }
     }
 

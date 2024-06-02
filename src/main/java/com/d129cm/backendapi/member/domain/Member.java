@@ -1,6 +1,7 @@
 package com.d129cm.backendapi.member.domain;
 
 import com.d129cm.backendapi.common.domain.Address;
+import com.d129cm.backendapi.common.domain.Password;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.util.Assert;
@@ -17,8 +18,8 @@ public class  Member {
     @Column(unique = true, nullable = false)
     private String email;
 
-    @Column(nullable = false)
-    private String password;
+    @Embedded
+    private Password password;
 
     @Column(nullable = false)
     private String name;
@@ -27,7 +28,7 @@ public class  Member {
     private Address address;
 
     @Builder
-    public Member (String email, String password, String name, Address address) {
+    public Member (String email, Password password, String name, Address address) {
         Assert.notNull(email, "이메일은 null일 수 없습니다.");
         Assert.notNull(password, "비밀번호는 null일 수 없습니다.");
         Assert.notNull(name, "이름은 null일 수 없습니다.");

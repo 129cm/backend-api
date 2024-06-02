@@ -1,6 +1,7 @@
 package com.d129cm.backendapi.member.repository;
 
 import com.d129cm.backendapi.common.domain.Address;
+import com.d129cm.backendapi.common.domain.Password;
 import com.d129cm.backendapi.config.InitializeTestContainers;
 import com.d129cm.backendapi.member.domain.Member;
 import org.junit.jupiter.api.Assertions;
@@ -26,7 +27,7 @@ public class MemberRepositoryTest {
         //given
         Member member = Member.builder()
                 .email("test@naver.com")
-                .password("Asdf1234!")
+                .password(Mockito.mock(Password.class))
                 .name("이름")
                 .address(Mockito.mock(Address.class))
                 .build();
