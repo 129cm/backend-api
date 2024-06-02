@@ -2,11 +2,13 @@ package com.d129cm.backendapi.auth.filter;
 
 import com.d129cm.backendapi.auth.dto.PartnersLoginRequest;
 import com.d129cm.backendapi.common.dto.CommonResponse;
+import com.d129cm.backendapi.common.utils.ServletResponseUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -61,6 +63,8 @@ public class PartnersJwtLoginFilter extends UsernamePasswordAuthenticationFilter
 
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
-        super.unsuccessfulAuthentication(request, response, failed);
+        CommonResponse<?> errorResponse = CommonResponse.failure(HttpStatus.UNAUTHORIZED, "인증 과정 중 오류 발생");
+
+        ServletResponseUtil.servletResponse(response, errorResponse);
     }
 }

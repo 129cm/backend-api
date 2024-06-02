@@ -1,7 +1,9 @@
 package com.d129cm.backendapi.auth.config;
 
+import com.d129cm.backendapi.auth.filter.JwtAuthorizationFilter;
 import com.d129cm.backendapi.auth.filter.PartnersJwtLoginFilter;
 import com.d129cm.backendapi.auth.service.PartnersUserDetailsService;
+import com.d129cm.backendapi.auth.utils.JwtProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
@@ -21,13 +23,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-@Order(1)
 @Configuration
 @RequiredArgsConstructor
 @EnableWebSecurity(debug = true)
 public class PartnersSecurityConfig {
 
     private final PartnersUserDetailsService partnersUserDetailsService;
+    private final JwtProvider jwtProvider;
     private final PasswordEncoder passwordEncoder;
 
     @Bean
@@ -39,18 +41,24 @@ public class PartnersSecurityConfig {
     }
 
     @Bean
-    public AuthenticationManager partnersManager() {
+    public AuthenticationManager partnersAuthenticationManager() {
         return new ProviderManager(partnersProvider());
     }
 
     @Bean
     public PartnersJwtLoginFilter partnersJwtLoginFilter() {
-        return new PartnersJwtLoginFilter(partnersManager());
+        return new PartnersJwtLoginFilter(partnersAuthenticationManager());
+    }
+
+    @Bean
+    public JwtAuthorizationFilter partnersJwtAuthorizationFilter() {
+        return new JwtAuthorizationFilter(jwtProvider, partnersUserDetailsService);
     }
 
     @Bean("partnersSecurityFilterChain")
+    @Order(2)
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.securityMatcher("/partners")
+        http.securityMatcher("/partners/**")
                 .cors(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
@@ -65,7 +73,8 @@ public class PartnersSecurityConfig {
         http.formLogin(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable);
 
-        http.addFilterBefore(partnersJwtLoginFilter(), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(partnersJwtLoginFilter(), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(partnersJwtAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
