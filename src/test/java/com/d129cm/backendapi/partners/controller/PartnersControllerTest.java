@@ -87,8 +87,8 @@ public class PartnersControllerTest {
                     .content(new ObjectMapper().writeValueAsString(request)));
 
             // then
-            result.andExpect(status().isCreated())
-                    .andExpect(content().json("{\"status\":201, \"message\":\"성공\"}"));
+            result.andExpect(status().isOk())
+                    .andExpect(content().json("{\"status\":200, \"message\":\"성공\"}"));
         }
 
         @Test
