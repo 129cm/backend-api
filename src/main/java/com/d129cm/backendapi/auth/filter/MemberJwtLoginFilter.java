@@ -2,15 +2,12 @@ package com.d129cm.backendapi.auth.filter;
 
 import com.d129cm.backendapi.auth.domain.Role;
 import com.d129cm.backendapi.auth.dto.LoginRequest;
-import com.d129cm.backendapi.auth.dto.LoginResponse;
-import com.d129cm.backendapi.auth.utils.CookieUtils;
 import com.d129cm.backendapi.auth.utils.JwtProvider;
 import com.d129cm.backendapi.common.dto.CommonResponse;
 import com.d129cm.backendapi.global.utils.ServletResponseUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpHeaders;
@@ -62,11 +59,9 @@ public class MemberJwtLoginFilter extends UsernamePasswordAuthenticationFilter {
         String token = jwtProvider.createToken(username, role);
 
         String encodedToken = URLEncoder.encode(token, StandardCharsets.UTF_8).replace("+", "%20");
-        Cookie cookie = CookieUtils.createCookie(HttpHeaders.AUTHORIZATION, encodedToken, jwtProvider.JWT_TOKEN_EXPIRATION_TIME);
-        response.addCookie(cookie);
+        response.addHeader(HttpHeaders.AUTHORIZATION, encodedToken);
 
-        CommonResponse<?> successResponse = CommonResponse.success(HttpStatus.OK, new LoginResponse(username));
-
+        CommonResponse<?> successResponse = CommonResponse.success(HttpStatus.OK, null);
         ServletResponseUtil.servletResponse(response, successResponse);
     }
 
