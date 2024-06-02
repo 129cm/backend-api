@@ -1,10 +1,9 @@
 package com.d129cm.backendapi.auth.filter;
 
 import com.d129cm.backendapi.auth.domain.Role;
-import com.d129cm.backendapi.auth.service.MemberDetailsService;
 import com.d129cm.backendapi.auth.utils.JwtProvider;
 import com.d129cm.backendapi.common.dto.CommonResponse;
-import com.d129cm.backendapi.global.utils.ServletResponseUtil;
+import com.d129cm.backendapi.common.utils.ServletResponseUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -15,6 +14,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
@@ -24,12 +24,12 @@ import java.util.Collections;
 public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
      private final JwtProvider jwtProvider;
-     private final MemberDetailsService memberService;
+     private final UserDetailsService detailsService;
 
 
     @Override
     protected void doFilterInternal(HttpServletRequest req, HttpServletResponse res, FilterChain filterChain) throws ServletException, IOException {
-        if(req.getRequestURI().equals("/members/signup")) {
+        if(req.getRequestURI().equals("/members/signup") || req.getRequestURI().equals("/partners/signup") || req.getRequestURI().equals("/ping")) {
             filterChain.doFilter(req, res);
             return;
         }
@@ -55,7 +55,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
     }
 
     private Authentication createAuthentication(String username, Role role) {
-        UserDetails userDetails = memberService.loadUserByUsername(username);
+        UserDetails userDetails = detailsService.loadUserByUsername(username);
         return new UsernamePasswordAuthenticationToken(userDetails, null, Collections.singleton(role));
     }
 }

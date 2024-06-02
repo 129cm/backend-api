@@ -1,7 +1,7 @@
 package com.d129cm.backendapi.member.controller;
 
-import com.d129cm.backendapi.auth.config.CustomSecurityConfig;
 import com.d129cm.backendapi.common.dto.AddressRequest;
+import com.d129cm.backendapi.config.TestSecurityConfig;
 import com.d129cm.backendapi.member.dto.MemberSignupRequest;
 import com.d129cm.backendapi.member.service.MemberService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -21,7 +21,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(MemberController.class)
-@Import(CustomSecurityConfig.class)
+@Import(TestSecurityConfig.class)
 @SuppressWarnings("NonAsciiCharacters")
 public class MemberControllerTest {
 

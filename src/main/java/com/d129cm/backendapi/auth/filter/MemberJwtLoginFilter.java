@@ -4,7 +4,7 @@ import com.d129cm.backendapi.auth.domain.Role;
 import com.d129cm.backendapi.auth.dto.LoginRequest;
 import com.d129cm.backendapi.auth.utils.JwtProvider;
 import com.d129cm.backendapi.common.dto.CommonResponse;
-import com.d129cm.backendapi.global.utils.ServletResponseUtil;
+import com.d129cm.backendapi.common.utils.ServletResponseUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -61,7 +61,7 @@ public class MemberJwtLoginFilter extends UsernamePasswordAuthenticationFilter {
         String encodedToken = URLEncoder.encode(token, StandardCharsets.UTF_8).replace("+", "%20");
         response.addHeader(HttpHeaders.AUTHORIZATION, encodedToken);
 
-        CommonResponse<?> successResponse = CommonResponse.success(HttpStatus.OK, null);
+        CommonResponse<?> successResponse = CommonResponse.success();
         ServletResponseUtil.servletResponse(response, successResponse);
     }
 

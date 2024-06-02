@@ -1,4 +1,4 @@
-package com.d129cm.backendapi.global.utils;
+package com.d129cm.backendapi.common.utils;
 
 import com.d129cm.backendapi.common.dto.CommonResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
