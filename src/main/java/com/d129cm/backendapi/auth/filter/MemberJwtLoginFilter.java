@@ -7,11 +7,11 @@ import com.d129cm.backendapi.common.dto.CommonResponse;
 import com.d129cm.backendapi.common.utils.ServletResponseUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -25,11 +25,14 @@ import java.nio.charset.StandardCharsets;
 
 public class MemberJwtLoginFilter extends UsernamePasswordAuthenticationFilter {
 
+    private static final String MEMBERS_LOGIN_URL = "/members/login";
+
     private final JwtProvider jwtProvider;
 
-    public MemberJwtLoginFilter(JwtProvider jwtProvider) {
+    public MemberJwtLoginFilter(JwtProvider jwtProvider, AuthenticationManager authenticationManager) {
+        super(authenticationManager);
         this.jwtProvider = jwtProvider;
-        setFilterProcessesUrl("/members/login");
+        setFilterProcessesUrl(MEMBERS_LOGIN_URL);
         setPostOnly(true);
     }
 
@@ -51,7 +54,7 @@ public class MemberJwtLoginFilter extends UsernamePasswordAuthenticationFilter {
     }
 
     @Override
-    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
+    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException {
         UserDetails userDetails = (UserDetails) authResult.getPrincipal();
         String username = userDetails.getUsername();
         Role role = userDetails.getAuthorities().stream().findFirst().map(Role.class::cast).orElseThrow();
@@ -66,7 +69,7 @@ public class MemberJwtLoginFilter extends UsernamePasswordAuthenticationFilter {
     }
 
     @Override
-    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
+    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException {
         CommonResponse<?> errorResponse = CommonResponse.failure(HttpStatus.UNAUTHORIZED, "인증 과정 중 오류 발생");
 
         ServletResponseUtil.servletResponse(response, errorResponse);

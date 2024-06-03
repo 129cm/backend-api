@@ -1,6 +1,6 @@
 package com.d129cm.backendapi.auth.service;
 
-import com.d129cm.backendapi.auth.domain.PartnersUserDetails;
+import com.d129cm.backendapi.auth.domain.PartnersDetails;
 import com.d129cm.backendapi.partners.domain.Partners;
 import com.d129cm.backendapi.partners.repository.PartnersRepository;
 import lombok.RequiredArgsConstructor;
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class PartnersUserDetailsService implements UserDetailsService {
+public class PartnersDetailsService implements UserDetailsService {
 
     private final PartnersRepository repository;
 
@@ -20,6 +20,6 @@ public class PartnersUserDetailsService implements UserDetailsService {
         Partners partners = repository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException(email));
 
-        return new PartnersUserDetails(partners);
+        return new PartnersDetails(partners);
     }
 }

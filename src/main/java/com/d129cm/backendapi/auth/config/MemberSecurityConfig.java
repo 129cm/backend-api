@@ -23,6 +23,9 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.web.util.matcher.OrRequestMatcher;
+import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -37,13 +40,12 @@ public class MemberSecurityConfig {
 
     private final JwtProvider jwtProvider;
     private final PasswordEncoder passwordEncoder;
-    private final MemberDetailsService memberService;
+    private final MemberDetailsService memberDetailsService;
 
     @Bean
     public AuthenticationProvider memberProvider() {
-        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-        provider.setPasswordEncoder(passwordEncoder);
-        provider.setUserDetailsService(memberService);
+        DaoAuthenticationProvider provider = new DaoAuthenticationProvider(passwordEncoder);
+        provider.setUserDetailsService(memberDetailsService);
         return provider;
     }
 
@@ -51,19 +53,6 @@ public class MemberSecurityConfig {
     @Primary
     public AuthenticationManager memberAuthenticationManager() {
         return new ProviderManager(memberProvider());
-    }
-
-
-    @Bean
-    public MemberJwtLoginFilter memberJwtLoginFilter() {
-        MemberJwtLoginFilter memberJwtLoginFilter = new MemberJwtLoginFilter(jwtProvider);
-        memberJwtLoginFilter.setAuthenticationManager(memberAuthenticationManager());
-        return memberJwtLoginFilter;
-    }
-
-    @Bean
-    public JwtAuthorizationFilter jwtAuthorizationFilter() {
-        return new JwtAuthorizationFilter(jwtProvider, memberService);
     }
 
     @Bean
@@ -79,9 +68,13 @@ public class MemberSecurityConfig {
         return source;
     }
 
-    @Bean(name = "memberSecurityFilterChain")
+    @Bean
     @Order(1)
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain memberSecurityFilterChain(HttpSecurity http) throws Exception {
+        final RequestMatcher ignoredRequests = new OrRequestMatcher(
+                List.of(new AntPathRequestMatcher("/members/signup"))
+        );
+
         http.securityMatcher("/members/**")
                 .cors(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
@@ -92,13 +85,13 @@ public class MemberSecurityConfig {
 
         http.authorizeHttpRequests(member -> member
                 .requestMatchers(HttpMethod.POST, "/members/signup", "/members/login").permitAll()
-                .anyRequest().authenticated());
+                .anyRequest().hasRole("MEMBER"));
 
         http.formLogin(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable);
 
-        http.addFilterBefore(memberJwtLoginFilter(), UsernamePasswordAuthenticationFilter.class)
-                .addFilterAfter(jwtAuthorizationFilter(), MemberJwtLoginFilter.class);
+        http.addFilterBefore(new MemberJwtLoginFilter(jwtProvider, memberAuthenticationManager()), UsernamePasswordAuthenticationFilter.class)
+                .addFilterAfter(new JwtAuthorizationFilter(jwtProvider, memberDetailsService, ignoredRequests), MemberJwtLoginFilter.class);
 
         return http.build();
     }

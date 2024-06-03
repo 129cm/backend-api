@@ -2,7 +2,7 @@ package com.d129cm.backendapi.auth.config;
 
 import com.d129cm.backendapi.auth.filter.JwtAuthorizationFilter;
 import com.d129cm.backendapi.auth.filter.PartnersJwtLoginFilter;
-import com.d129cm.backendapi.auth.service.PartnersUserDetailsService;
+import com.d129cm.backendapi.auth.service.PartnersDetailsService;
 import com.d129cm.backendapi.auth.utils.JwtProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
@@ -22,42 +22,40 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.web.util.matcher.OrRequestMatcher;
+import org.springframework.security.web.util.matcher.RequestMatcher;
+
+import java.util.List;
 
 @Configuration
+@EnableWebSecurity
 @RequiredArgsConstructor
-@EnableWebSecurity(debug = true)
 public class PartnersSecurityConfig {
-
-    private final PartnersUserDetailsService partnersUserDetailsService;
     private final JwtProvider jwtProvider;
     private final PasswordEncoder passwordEncoder;
+    private final PartnersDetailsService partnersDetailsService;
 
     @Bean
     public AuthenticationProvider partnersProvider() {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider(passwordEncoder);
-        provider.setUserDetailsService(partnersUserDetailsService);
-
+        provider.setUserDetailsService(partnersDetailsService);
         return provider;
     }
 
     @Bean
+    @Order(2)
     public AuthenticationManager partnersAuthenticationManager() {
         return new ProviderManager(partnersProvider());
     }
 
     @Bean
-    public PartnersJwtLoginFilter partnersJwtLoginFilter() {
-        return new PartnersJwtLoginFilter(partnersAuthenticationManager());
-    }
-
-    @Bean
-    public JwtAuthorizationFilter partnersJwtAuthorizationFilter() {
-        return new JwtAuthorizationFilter(jwtProvider, partnersUserDetailsService);
-    }
-
-    @Bean("partnersSecurityFilterChain")
     @Order(2)
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain partnersSecurityFilterChain(HttpSecurity http) throws Exception {
+        final RequestMatcher ignoredRequests = new OrRequestMatcher(
+                List.of(new AntPathRequestMatcher("/partners/signup"))
+        );
+
         http.securityMatcher("/partners/**")
                 .cors(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
@@ -67,14 +65,14 @@ public class PartnersSecurityConfig {
                 .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll());
 
         http.authorizeHttpRequests(auth -> auth
-                .requestMatchers(HttpMethod.POST, "/partners/signup", "partners/login").permitAll()
+                .requestMatchers(HttpMethod.POST, "/partners/signup", "/partners/login").permitAll()
                 .anyRequest().hasRole("PARTNERS"));
 
         http.formLogin(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable);
 
-        http.addFilterBefore(partnersJwtLoginFilter(), UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(partnersJwtAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(new PartnersJwtLoginFilter(partnersAuthenticationManager()), UsernamePasswordAuthenticationFilter.class)
+                .addFilterAfter(new JwtAuthorizationFilter(jwtProvider, partnersDetailsService, ignoredRequests), PartnersJwtLoginFilter.class);
 
         return http.build();
     }

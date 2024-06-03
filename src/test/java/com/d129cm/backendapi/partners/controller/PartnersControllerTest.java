@@ -1,9 +1,9 @@
 package com.d129cm.backendapi.partners.controller;
 
 import com.d129cm.backendapi.auth.config.PartnersSecurityConfig;
-import com.d129cm.backendapi.auth.domain.PartnersUserDetails;
+import com.d129cm.backendapi.auth.domain.PartnersDetails;
 import com.d129cm.backendapi.auth.dto.PartnersLoginRequest;
-import com.d129cm.backendapi.auth.service.PartnersUserDetailsService;
+import com.d129cm.backendapi.auth.service.PartnersDetailsService;
 import com.d129cm.backendapi.auth.utils.JwtProvider;
 import com.d129cm.backendapi.common.dto.CommonResponse;
 import com.d129cm.backendapi.common.exception.ConflictException;
@@ -44,7 +44,7 @@ public class PartnersControllerTest {
     private MockMvc mockMvc;
 
     @MockBean
-    private PartnersUserDetailsService partnersUserDetailsService;
+    private PartnersDetailsService partnersDetailsService;
 
     @MockBean
     private PartnersService partnersService;
@@ -58,9 +58,9 @@ public class PartnersControllerTest {
         void 성공_파트너스_로그인_요청() throws Exception {
             // given
             PartnersLoginRequest request = new PartnersLoginRequest("email@email.com", "Asdf123!");
-            PartnersUserDetails mockUserDetails = spy(new PartnersUserDetails(mock(Partners.class)));
+            PartnersDetails mockUserDetails = spy(new PartnersDetails(mock(Partners.class)));
             when(passwordEncoder.matches(request.password(), mockUserDetails.getPassword())).thenReturn(true);
-            when(partnersUserDetailsService.loadUserByUsername(request.email())).thenReturn(mockUserDetails);
+            when(partnersDetailsService.loadUserByUsername(request.email())).thenReturn(mockUserDetails);
 
             // when
             ResultActions result = mockMvc.perform(post("/partners/login")

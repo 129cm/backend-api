@@ -13,7 +13,7 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
-public class CustomSecurityConfig {
+public class CommonSecurityConfig {
 
     @Bean
     @Order(999)
@@ -22,9 +22,7 @@ public class CustomSecurityConfig {
                 .csrf(Customizer.withDefaults());
 
         http.authorizeHttpRequests(common -> common
-                .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll());
-
-        http.authorizeHttpRequests(auth -> auth
+                .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
                 .requestMatchers(HttpMethod.GET, "/ping").permitAll()
                 .requestMatchers(HttpMethod.POST, "/error").permitAll()
                 .anyRequest().denyAll());

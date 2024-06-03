@@ -8,7 +8,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.Collections;
 
-public record PartnersUserDetails(Partners partners) implements UserDetails {
+public record PartnersDetails(Partners partners) implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
