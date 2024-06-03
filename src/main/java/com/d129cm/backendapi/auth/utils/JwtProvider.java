@@ -27,7 +27,7 @@ public class JwtProvider {
     private static final String BEARER_PREFIX = "Bearer ";
     @Value("${jwt.token.expiration.time}")
     public int JWT_TOKEN_EXPIRATION_TIME;
-    @Value("${jwt.token.secretKey}")
+    @Value("${jwt.token.expiration.secretKey}")
     private String SECRET_KEY;
     private Key key;
 
@@ -48,7 +48,7 @@ public class JwtProvider {
 
     public String getJwtFromHeader(HttpServletRequest request) {
         String bearerToken = request.getHeader(HttpHeaders.AUTHORIZATION);
-        if (StringUtils.hasText(bearerToken)) {
+        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(BEARER_PREFIX)) {
             return removeBearerPrefix(bearerToken);
         }
 

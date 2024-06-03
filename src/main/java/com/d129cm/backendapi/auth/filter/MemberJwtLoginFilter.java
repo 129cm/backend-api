@@ -58,7 +58,8 @@ public class MemberJwtLoginFilter extends UsernamePasswordAuthenticationFilter {
 
         String token = jwtProvider.createToken(username, role);
 
-        response.addHeader(HttpHeaders.AUTHORIZATION, token);
+        String encodedToken = URLEncoder.encode(token, StandardCharsets.UTF_8).replace("+", "%20");
+        response.addHeader(HttpHeaders.AUTHORIZATION, encodedToken);
 
         CommonResponse<?> successResponse = CommonResponse.success(HttpStatus.OK, null);
         ServletResponseUtil.servletResponse(response, successResponse);
