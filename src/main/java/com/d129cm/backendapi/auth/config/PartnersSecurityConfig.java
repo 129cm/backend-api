@@ -71,7 +71,7 @@ public class PartnersSecurityConfig {
         http.formLogin(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable);
 
-        http.addFilterBefore(new PartnersJwtLoginFilter(partnersAuthenticationManager()), UsernamePasswordAuthenticationFilter.class)
+        http.addFilterBefore(new PartnersJwtLoginFilter(jwtProvider, partnersAuthenticationManager()), UsernamePasswordAuthenticationFilter.class)
                 .addFilterAfter(new JwtAuthorizationFilter(jwtProvider, partnersDetailsService, ignoredRequests), PartnersJwtLoginFilter.class);
 
         return http.build();

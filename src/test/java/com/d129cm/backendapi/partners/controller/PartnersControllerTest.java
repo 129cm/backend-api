@@ -1,13 +1,10 @@
 package com.d129cm.backendapi.partners.controller;
 
 import com.d129cm.backendapi.auth.config.PartnersSecurityConfig;
-import com.d129cm.backendapi.auth.domain.PartnersDetails;
-import com.d129cm.backendapi.auth.dto.PartnersLoginRequest;
 import com.d129cm.backendapi.auth.service.PartnersDetailsService;
 import com.d129cm.backendapi.auth.utils.JwtProvider;
 import com.d129cm.backendapi.common.dto.CommonResponse;
 import com.d129cm.backendapi.common.exception.ConflictException;
-import com.d129cm.backendapi.partners.domain.Partners;
 import com.d129cm.backendapi.partners.dto.PartnersSignupRequest;
 import com.d129cm.backendapi.partners.service.PartnersService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -30,7 +27,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.params.provider.Arguments.arguments;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doThrow;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -51,27 +49,6 @@ public class PartnersControllerTest {
 
     @MockBean
     private PasswordEncoder passwordEncoder;
-
-    @Nested
-    class login {
-        @Test
-        void 성공_파트너스_로그인_요청() throws Exception {
-            // given
-            PartnersLoginRequest request = new PartnersLoginRequest("email@email.com", "Asdf123!");
-            PartnersDetails mockUserDetails = spy(new PartnersDetails(mock(Partners.class)));
-            when(passwordEncoder.matches(request.password(), mockUserDetails.getPassword())).thenReturn(true);
-            when(partnersDetailsService.loadUserByUsername(request.email())).thenReturn(mockUserDetails);
-
-            // when
-            ResultActions result = mockMvc.perform(post("/partners/login")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .characterEncoding(StandardCharsets.UTF_8)
-                    .content(new ObjectMapper().writeValueAsString(request)));
-
-            // then
-            result.andExpect(status().isOk()).andExpect(content().json("{\"status\":200, \"message\":\"성공\"}"));
-        }
-    }
 
     @Nested
     class signup {

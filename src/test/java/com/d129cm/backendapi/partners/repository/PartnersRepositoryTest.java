@@ -1,5 +1,6 @@
 package com.d129cm.backendapi.partners.repository;
 
+import com.d129cm.backendapi.common.domain.Password;
 import com.d129cm.backendapi.config.InitializeTestContainers;
 import com.d129cm.backendapi.partners.domain.Partners;
 import org.junit.jupiter.api.Assertions;
@@ -14,10 +15,12 @@ import org.springframework.boot.testcontainers.context.ImportTestcontainers;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @ImportTestcontainers(InitializeTestContainers.class)
+@SuppressWarnings("NonAsciiCharacters")
 public class PartnersRepositoryTest {
 
     @Autowired
@@ -29,7 +32,7 @@ public class PartnersRepositoryTest {
 
         Partners partners = Partners.builder()
                 .email("test@naver.com")
-                .password("asdf1234!")
+                .password(mock(Password.class))
                 .businessNumber("111-11-11111")
                 .build();
 
@@ -41,7 +44,7 @@ public class PartnersRepositoryTest {
         //given
         Partners partners = Partners.builder()
                 .email("email@naver.com")
-                .password("asdf1234!")
+                .password(mock(Password.class))
                 .businessNumber("123-45-67890")
                 .build();
 
@@ -65,7 +68,7 @@ public class PartnersRepositoryTest {
             //given
             Partners existPartners = Partners.builder()
                     .email("test@naver.com")
-                    .password("asdf1234!")
+                    .password(mock(Password.class))
                     .businessNumber("111-11-11111")
                     .build();
 
@@ -84,7 +87,7 @@ public class PartnersRepositoryTest {
             // given
             Partners existPartners = Partners.builder()
                     .email("test@naver.com")
-                    .password("asdf1234!")
+                    .password(mock(Password.class))
                     .businessNumber("111-11-11111")
                     .build();
 

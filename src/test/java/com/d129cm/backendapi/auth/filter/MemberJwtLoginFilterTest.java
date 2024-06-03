@@ -21,15 +21,17 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(MemberJwtLoginFilter.class)
 @ContextConfiguration(classes = {MemberSecurityConfig.class})
+@SuppressWarnings("NonAsciiCharacters")
 class MemberJwtLoginFilterTest {
 
     @Autowired
@@ -63,11 +65,14 @@ class MemberJwtLoginFilterTest {
             when(authenticationManager.authenticate(any())).thenReturn(authResult);
             when(jwtProvider.createToken(any(), any())).thenReturn("mocked-jwt-token");
 
-            // when & then
-            mockMvc.perform(post("/members/login")
-                            .contentType("application/json")
-                            .content(loginRequestJson))
-                     .andExpect(status().isOk());
+            // when
+            ResultActions perform = mockMvc.perform(post("/members/login")
+                    .contentType("application/json")
+                    .content(loginRequestJson));
+
+            // then
+            perform.andExpect(status().isOk())
+                    .andExpect(header().string("Authorization", "mocked-jwt-token"));
         }
 
         @Test
@@ -79,11 +84,14 @@ class MemberJwtLoginFilterTest {
             when(authenticationManager.authenticate(any()))
                     .thenThrow(new AuthenticationServiceException("Invalid credentials"));
 
-            // when & then
-            mockMvc.perform(post("/members/login")
-                            .contentType("application/json")
-                            .content(loginRequestJson))
-                    .andExpect(status().isUnauthorized());
+            // when
+            ResultActions perform = mockMvc.perform(post("/members/login")
+                    .contentType("application/json")
+                    .content(loginRequestJson));
+
+            // then
+            perform.andExpect(status().isUnauthorized())
+                    .andExpect(jsonPath("$.message").value("인증 과정 중 오류 발생"));
         }
     }
 }

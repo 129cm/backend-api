@@ -1,30 +1,37 @@
 package com.d129cm.backendapi.auth.filter;
 
+import com.d129cm.backendapi.auth.domain.Role;
 import com.d129cm.backendapi.auth.dto.PartnersLoginRequest;
+import com.d129cm.backendapi.auth.utils.JwtProvider;
 import com.d129cm.backendapi.common.dto.CommonResponse;
 import com.d129cm.backendapi.common.utils.ServletResponseUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 
 public class PartnersJwtLoginFilter extends UsernamePasswordAuthenticationFilter {
 
     private static final String PARTNERS_LOGIN_URL = "/partners/login";
 
-    public PartnersJwtLoginFilter(AuthenticationManager authenticationManager) {
+    private final JwtProvider jwtProvider;
+
+    public PartnersJwtLoginFilter(JwtProvider jwtProvider, AuthenticationManager authenticationManager) {
         super(authenticationManager);
+        this.jwtProvider = jwtProvider;
         setFilterProcessesUrl(PARTNERS_LOGIN_URL);
         setPostOnly(true);
     }
@@ -48,14 +55,17 @@ public class PartnersJwtLoginFilter extends UsernamePasswordAuthenticationFilter
 
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException {
+        UserDetails userDetails = (UserDetails) authResult.getPrincipal();
+        String username = userDetails.getUsername();
+        Role role = userDetails.getAuthorities().stream().findFirst().map(Role.class::cast).orElseThrow();
+
+        String token = jwtProvider.createToken(username, role);
+
+        String encodedToken = URLEncoder.encode(token, StandardCharsets.UTF_8).replace("+", "%20");
+        response.addHeader(HttpHeaders.AUTHORIZATION, encodedToken);
+
         CommonResponse<?> successResponse = CommonResponse.success();
-        String jsonResponse = new ObjectMapper().writeValueAsString(successResponse);
-
-        response.setStatus(successResponse.status());
-        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-        response.setCharacterEncoding(StandardCharsets.UTF_8.name());
-
-        response.getWriter().write(jsonResponse);
+        ServletResponseUtil.servletResponse(response, successResponse);
     }
 
     @Override

@@ -1,7 +1,7 @@
 package com.d129cm.backendapi.common;
 
+import com.d129cm.backendapi.auth.config.CommonSecurityConfig;
 import com.d129cm.backendapi.common.controller.HealthCheckController;
-import com.d129cm.backendapi.config.TestSecurityConfig;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -13,7 +13,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(HealthCheckController.class)
-@Import(TestSecurityConfig.class)
+@Import(CommonSecurityConfig.class)
+@SuppressWarnings("NonAsciiCharacters")
 public class HealthCheckControllerTest {
 
     @Autowired

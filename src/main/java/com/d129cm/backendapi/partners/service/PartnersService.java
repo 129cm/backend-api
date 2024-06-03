@@ -1,5 +1,6 @@
 package com.d129cm.backendapi.partners.service;
 
+import com.d129cm.backendapi.common.domain.Password;
 import com.d129cm.backendapi.common.exception.ConflictException;
 import com.d129cm.backendapi.partners.domain.Partners;
 import com.d129cm.backendapi.partners.dto.PartnersSignupRequest;
@@ -22,8 +23,13 @@ public class PartnersService {
             throw new ConflictException("email", request.email());
         }
 
-        Partners newPartners = request.toPartnersEntity();
-        newPartners.encodePassword(passwordEncoder);
+        Password encodedPassword = Password.of(request.password(), passwordEncoder);
+
+        Partners newPartners = Partners.builder()
+                .email(request.email())
+                .businessNumber(request.businessNumber())
+                .password(encodedPassword)
+                .build();
 
         partnersRepository.save(newPartners);
     }

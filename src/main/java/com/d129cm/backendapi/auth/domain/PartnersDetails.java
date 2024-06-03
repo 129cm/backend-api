@@ -2,7 +2,6 @@ package com.d129cm.backendapi.auth.domain;
 
 import com.d129cm.backendapi.partners.domain.Partners;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
@@ -12,12 +11,12 @@ public record PartnersDetails(Partners partners) implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.singleton(new SimpleGrantedAuthority("ROLE_PARTNERS"));
+        return Collections.singleton(Role.ROLE_PARTNERS);
     }
 
     @Override
     public String getPassword() {
-        return partners.getPassword();
+        return partners.getPassword().getPassword();
     }
 
     @Override
