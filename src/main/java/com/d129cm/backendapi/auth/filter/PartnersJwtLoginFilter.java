@@ -1,7 +1,7 @@
 package com.d129cm.backendapi.auth.filter;
 
 import com.d129cm.backendapi.auth.domain.Role;
-import com.d129cm.backendapi.auth.dto.MemberLoginRequest;
+import com.d129cm.backendapi.auth.dto.PartnersLoginRequest;
 import com.d129cm.backendapi.auth.utils.JwtProvider;
 import com.d129cm.backendapi.common.dto.CommonResponse;
 import com.d129cm.backendapi.common.utils.ServletResponseUtil;
@@ -23,24 +23,24 @@ import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 
-public class MemberJwtLoginFilter extends UsernamePasswordAuthenticationFilter {
+public class PartnersJwtLoginFilter extends UsernamePasswordAuthenticationFilter {
 
-    private static final String MEMBERS_LOGIN_URL = "/members/login";
+    private static final String PARTNERS_LOGIN_URL = "/partners/login";
 
     private final JwtProvider jwtProvider;
 
-    public MemberJwtLoginFilter(JwtProvider jwtProvider, AuthenticationManager authenticationManager) {
+    public PartnersJwtLoginFilter(JwtProvider jwtProvider, AuthenticationManager authenticationManager) {
         super(authenticationManager);
         this.jwtProvider = jwtProvider;
-        setFilterProcessesUrl(MEMBERS_LOGIN_URL);
+        setFilterProcessesUrl(PARTNERS_LOGIN_URL);
         setPostOnly(true);
     }
 
-    @Override
-    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
 
+    @Override
+    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) {
         try {
-            MemberLoginRequest requestDto = new ObjectMapper().readValue(request.getInputStream(), MemberLoginRequest.class);
+            PartnersLoginRequest requestDto = new ObjectMapper().readValue(request.getInputStream(), PartnersLoginRequest.class);
 
             return getAuthenticationManager().authenticate(
                     new UsernamePasswordAuthenticationToken(

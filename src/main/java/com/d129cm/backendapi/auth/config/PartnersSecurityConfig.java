@@ -1,14 +1,13 @@
 package com.d129cm.backendapi.auth.config;
 
 import com.d129cm.backendapi.auth.filter.JwtAuthorizationFilter;
-import com.d129cm.backendapi.auth.filter.MemberJwtLoginFilter;
-import com.d129cm.backendapi.auth.service.MemberDetailsService;
+import com.d129cm.backendapi.auth.filter.PartnersJwtLoginFilter;
+import com.d129cm.backendapi.auth.service.PartnersDetailsService;
 import com.d129cm.backendapi.auth.utils.JwtProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -26,56 +25,38 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.OrRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import java.util.Arrays;
 import java.util.List;
 
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
-public class MemberSecurityConfig {
-
+public class PartnersSecurityConfig {
     private final JwtProvider jwtProvider;
     private final PasswordEncoder passwordEncoder;
-    private final MemberDetailsService memberDetailsService;
+    private final PartnersDetailsService partnersDetailsService;
 
     @Bean
-    public AuthenticationProvider memberProvider() {
+    public AuthenticationProvider partnersProvider() {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider(passwordEncoder);
-        provider.setUserDetailsService(memberDetailsService);
+        provider.setUserDetailsService(partnersDetailsService);
         return provider;
     }
 
     @Bean
-    @Primary
-    public AuthenticationManager memberAuthenticationManager() {
-        return new ProviderManager(memberProvider());
+    @Order(2)
+    public AuthenticationManager partnersAuthenticationManager() {
+        return new ProviderManager(partnersProvider());
     }
 
     @Bean
-    CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedHeaders(List.of("*"));
-        configuration.setAllowCredentials(true);
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
-        configuration.setMaxAge(60L);
-
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
-        return source;
-    }
-
-    @Bean
-    @Order(1)
-    public SecurityFilterChain memberSecurityFilterChain(HttpSecurity http) throws Exception {
+    @Order(2)
+    public SecurityFilterChain partnersSecurityFilterChain(HttpSecurity http) throws Exception {
         final RequestMatcher ignoredRequests = new OrRequestMatcher(
-                List.of(new AntPathRequestMatcher("/members/signup"))
+                List.of(new AntPathRequestMatcher("/partners/signup"))
         );
 
-        http.securityMatcher("/members/**")
+        http.securityMatcher("/partners/**")
                 .cors(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
@@ -83,15 +64,15 @@ public class MemberSecurityConfig {
         http.authorizeHttpRequests(common -> common
                 .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll());
 
-        http.authorizeHttpRequests(member -> member
-                .requestMatchers(HttpMethod.POST, "/members/signup", "/members/login").permitAll()
-                .anyRequest().hasRole("MEMBER"));
+        http.authorizeHttpRequests(auth -> auth
+                .requestMatchers(HttpMethod.POST, "/partners/signup", "/partners/login").permitAll()
+                .anyRequest().hasRole("PARTNERS"));
 
         http.formLogin(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable);
 
-        http.addFilterBefore(new MemberJwtLoginFilter(jwtProvider, memberAuthenticationManager()), UsernamePasswordAuthenticationFilter.class)
-                .addFilterAfter(new JwtAuthorizationFilter(jwtProvider, memberDetailsService, ignoredRequests), MemberJwtLoginFilter.class);
+        http.addFilterBefore(new PartnersJwtLoginFilter(jwtProvider, partnersAuthenticationManager()), UsernamePasswordAuthenticationFilter.class)
+                .addFilterAfter(new JwtAuthorizationFilter(jwtProvider, partnersDetailsService, ignoredRequests), PartnersJwtLoginFilter.class);
 
         return http.build();
     }

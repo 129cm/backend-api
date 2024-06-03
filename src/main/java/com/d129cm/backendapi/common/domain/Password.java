@@ -7,12 +7,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @Getter
 @Embeddable
 public class Password {
-    private String value;
+    private String password;
     protected Password() {
     }
 
-    private Password(String value) {
-        this.value = value;
+    private Password(String password) {
+        this.password = password;
     }
 
     public static Password of(String rawPassword, PasswordEncoder passwordEncoder) {
@@ -23,6 +23,6 @@ public class Password {
     }
 
     public boolean matches(String rawPassword, PasswordEncoder passwordEncoder) {
-        return passwordEncoder.matches(rawPassword, this.value);
+        return passwordEncoder.matches(rawPassword, this.password);
     }
 }

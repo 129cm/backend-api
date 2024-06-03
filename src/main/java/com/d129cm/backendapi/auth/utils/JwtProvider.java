@@ -18,7 +18,6 @@ import org.springframework.util.StringUtils;
 
 import java.security.Key;
 import java.util.Date;
-import java.util.Objects;
 
 @Slf4j(topic = "JwtProvider")
 @Component
@@ -26,8 +25,8 @@ public class JwtProvider {
 
     private static final String BEARER_PREFIX = "Bearer ";
     @Value("${jwt.token.expiration.time}")
-    public int JWT_TOKEN_EXPIRATION_TIME;
-    @Value("${jwt.token.expiration.secretKey}")
+    public long JWT_TOKEN_EXPIRATION_TIME;
+    @Value("${jwt.token.secretKey}")
     private String SECRET_KEY;
     private Key key;
 

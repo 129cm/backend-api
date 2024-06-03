@@ -2,7 +2,7 @@ package com.d129cm.backendapi.auth.filter;
 
 import com.d129cm.backendapi.auth.config.MemberSecurityConfig;
 import com.d129cm.backendapi.auth.domain.MemberDetails;
-import com.d129cm.backendapi.auth.dto.LoginRequest;
+import com.d129cm.backendapi.auth.dto.MemberLoginRequest;
 import com.d129cm.backendapi.auth.service.MemberDetailsService;
 import com.d129cm.backendapi.auth.utils.JwtProvider;
 import com.d129cm.backendapi.common.domain.Address;
@@ -18,22 +18,20 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
-
-import java.util.Collections;
+import org.springframework.test.web.servlet.ResultActions;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(MemberJwtLoginFilter.class)
 @ContextConfiguration(classes = {MemberSecurityConfig.class})
+@SuppressWarnings("NonAsciiCharacters")
 class MemberJwtLoginFilterTest {
 
     @Autowired
@@ -56,8 +54,8 @@ class MemberJwtLoginFilterTest {
         @Test
         void 성공200반환_멤버_로그인_성공() throws Exception {
             // given
-            LoginRequest loginRequest = new LoginRequest("test@naver.com", "Asdf1234!");
-            String loginRequestJson = new ObjectMapper().writeValueAsString(loginRequest);
+            MemberLoginRequest memberLoginRequest = new MemberLoginRequest("test@naver.com", "Asdf1234!");
+            String loginRequestJson = new ObjectMapper().writeValueAsString(memberLoginRequest);
 
             Member member = new Member("test@naver.com", Password.of("Asdf1234", passwordEncoder), "이름", mock(Address.class));
             MemberDetails memberDetails = new MemberDetails(member);
@@ -67,27 +65,33 @@ class MemberJwtLoginFilterTest {
             when(authenticationManager.authenticate(any())).thenReturn(authResult);
             when(jwtProvider.createToken(any(), any())).thenReturn("mocked-jwt-token");
 
-            // when & then
-            mockMvc.perform(post("/members/login")
-                            .contentType("application/json")
-                            .content(loginRequestJson))
-                     .andExpect(status().isOk());
+            // when
+            ResultActions perform = mockMvc.perform(post("/members/login")
+                    .contentType("application/json")
+                    .content(loginRequestJson));
+
+            // then
+            perform.andExpect(status().isOk())
+                    .andExpect(header().string("Authorization", "mocked-jwt-token"));
         }
 
         @Test
         void 에러403반환_멤버_로그인_실패() throws Exception {
             // given
-            LoginRequest loginRequest = new LoginRequest("test@naver.com", "wrongPassword");
-            String loginRequestJson = new ObjectMapper().writeValueAsString(loginRequest);
+            MemberLoginRequest memberLoginRequest = new MemberLoginRequest("test@naver.com", "wrongPassword");
+            String loginRequestJson = new ObjectMapper().writeValueAsString(memberLoginRequest);
 
             when(authenticationManager.authenticate(any()))
                     .thenThrow(new AuthenticationServiceException("Invalid credentials"));
 
-            // when & then
-            mockMvc.perform(post("/members/login")
-                            .contentType("application/json")
-                            .content(loginRequestJson))
-                    .andExpect(status().isUnauthorized());
+            // when
+            ResultActions perform = mockMvc.perform(post("/members/login")
+                    .contentType("application/json")
+                    .content(loginRequestJson));
+
+            // then
+            perform.andExpect(status().isUnauthorized())
+                    .andExpect(jsonPath("$.message").value("인증 과정 중 오류 발생"));
         }
     }
 }

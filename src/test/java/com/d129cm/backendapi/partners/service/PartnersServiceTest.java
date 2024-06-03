@@ -8,11 +8,13 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
-import static org.mockito.ArgumentMatchers.any;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -23,6 +25,9 @@ public class PartnersServiceTest {
     private PartnersService partnersService;
 
     @Mock
+    private PasswordEncoder passwordEncoder;
+
+    @Mock
     private PartnersRepository partnersRepository;
 
     @Nested
@@ -30,16 +35,20 @@ public class PartnersServiceTest {
         @Test
         void 성공_파트너스_저장() {
             // given
-            PartnersSignupRequest request = new PartnersSignupRequest(
-                    "email@naver.com", "asdf1234!", "123-45-67890");
+            PartnersSignupRequest request = new PartnersSignupRequest("test@example.com", "password123", "123456789");
 
-            when(partnersRepository.save(any(Partners.class))).thenReturn(mock(Partners.class));
+            when(partnersRepository.existsByEmail(anyString())).thenReturn(false);
+            when(passwordEncoder.encode(anyString())).thenReturn("encodedPassword");
 
             // when
             partnersService.savePartners(request);
 
             // then
-            verify(partnersRepository).save(any(Partners.class));
+            ArgumentCaptor<Partners> partnersCaptor = ArgumentCaptor.forClass(Partners.class);
+            verify(partnersRepository).save(partnersCaptor.capture());
+
+            Partners savedPartner = partnersCaptor.getValue();
+            assertEquals("encodedPassword", savedPartner.getPassword().getPassword());
         }
 
         @Test
