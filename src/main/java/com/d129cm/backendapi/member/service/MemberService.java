@@ -1,10 +1,14 @@
 package com.d129cm.backendapi.member.service;
 
+import com.d129cm.backendapi.auth.domain.MemberDetails;
 import com.d129cm.backendapi.common.domain.Password;
+import com.d129cm.backendapi.common.dto.AddressResponse;
 import com.d129cm.backendapi.common.exception.ConflictException;
 import com.d129cm.backendapi.member.domain.Member;
+import com.d129cm.backendapi.member.dto.MemberMyPageResponse;
 import com.d129cm.backendapi.member.dto.MemberSignupRequest;
 import com.d129cm.backendapi.member.repository.MemberRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -31,5 +35,12 @@ public class MemberService {
                 .address(request.address().toAddressEntity())
                 .build();
         memberRepository.save(newMember);
+    }
+
+    public MemberMyPageResponse getMemberMyPage(MemberDetails memberDetails) {
+        Member member = memberRepository.findById(memberDetails.member().getId())
+                .orElseThrow(()-> new EntityNotFoundException("일치하는 멤버가 없습니다."));
+        AddressResponse addressResponse = AddressResponse.of(member.getAddress());
+        return new MemberMyPageResponse(member.getEmail(), member.getName(), addressResponse);
     }
 }
