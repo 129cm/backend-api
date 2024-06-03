@@ -1,7 +1,7 @@
 package com.d129cm.backendapi.auth.filter;
 
 import com.d129cm.backendapi.auth.domain.Role;
-import com.d129cm.backendapi.auth.dto.LoginRequest;
+import com.d129cm.backendapi.auth.dto.MemberLoginRequest;
 import com.d129cm.backendapi.auth.utils.JwtProvider;
 import com.d129cm.backendapi.common.dto.CommonResponse;
 import com.d129cm.backendapi.common.utils.ServletResponseUtil;
@@ -40,7 +40,7 @@ public class MemberJwtLoginFilter extends UsernamePasswordAuthenticationFilter {
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
 
         try {
-            LoginRequest requestDto = new ObjectMapper().readValue(request.getInputStream(), LoginRequest.class);
+            MemberLoginRequest requestDto = new ObjectMapper().readValue(request.getInputStream(), MemberLoginRequest.class);
 
             return getAuthenticationManager().authenticate(
                     new UsernamePasswordAuthenticationToken(
