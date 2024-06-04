@@ -32,8 +32,12 @@ public class GlobalExceptionHandlerTest {
     @Test
     void 실패409반환_ConflictException_발생() throws Exception {
         // given
+        String fieldName = "fieldName";
+        String fieldValue = "fieldValue";
+        String message = String.format("중복된 %s: '%s'은 중복된 값 입니다.", fieldName, fieldValue);
+
         // when
-        when(controller.healthCheck()).thenThrow(new ConflictException("fieldName", "fieldValue"));
+        when(controller.healthCheck()).thenThrow(new ConflictException(message));
 
         // then
         mockMvc.perform(MockMvcRequestBuilders.get("/ping"))
@@ -45,8 +49,11 @@ public class GlobalExceptionHandlerTest {
     @Test
     void 실패401반환_AuthenticationException_발생() throws Exception {
         // given
+        String token = "invalidToken";
+        String message = String.format("토큰 '%s'는 유효하지 않습니다.", token);
+
         // when
-        when(controller.healthCheck()).thenThrow(new AuthenticationException("Token"));
+        when(controller.healthCheck()).thenThrow(new AuthenticationException(message));
 
         // then
         mockMvc.perform(MockMvcRequestBuilders.get("/ping"))

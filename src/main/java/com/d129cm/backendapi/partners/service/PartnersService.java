@@ -24,7 +24,7 @@ public class PartnersService {
 
     public void savePartners(PartnersSignupRequest request) {
         if (partnersRepository.existsByEmail(request.email())) {
-            throw new ConflictException("email", request.email());
+            throw ConflictException.duplicatedValue("email", request.email());
         }
 
         Password encodedPassword = Password.of(request.password(), passwordEncoder);
