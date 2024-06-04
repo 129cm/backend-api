@@ -85,7 +85,7 @@ public class PartnersControllerTest {
         void status409_이메일_중복() throws Exception {
             // given
             PartnersSignupRequest request = new PartnersSignupRequest("email@naver.com", "Asdf123!", "123-12-12312");
-            ConflictException e = new ConflictException("email", request.email());
+            ConflictException e = ConflictException.duplicatedValue("email", request.email());
 
             doThrow(e).when(partnersService).savePartners(request);
 
