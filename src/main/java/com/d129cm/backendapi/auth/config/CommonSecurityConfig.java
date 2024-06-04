@@ -24,7 +24,7 @@ public class CommonSecurityConfig {
         http.authorizeHttpRequests(common -> common
                 .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
                 .requestMatchers(HttpMethod.GET, "/ping").permitAll()
-                .requestMatchers(HttpMethod.POST, "/error").permitAll()
+                .requestMatchers(HttpMethod.GET, "/error").permitAll()
                 .anyRequest().denyAll());
 
         http.formLogin(AbstractHttpConfigurer::disable)

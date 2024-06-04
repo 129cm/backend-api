@@ -1,13 +1,18 @@
 package com.d129cm.backendapi.partners.controller;
 
 import com.d129cm.backendapi.auth.config.PartnersSecurityConfig;
+import com.d129cm.backendapi.auth.domain.PartnersDetails;
+import com.d129cm.backendapi.auth.domain.Role;
 import com.d129cm.backendapi.auth.service.PartnersDetailsService;
 import com.d129cm.backendapi.auth.utils.JwtProvider;
+import com.d129cm.backendapi.brand.dto.BrandResponse;
 import com.d129cm.backendapi.common.dto.CommonResponse;
 import com.d129cm.backendapi.common.exception.ConflictException;
+import com.d129cm.backendapi.partners.dto.PartnersMyPageResponse;
 import com.d129cm.backendapi.partners.dto.PartnersSignupRequest;
 import com.d129cm.backendapi.partners.service.PartnersService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -27,11 +32,10 @@ import java.nio.charset.StandardCharsets;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.params.provider.Arguments.arguments;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(PartnersController.class)
 @Import({PartnersSecurityConfig.class, JwtProvider.class})
@@ -49,6 +53,14 @@ public class PartnersControllerTest {
 
     @MockBean
     private PasswordEncoder passwordEncoder;
+
+    @MockBean
+    private JwtProvider jwtProvider;
+
+    @BeforeEach
+    void setUp() {
+        when(passwordEncoder.encode(any())).thenReturn("encodedPassword");
+    }
 
     @Nested
     class signup {
@@ -126,4 +138,33 @@ public class PartnersControllerTest {
         }
     }
 
+    @Nested
+    class getPartnersMyPage {
+        @Test
+        void 성공_파트너스_마이페이지_조회() throws Exception {
+            // given
+            String mockToken = "token";
+            PartnersMyPageResponse response = new PartnersMyPageResponse("test@email.com", "123-45-67890", mock(BrandResponse.class));
+            when(partnersDetailsService.loadUserByUsername("partners")).thenReturn(mock(PartnersDetails.class));
+            when(partnersService.getPartnersMyPage(any())).thenReturn(response);
+            when(jwtProvider.getJwtFromHeader(any())).thenReturn(mockToken);
+            when(jwtProvider.getRoleFromToken(mockToken)).thenReturn(Role.ROLE_PARTNERS);
+            when(jwtProvider.getSubjectFromToken(mockToken)).thenReturn("partners");
+
+            // when
+            ResultActions result = mockMvc.perform(get("/partners")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .characterEncoding(StandardCharsets.UTF_8)
+                    .header("Authorization", "Bearer token")
+            );
+
+            // then
+            result.andExpect(status().isOk())
+                    .andExpect(jsonPath("$.status").value(200))
+                    .andExpect(jsonPath("$.message").value("성공"))
+                    .andExpect(jsonPath("$.data.email").value(response.email()))
+                    .andExpect(jsonPath("$.data.businessNumber").value(response.businessNumber()));
+
+        }
+    }
 }
