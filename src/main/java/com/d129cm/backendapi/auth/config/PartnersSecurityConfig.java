@@ -53,8 +53,9 @@ public class PartnersSecurityConfig {
     @Order(2)
     public SecurityFilterChain partnersSecurityFilterChain(HttpSecurity http) throws Exception {
         final RequestMatcher ignoredRequests = new OrRequestMatcher(
-                List.of(new AntPathRequestMatcher("/partners/signup"))
-        );
+                List.of(new AntPathRequestMatcher("/partners/signup", HttpMethod.POST.name()),
+                        new AntPathRequestMatcher("/partners/login", HttpMethod.POST.name())
+                ));
 
         http.securityMatcher("/partners/**")
                 .cors(Customizer.withDefaults())
@@ -65,7 +66,7 @@ public class PartnersSecurityConfig {
                 .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll());
 
         http.authorizeHttpRequests(auth -> auth
-                .requestMatchers(HttpMethod.POST, "/partners/signup", "/partners/login").permitAll()
+                .requestMatchers(ignoredRequests).permitAll()
                 .anyRequest().hasRole("PARTNERS"));
 
         http.formLogin(AbstractHttpConfigurer::disable)

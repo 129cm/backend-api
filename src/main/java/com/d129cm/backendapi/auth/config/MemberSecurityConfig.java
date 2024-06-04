@@ -72,8 +72,9 @@ public class MemberSecurityConfig {
     @Order(1)
     public SecurityFilterChain memberSecurityFilterChain(HttpSecurity http) throws Exception {
         final RequestMatcher ignoredRequests = new OrRequestMatcher(
-                List.of(new AntPathRequestMatcher("/members/signup"))
-        );
+                List.of(new AntPathRequestMatcher("/members/signup", HttpMethod.POST.name()),
+                        new AntPathRequestMatcher("/members/login", HttpMethod.POST.name())
+                ));
 
         http.securityMatcher("/members/**")
                 .cors(Customizer.withDefaults())
@@ -84,7 +85,7 @@ public class MemberSecurityConfig {
                 .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll());
 
         http.authorizeHttpRequests(member -> member
-                .requestMatchers(HttpMethod.POST, "/members/signup", "/members/login").permitAll()
+                .requestMatchers(ignoredRequests).permitAll()
                 .anyRequest().hasRole("MEMBER"));
 
         http.formLogin(AbstractHttpConfigurer::disable)
