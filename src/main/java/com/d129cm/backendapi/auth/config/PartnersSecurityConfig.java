@@ -1,5 +1,7 @@
 package com.d129cm.backendapi.auth.config;
 
+import com.d129cm.backendapi.auth.filter.CustomAccessDeniedHandler;
+import com.d129cm.backendapi.auth.filter.CustomAuthenticationEntryPoint;
 import com.d129cm.backendapi.auth.filter.JwtAuthorizationFilter;
 import com.d129cm.backendapi.auth.filter.PartnersJwtLoginFilter;
 import com.d129cm.backendapi.auth.service.PartnersDetailsService;
@@ -74,6 +76,10 @@ public class PartnersSecurityConfig {
 
         http.addFilterBefore(new PartnersJwtLoginFilter(jwtProvider, partnersAuthenticationManager()), UsernamePasswordAuthenticationFilter.class)
                 .addFilterAfter(new JwtAuthorizationFilter(jwtProvider, partnersDetailsService, ignoredRequests), PartnersJwtLoginFilter.class);
+
+        http.exceptionHandling(exception -> exception
+                .accessDeniedHandler(new CustomAccessDeniedHandler())
+                .authenticationEntryPoint(new CustomAuthenticationEntryPoint()));
 
         return http.build();
     }
