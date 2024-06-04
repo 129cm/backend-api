@@ -59,7 +59,7 @@ public class PartnersServiceTest {
         void 예외반환_중복된_파트너스() {
             // given
             PartnersSignupRequest request = new PartnersSignupRequest("email@naver.com", "asdf1234!", "123-45-67890");
-            ConflictException e = new ConflictException("email", request.email());
+            ConflictException e = ConflictException.duplicatedValue("email", request.email());
 
             // when
             when(partnersRepository.existsByEmail(request.email())).thenReturn(true);

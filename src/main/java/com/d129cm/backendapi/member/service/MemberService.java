@@ -25,7 +25,7 @@ public class MemberService {
     public void saveMember(MemberSignupRequest request) {
         Password newPassword = Password.of(request.password(), passwordEncoder);
         if (memberRepository.existsByEmail(request.email())) {
-            throw new ConflictException("email", request.email());
+            throw ConflictException.duplicatedValue("email", request.email());
         }
 
         Member newMember = Member.builder()

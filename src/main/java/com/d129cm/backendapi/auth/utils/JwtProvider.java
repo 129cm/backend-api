@@ -46,14 +46,14 @@ public class JwtProvider {
         if (token.startsWith(BEARER_PREFIX)) {
             return token.substring(BEARER_PREFIX.length());
         }
-        throw new AuthenticationException(token);
+        throw AuthenticationException.unauthenticatedToken(token);
     }
 
     public void validateToken(String token) {
         try {
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
         } catch (JwtException | IllegalArgumentException e) {
-            throw new AuthenticationException(token);
+            throw AuthenticationException.unauthenticatedToken(token);
         }
     }
 
