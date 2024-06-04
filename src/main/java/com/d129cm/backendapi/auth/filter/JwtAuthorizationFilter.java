@@ -2,14 +2,12 @@ package com.d129cm.backendapi.auth.filter;
 
 import com.d129cm.backendapi.auth.domain.Role;
 import com.d129cm.backendapi.auth.utils.JwtProvider;
-import com.d129cm.backendapi.common.dto.CommonResponse;
-import com.d129cm.backendapi.common.utils.ServletResponseUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -37,7 +35,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
         }
 
         try {
-            String tokenValue = jwtProvider.getJwtFromHeader(req);
+            String tokenValue = jwtProvider.removeBearerPrefix(req.getHeader(HttpHeaders.AUTHORIZATION));
             jwtProvider.validateToken(tokenValue);
             String username = jwtProvider.getSubjectFromToken(tokenValue);
             Role role = jwtProvider.getRoleFromToken(tokenValue);
@@ -45,9 +43,9 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
             filterChain.doFilter(req, res);
         } catch (Exception e) {
             SecurityContextHolder.clearContext();
+            res.setHeader(HttpHeaders.AUTHORIZATION, "");
 
-            CommonResponse<?> responseDto = CommonResponse.failure(HttpStatus.UNAUTHORIZED, "토큰이 유효하지 않습니다.");
-            ServletResponseUtil.servletResponse(res, responseDto);
+            filterChain.doFilter(req, res);
         }
     }
 
