@@ -1,5 +1,7 @@
 package com.d129cm.backendapi.auth.config;
 
+import com.d129cm.backendapi.auth.filter.CustomAccessDeniedHandler;
+import com.d129cm.backendapi.auth.filter.CustomAuthenticationEntryPoint;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,12 +25,15 @@ public class CommonSecurityConfig {
 
         http.authorizeHttpRequests(common -> common
                 .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
-                .requestMatchers(HttpMethod.GET, "/ping").permitAll()
-                .requestMatchers(HttpMethod.GET, "/error").permitAll()
+                .requestMatchers(HttpMethod.GET, "/ping", "/error").permitAll()
                 .anyRequest().denyAll());
 
         http.formLogin(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable);
+
+        http.exceptionHandling(exception -> exception
+                .accessDeniedHandler(new CustomAccessDeniedHandler())
+                .authenticationEntryPoint(new CustomAuthenticationEntryPoint()));
 
         return http.build();
     }

@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -38,13 +39,15 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
             String tokenValue = jwtProvider.removeBearerPrefix(req.getHeader(HttpHeaders.AUTHORIZATION));
             jwtProvider.validateToken(tokenValue);
             String username = jwtProvider.getSubjectFromToken(tokenValue);
+            UserDetails userDetails = detailsService.loadUserByUsername(username);
+
             Role role = jwtProvider.getRoleFromToken(tokenValue);
+            if (!userDetails.getAuthorities().contains(role))
+                throw new AccessDeniedException("Invalid Role");
+
             setAuthentication(username, role);
             filterChain.doFilter(req, res);
         } catch (Exception e) {
-            SecurityContextHolder.clearContext();
-            res.setHeader(HttpHeaders.AUTHORIZATION, "");
-
             filterChain.doFilter(req, res);
         }
     }
