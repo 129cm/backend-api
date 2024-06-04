@@ -1,7 +1,11 @@
 package com.d129cm.backendapi.partners.service;
 
+import com.d129cm.backendapi.brand.domain.Brand;
+import com.d129cm.backendapi.brand.dto.BrandResponse;
+import com.d129cm.backendapi.common.domain.Password;
 import com.d129cm.backendapi.common.exception.ConflictException;
 import com.d129cm.backendapi.partners.domain.Partners;
+import com.d129cm.backendapi.partners.dto.PartnersMyPageResponse;
 import com.d129cm.backendapi.partners.dto.PartnersSignupRequest;
 import com.d129cm.backendapi.partners.repository.PartnersRepository;
 import org.assertj.core.api.Assertions;
@@ -66,4 +70,40 @@ public class PartnersServiceTest {
         }
     }
 
+    @Nested
+    class getPartnersMyPage {
+        @Test
+        void 성공_파트너스_마이페이지_조회() {
+            // given
+            Brand brand = mock(Brand.class);
+            Partners partners = Partners.builder()
+                    .email("test@test.com")
+                    .password(mock(Password.class))
+                    .businessNumber("123-45-67890")
+                    .build();
+            partners.setBrand(brand);
+
+            // when
+            PartnersMyPageResponse response = partnersService.getPartnersMyPage(partners);
+
+            // then
+            Assertions.assertThat(response.brand()).isEqualTo(BrandResponse.of(brand));
+        }
+
+        @Test
+        void 성공_파트너스_마이페이지_조회_브랜드없음() {
+            // given
+            Partners partners = Partners.builder()
+                    .email("test@naver.com")
+                    .password(mock(Password.class))
+                    .businessNumber("123-45-67890")
+                    .build();
+
+            // when
+            PartnersMyPageResponse response = partnersService.getPartnersMyPage(partners);
+
+            // then
+            Assertions.assertThat(response.brand()).isNull();
+        }
+    }
 }
