@@ -21,6 +21,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(HealthCheckController.class)
 @Import({GlobalExceptionHandler.class, TestSecurityConfig.class})
+@SuppressWarnings("NonAsciiCharacters")
 public class GlobalExceptionHandlerTest {
 
     @Autowired
@@ -49,8 +50,8 @@ public class GlobalExceptionHandlerTest {
     @Test
     void 실패401반환_AuthenticationException_발생() throws Exception {
         // given
-        String token = "invalidToken";
-        String message = String.format("토큰 '%s'는 유효하지 않습니다.", token);
+        String token = "Token";
+        String message = String.format("토큰 : '%s'는 유효하지 않습니다.", token);
 
         // when
         when(controller.healthCheck()).thenThrow(new AuthenticationException(message));
