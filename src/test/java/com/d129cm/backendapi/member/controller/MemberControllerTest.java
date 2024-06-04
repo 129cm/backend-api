@@ -29,8 +29,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(MemberController.class)
 @Import(TestSecurityConfig.class)
@@ -63,7 +62,8 @@ public class MemberControllerTest {
 
             // then
             result.andExpect(status().isOk())
-                    .andExpect(content().json("{\"status\":200, \"message\":\"성공\"}"));
+                    .andExpect(jsonPath("$.status").value(200))
+                    .andExpect(jsonPath("$.message").value("성공"));
         }
     }
 
@@ -93,7 +93,13 @@ public class MemberControllerTest {
 
             // then
             result.andExpect(status().isOk())
-                    .andExpect(content().json("{\"status\":200, \"message\":\"성공\", \"data\":{\"email\":\"test@naver.com\", \"name\":\"이름\", \"address\":{\"zipCode\":\"1234\", \"roadNameAddress\":\"Seoul\", \"addressDetails\":\"Seoul\"}}}"));
+                    .andExpect(jsonPath("$.status").value(200))
+                    .andExpect(jsonPath("$.message").value("성공"))
+                    .andExpect(jsonPath("$.data.email").value("test@naver.com"))
+                    .andExpect(jsonPath("$.data.name").value("이름"))
+                    .andExpect(jsonPath("$.data.address.zipCode").value("1234"))
+                    .andExpect(jsonPath("$.data.address.roadNameAddress").value("Seoul"))
+                    .andExpect(jsonPath("$.data.address.addressDetails").value("Seoul"));
         }
     }
 }
