@@ -2,6 +2,7 @@ package com.d129cm.backendapi.member.controller;
 
 import com.d129cm.backendapi.auth.domain.MemberDetails;
 import com.d129cm.backendapi.common.dto.CommonResponse;
+import com.d129cm.backendapi.member.dto.BrandsForMemberResponse;
 import com.d129cm.backendapi.member.dto.MemberMyPageResponse;
 import com.d129cm.backendapi.member.dto.MemberSignupRequest;
 import com.d129cm.backendapi.member.service.MemberService;
@@ -9,10 +10,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -31,5 +29,11 @@ public class MemberController {
     public ResponseEntity<CommonResponse<MemberMyPageResponse>> getMemberMyPage(@AuthenticationPrincipal MemberDetails memberDetails) {
         MemberMyPageResponse memberMyPageResponse = memberService.getMemberMyPage(memberDetails);
         return ResponseEntity.ok(CommonResponse.success(memberMyPageResponse));
+    }
+
+    @GetMapping("/members/brands/{brandId}")
+    public ResponseEntity<CommonResponse<BrandsForMemberResponse>> getBrandsForMember(@PathVariable Long brandId) {
+        BrandsForMemberResponse brandsForMemberResponse = memberService.getBrandsForMember(brandId);
+        return ResponseEntity.ok(CommonResponse.success(brandsForMemberResponse));
     }
 }
