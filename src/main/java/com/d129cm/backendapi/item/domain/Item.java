@@ -1,5 +1,6 @@
 package com.d129cm.backendapi.item.domain;
 
+import com.d129cm.backendapi.brand.domain.Brand;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -29,6 +30,9 @@ public class Item {
 
     @OneToMany(mappedBy = "item", fetch = FetchType.EAGER)
     private List<ItemOption> itemOptions;
+    @ManyToOne
+    @JoinColumn(name = "brand_id")
+    private Brand brand;
 
     @Builder
     public Item(String name, Integer price, Integer quantity, String image, String description) {

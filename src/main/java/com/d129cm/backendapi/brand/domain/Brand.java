@@ -1,5 +1,6 @@
 package com.d129cm.backendapi.brand.domain;
 
+import com.d129cm.backendapi.item.domain.Item;
 import com.d129cm.backendapi.partners.domain.Partners;
 import jakarta.persistence.*;
 import lombok.Builder;
@@ -7,6 +8,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.util.Assert;
+
+import java.util.List;
 
 @Entity
 @Getter
@@ -25,6 +28,8 @@ public class Brand {
     @Setter
     @OneToOne(mappedBy = "brand", fetch = FetchType.LAZY)
     private Partners partners;
+    @OneToMany(mappedBy = "brand", fetch = FetchType.EAGER)
+    private List<Item> items;
 
     @Builder
     private Brand(String name, String image, String description) {
