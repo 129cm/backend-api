@@ -1,12 +1,8 @@
 package com.d129cm.backendapi.item.domain;
 
-import com.d129cm.backendapi.common.domain.Address;
-import com.d129cm.backendapi.common.domain.Password;
-import com.d129cm.backendapi.member.domain.Member;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
