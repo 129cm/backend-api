@@ -44,7 +44,7 @@ public class ItemTest {
         }
 
         @Test
-        void 예외발생_멤버_필드가_Null일_때() {
+        void 예외발생_아이템_필드가_Null일_때() {
             // given
             String name = "상품 이름";
             Integer quantity = 100;
