@@ -2,11 +2,13 @@ package com.d129cm.backendapi.member.service;
 
 import com.d129cm.backendapi.auth.domain.MemberDetails;
 import com.d129cm.backendapi.brand.domain.Brand;
+import com.d129cm.backendapi.brand.manager.BrandManager;
 import com.d129cm.backendapi.brand.repository.BrandRepository;
 import com.d129cm.backendapi.common.domain.Password;
 import com.d129cm.backendapi.common.dto.AddressResponse;
 import com.d129cm.backendapi.common.exception.ConflictException;
 import com.d129cm.backendapi.item.domain.Item;
+import com.d129cm.backendapi.item.manager.ItemManager;
 import com.d129cm.backendapi.item.repository.ItemRepository;
 import com.d129cm.backendapi.member.domain.Member;
 import com.d129cm.backendapi.member.dto.BrandsForMemberResponse;
@@ -28,8 +30,8 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
-    private final BrandRepository brandRepository;
-    private final ItemRepository itemRepository;
+    private final BrandManager brandManager;
+    private final ItemManager itemManager;
 
     public void saveMember(MemberSignupRequest request) {
         Password newPassword = Password.of(request.password(), passwordEncoder);
@@ -54,9 +56,8 @@ public class MemberService {
     }
 
     public BrandsForMemberResponse getBrandsForMember(Long brandId) {
-        Brand brand = brandRepository.findById(brandId)
-                .orElseThrow(() -> new EntityNotFoundException("일치하는 브랜드가 없습니다."));
-        List<Item> items = itemRepository.findAllByBrandId(brandId);
+        Brand brand =brandManager.getBrand(brandId);
+        List<Item> items = itemManager.getAllItemByBrandId(brandId);
         return BrandsForMemberResponse.of(brand, items);
     }
 }

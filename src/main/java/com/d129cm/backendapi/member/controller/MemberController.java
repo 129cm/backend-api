@@ -31,9 +31,4 @@ public class MemberController {
         return ResponseEntity.ok(CommonResponse.success(memberMyPageResponse));
     }
 
-    @GetMapping("/members/brands/{brandId}")
-    public ResponseEntity<CommonResponse<BrandsForMemberResponse>> getBrandsForMember(@PathVariable Long brandId) {
-        BrandsForMemberResponse brandsForMemberResponse = memberService.getBrandsForMember(brandId);
-        return ResponseEntity.ok(CommonResponse.success(brandsForMemberResponse));
-    }
 }
