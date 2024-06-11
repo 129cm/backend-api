@@ -1,4 +1,4 @@
-package com.d129cm.backendapi.common.entity;
+package com.d129cm.backendapi.common.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;

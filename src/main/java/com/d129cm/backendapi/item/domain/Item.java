@@ -1,7 +1,7 @@
 package com.d129cm.backendapi.item.domain;
 
 import com.d129cm.backendapi.brand.domain.Brand;
-import com.d129cm.backendapi.common.entity.BaseEntity;
+import com.d129cm.backendapi.common.domain.BaseEntity;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
