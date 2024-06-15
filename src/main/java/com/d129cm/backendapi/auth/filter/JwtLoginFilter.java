@@ -1,7 +1,7 @@
 package com.d129cm.backendapi.auth.filter;
 
 import com.d129cm.backendapi.auth.domain.Role;
-import com.d129cm.backendapi.auth.dto.PartnersLoginRequest;
+import com.d129cm.backendapi.auth.dto.MemberLoginRequest;
 import com.d129cm.backendapi.auth.utils.JwtProvider;
 import com.d129cm.backendapi.common.dto.CommonResponse;
 import com.d129cm.backendapi.common.utils.ServletResponseUtil;
@@ -20,27 +20,23 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import java.io.IOException;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 
-public class PartnersJwtLoginFilter extends UsernamePasswordAuthenticationFilter {
-
-    private static final String PARTNERS_LOGIN_URL = "/partners/login";
+public class JwtLoginFilter extends UsernamePasswordAuthenticationFilter {
 
     private final JwtProvider jwtProvider;
 
-    public PartnersJwtLoginFilter(JwtProvider jwtProvider, AuthenticationManager authenticationManager) {
+    public JwtLoginFilter(JwtProvider jwtProvider, AuthenticationManager authenticationManager, String loginUrl) {
         super(authenticationManager);
         this.jwtProvider = jwtProvider;
-        setFilterProcessesUrl(PARTNERS_LOGIN_URL);
+        setFilterProcessesUrl(loginUrl);
         setPostOnly(true);
     }
 
-
     @Override
-    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) {
+    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
+
         try {
-            PartnersLoginRequest requestDto = new ObjectMapper().readValue(request.getInputStream(), PartnersLoginRequest.class);
+            MemberLoginRequest requestDto = new ObjectMapper().readValue(request.getInputStream(), MemberLoginRequest.class);
 
             return getAuthenticationManager().authenticate(
                     new UsernamePasswordAuthenticationToken(
@@ -61,8 +57,7 @@ public class PartnersJwtLoginFilter extends UsernamePasswordAuthenticationFilter
 
         String token = jwtProvider.createToken(username, role);
 
-        String encodedToken = URLEncoder.encode(token, StandardCharsets.UTF_8).replace("+", "%20");
-        response.addHeader(HttpHeaders.AUTHORIZATION, encodedToken);
+        response.addHeader(HttpHeaders.AUTHORIZATION, token);
 
         CommonResponse<?> successResponse = CommonResponse.success();
         ServletResponseUtil.servletResponse(response, successResponse);
