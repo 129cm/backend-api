@@ -58,23 +58,20 @@ public class JwtProvider {
     }
 
     public String getSubjectFromToken(String token) {
-
-        Claims claims = Jwts.parserBuilder()
-                .setSigningKey(key)
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
-
+        Claims claims = getClaims(token);
         return claims.getSubject();
     }
 
     public Role getRoleFromToken(String token) {
-        Claims claims = Jwts.parserBuilder()
+        Claims claims = getClaims(token);
+        return Role.valueOf(claims.get("role", String.class));
+    }
+
+    public Claims getClaims(String token) {
+        return Jwts.parserBuilder()
                 .setSigningKey(key)
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
-
-        return Role.valueOf(claims.get("role", String.class));
     }
 }

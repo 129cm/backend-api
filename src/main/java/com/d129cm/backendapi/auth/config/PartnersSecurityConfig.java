@@ -3,7 +3,7 @@ package com.d129cm.backendapi.auth.config;
 import com.d129cm.backendapi.auth.filter.CustomAccessDeniedHandler;
 import com.d129cm.backendapi.auth.filter.CustomAuthenticationEntryPoint;
 import com.d129cm.backendapi.auth.filter.JwtAuthorizationFilter;
-import com.d129cm.backendapi.auth.filter.PartnersJwtLoginFilter;
+import com.d129cm.backendapi.auth.filter.JwtLoginFilter;
 import com.d129cm.backendapi.auth.service.PartnersDetailsService;
 import com.d129cm.backendapi.auth.utils.JwtProvider;
 import lombok.RequiredArgsConstructor;
@@ -74,8 +74,8 @@ public class PartnersSecurityConfig {
         http.formLogin(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable);
 
-        http.addFilterBefore(new PartnersJwtLoginFilter(jwtProvider, partnersAuthenticationManager()), UsernamePasswordAuthenticationFilter.class)
-                .addFilterAfter(new JwtAuthorizationFilter(jwtProvider, partnersDetailsService, ignoredRequests), PartnersJwtLoginFilter.class);
+        http.addFilterBefore(new JwtLoginFilter(jwtProvider, partnersAuthenticationManager(), "/partners/login"), UsernamePasswordAuthenticationFilter.class)
+                .addFilterAfter(new JwtAuthorizationFilter(jwtProvider, partnersDetailsService, ignoredRequests), JwtLoginFilter.class);
 
         http.exceptionHandling(exception -> exception
                 .accessDeniedHandler(new CustomAccessDeniedHandler())
