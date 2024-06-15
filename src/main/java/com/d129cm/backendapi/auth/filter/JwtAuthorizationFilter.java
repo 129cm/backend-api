@@ -45,20 +45,19 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
             if (!userDetails.getAuthorities().contains(role))
                 throw new AccessDeniedException("Invalid Role");
 
-            setAuthentication(username, role);
+            setAuthentication(userDetails, role);
             filterChain.doFilter(req, res);
         } catch (Exception e) {
             filterChain.doFilter(req, res);
         }
     }
 
-    private void setAuthentication(String username, Role role) {
-        Authentication authentication = createAuthentication(username, role);
+    private void setAuthentication(UserDetails userDetails, Role role) {
+        Authentication authentication = createAuthentication(userDetails, role);
         SecurityContextHolder.getContext().setAuthentication(authentication);
     }
 
-    private Authentication createAuthentication(String username, Role role) {
-        UserDetails userDetails = detailsService.loadUserByUsername(username);
+    private Authentication createAuthentication(UserDetails userDetails, Role role) {
         return new UsernamePasswordAuthenticationToken(userDetails, null, Collections.singleton(role));
     }
 }
