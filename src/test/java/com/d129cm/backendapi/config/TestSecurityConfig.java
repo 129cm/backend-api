@@ -1,16 +1,23 @@
 package com.d129cm.backendapi.config;
 
+import com.d129cm.backendapi.auth.domain.MemberDetails;
+import com.d129cm.backendapi.auth.domain.PartnersDetails;
+import com.d129cm.backendapi.common.domain.Address;
+import com.d129cm.backendapi.common.domain.Password;
+import com.d129cm.backendapi.member.domain.Member;
+import com.d129cm.backendapi.partners.domain.Partners;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+
+import static org.mockito.Mockito.mock;
 
 @Profile("test")
 @Configuration
@@ -18,16 +25,23 @@ import org.springframework.security.web.SecurityFilterChain;
 public class TestSecurityConfig {
 
     @Bean
-    public UserDetailsService inMemoryDetailsService() {
-        UserDetails partners = User.withUsername("partners")
-                .password("{noop}password") // {noop}은 비밀번호를 인코딩하지 않음을 나타냅니다.
-                .roles("PARTNERS")
+    public UserDetailsService inMemoryTestDetailsService() {
+        Partners testPartners = Partners.builder()
+                .email("testPartners@email.com")
+                .password(mock(Password.class))
+                .businessNumber("123-45-67890")
                 .build();
 
-        UserDetails members = User.withUsername("members")
-                .password("{noop}password")
-                .roles("MEMBERS")
+        Member testMember = Member.builder()
+                .email("testMember@email.com")
+                .password(mock(Password.class))
+                .name("testMember")
+                .address(mock(Address.class))
                 .build();
+
+        UserDetails partners = new PartnersDetails(testPartners);
+        UserDetails members = new MemberDetails(testMember);
+
         return new InMemoryUserDetailsManager(partners, members);
     }
 
