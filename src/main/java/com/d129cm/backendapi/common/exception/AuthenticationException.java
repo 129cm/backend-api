@@ -12,5 +12,4 @@ public class AuthenticationException extends BaseException {
     public static AuthenticationException unauthenticatedToken(String token) {
         return new AuthenticationException(String.format(UNAUTHENTICATED_TOKEN, token));
     }
-
 }

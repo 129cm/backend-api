@@ -15,4 +15,8 @@ public class BrandManager {
         return brandRepository.findById(brandId)
                 .orElseThrow(() -> new EntityNotFoundException("일치하는 브랜드가 없습니다."));
     }
+
+    public boolean existByBrandName(String brandName) {
+        return brandRepository.existsByName(brandName);
+    }
 }

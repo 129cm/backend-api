@@ -32,11 +32,12 @@ public class Brand {
     private List<Item> items;
 
     @Builder
-    private Brand(String name, String image, String description) {
+    private Brand(String name, Partners partners, String image, String description) {
         Assert.notNull(name, "이름은 null일 수 없습니다.");
         Assert.notNull(image, "이미지는 null일 수 없습니다.");
         Assert.notNull(description, "설명은 null일 수 없습니다.");
 
+        this.partners = partners;
         this.name = name;
         this.image = image;
         this.description = description;
