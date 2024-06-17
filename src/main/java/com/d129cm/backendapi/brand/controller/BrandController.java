@@ -18,8 +18,9 @@ public class BrandController {
     private final BrandService brandService;
 
     @PostMapping("/partners/brand")
-    public ResponseEntity<CommonResponse<?>> createBrand(@AuthenticationPrincipal(expression = "partners") Partners partners,
-                                                         @RequestBody BrandCreateRequest request){
+    public ResponseEntity<CommonResponse<Void>> createBrand(
+            @AuthenticationPrincipal(expression = "partners") Partners partners,
+            @RequestBody BrandCreateRequest request){
         brandService.createBrand(partners, request);
 
         return ResponseEntity.ok(CommonResponse.success());
