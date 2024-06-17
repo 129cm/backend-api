@@ -29,10 +29,10 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@WebMvcTest(MemberJwtLoginFilter.class)
+@WebMvcTest(JwtLoginFilter.class)
 @ContextConfiguration(classes = {MemberSecurityConfig.class})
 @SuppressWarnings("NonAsciiCharacters")
-class MemberJwtLoginFilterTest {
+class JwtLoginFilterTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -61,7 +61,6 @@ class MemberJwtLoginFilterTest {
             MemberDetails memberDetails = new MemberDetails(member);
 
             Authentication authResult = new UsernamePasswordAuthenticationToken(memberDetails, null, memberDetails.getAuthorities());
-            when(memberDetailsService.loadUserByUsername("test@naver.com")).thenReturn(memberDetails);
             when(authenticationManager.authenticate(any())).thenReturn(authResult);
             when(jwtProvider.createToken(any(), any())).thenReturn("mocked-jwt-token");
 
