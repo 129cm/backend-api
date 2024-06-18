@@ -3,8 +3,13 @@ package com.d129cm.backendapi.member.domain;
 import com.d129cm.backendapi.common.domain.Address;
 import com.d129cm.backendapi.common.domain.Password;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.springframework.util.Assert;
+
+import java.util.List;
 
 @Entity
 @Getter
@@ -26,6 +31,9 @@ public class  Member {
 
     @OneToOne(orphanRemoval = true, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Address address;
+
+    @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
+    private List<MemberOrder> memberOrders;
 
     @Builder
     public Member (String email, Password password, String name, Address address) {
