@@ -7,6 +7,7 @@ import com.d129cm.backendapi.common.domain.Password;
 import com.d129cm.backendapi.common.dto.AddressResponse;
 import com.d129cm.backendapi.common.exception.ConflictException;
 import com.d129cm.backendapi.item.domain.Item;
+import com.d129cm.backendapi.item.domain.SortCondition;
 import com.d129cm.backendapi.item.manager.ItemManager;
 import com.d129cm.backendapi.member.domain.Member;
 import com.d129cm.backendapi.member.dto.BrandsForMemberResponse;
@@ -55,7 +56,7 @@ public class MemberService {
         return new MemberMyPageResponse(member.getEmail(), member.getName(), addressResponse);
     }
 
-    public BrandsForMemberResponse getBrandsForMember(String sort, String sortOrder, Long brandId, int page, int size) {
+    public BrandsForMemberResponse getBrandsForMember(SortCondition sort, Sort.Direction sortOrder, Long brandId, int page, int size) {
         Brand brand =brandManager.getBrand(brandId);
         Sort sortObj = itemManager.getSortObject(sort, sortOrder);
         Pageable pageable = PageRequest.of(page, size, sortObj);

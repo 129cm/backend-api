@@ -1,6 +1,7 @@
 package com.d129cm.backendapi.item.manager;
 
 import com.d129cm.backendapi.item.domain.Item;
+import com.d129cm.backendapi.item.domain.SortCondition;
 import com.d129cm.backendapi.item.repository.ItemRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -17,14 +18,8 @@ public class ItemManager {
         return itemRepository.findAllByBrandId(brandId, pageable);
     }
 
-    public Sort getSortObject(String sort, String sortOrder) {
-        Sort.Direction direction = "DESC".equalsIgnoreCase(sortOrder) ? Sort.Direction.DESC : Sort.Direction.ASC;
-        String sortProperty = "";
-        switch (sort.toUpperCase()) {
-            case "PRICE" -> sortProperty = "price";
-            case "SALES" -> sortProperty = "sales";
-            default -> sortProperty = "createdAt";
-        }
-        return Sort.by(direction, sortProperty);
+    public Sort getSortObject(SortCondition sort, Sort.Direction sortOrder) {
+        String sortProperty = sort.getCondition();
+        return Sort.by(sortOrder, sortProperty);
     }
 }
