@@ -13,21 +13,30 @@ public class ItemOption {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(unique = true, nullable = false)
+    @Column(unique = true, nullable = false, length = 200)
     private String name;
     @Column(nullable = false)
     private Integer quantity;
+    @Column(nullable = false)
+    private Integer optionPrice = 0;
 
     @ManyToOne
-    @JoinColumn(name = "item_id")
+    @JoinColumn(name = "item_id", nullable = false)
     private Item item;
 
     @Builder
-    private ItemOption(String name, Integer quantity) {
+    private ItemOption(String name, Integer quantity, Integer optionPrice) {
         Assert.notNull(name, "이름은 null일 수 없습니다.");
         Assert.notNull(quantity, "수량은 null일 수 없습니다.");
+        Assert.notNull(optionPrice, "옵션 가격은 null일 수 없습니다.");
 
         this.name = name;
         this.quantity = quantity;
+        this.optionPrice = optionPrice;
+    }
+
+    public void updateItem(Item item) {
+        this.item = item;
+        item.addItemOption(this);
     }
 }
