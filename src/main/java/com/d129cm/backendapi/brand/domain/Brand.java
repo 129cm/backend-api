@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.util.Assert;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -28,8 +29,8 @@ public class Brand {
     @Setter
     @OneToOne(mappedBy = "brand", fetch = FetchType.LAZY)
     private Partners partners;
-    @OneToMany(mappedBy = "brand", fetch = FetchType.EAGER)
-    private List<Item> items;
+    @OneToMany(mappedBy = "brand", fetch = FetchType.LAZY, cascade = CascadeType.MERGE, orphanRemoval = true)
+    private List<Item> items = new ArrayList<>();
 
     @Builder
     private Brand(String name, Partners partners, String image, String description) {
