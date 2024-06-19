@@ -32,9 +32,6 @@ public class  Member {
     @OneToOne(orphanRemoval = true, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Address address;
 
-    @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
-    private List<MemberOrder> memberOrders;
-
     @Builder
     public Member (String email, Password password, String name, Address address) {
         Assert.notNull(email, "이메일은 null일 수 없습니다.");
