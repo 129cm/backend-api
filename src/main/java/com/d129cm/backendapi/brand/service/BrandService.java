@@ -19,14 +19,13 @@ public class BrandService {
     private final PartnersManager partnersManager;
     private final BrandManager brandManager;
 
-    public void createBrand(Partners partners, BrandCreateRequest request){
-        if(partners.getBrand() != null){
+    public void createBrand(Partners partners, BrandCreateRequest request) {
+        if (partners.getBrand() != null) {
             throw BadRequestException.relationAlreadyExist("Brand");
         }
 
         Brand brand = request.toBrandEntity();
-
-        if(brandManager.existByBrandName(brand.getName())){
+        if (brandManager.existByBrandName(brand.getName())) {
             throw ConflictException.duplicatedValue("Brand", brand.getName());
         }
 
