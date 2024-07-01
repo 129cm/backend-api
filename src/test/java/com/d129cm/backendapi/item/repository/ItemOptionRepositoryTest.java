@@ -1,5 +1,6 @@
 package com.d129cm.backendapi.item.repository;
 
+import com.d129cm.backendapi.common.config.JpaAuditingConfig;
 import com.d129cm.backendapi.config.InitializeTestContainers;
 import com.d129cm.backendapi.item.domain.ItemOption;
 import org.junit.jupiter.api.Assertions;
@@ -9,12 +10,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.testcontainers.context.ImportTestcontainers;
+import org.springframework.context.annotation.Import;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @ImportTestcontainers(InitializeTestContainers.class)
+@Import(JpaAuditingConfig.class)
 public class ItemOptionRepositoryTest {
 
     @Autowired
@@ -28,6 +31,7 @@ public class ItemOptionRepositoryTest {
             ItemOption itemOption = ItemOption.builder()
                     .name("상품 옵션 이름")
                     .quantity(100)
+                    .optionPrice(1000)
                     .build();
 
             // when

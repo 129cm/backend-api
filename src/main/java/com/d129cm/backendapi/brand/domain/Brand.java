@@ -43,4 +43,9 @@ public class Brand {
         this.image = image;
         this.description = description;
     }
+
+    public void addItem(Item item) {
+        Assert.notNull(item, "item은 null일 수 없습니다.");
+        items.add(item);
+    }
 }
