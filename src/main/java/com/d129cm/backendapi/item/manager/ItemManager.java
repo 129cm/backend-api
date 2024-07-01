@@ -18,7 +18,7 @@ public class ItemManager {
         return itemRepository.findAllByBrandId(brandId, pageable);
     }
 
-    public Sort getSortObject(SortCondition sort, Sort.Direction sortOrder) {
+    public Sort createItemSort(SortCondition sort, Sort.Direction sortOrder) {
         String sortProperty = sort.getCondition();
         return Sort.by(sortOrder, sortProperty);
     }

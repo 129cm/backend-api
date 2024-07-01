@@ -85,7 +85,7 @@ public class ItemManagerTest {
             Sort.Direction sortOrder = Sort.Direction.DESC;
 
             // when
-            Sort result = itemManager.getSortObject(sortCondition, sortOrder);
+            Sort result = itemManager.createItemSort(sortCondition, sortOrder);
 
             // then
             assertThat(result).isEqualTo(Sort.by(sortOrder, sortCondition.getCondition()));
@@ -98,7 +98,7 @@ public class ItemManagerTest {
             Sort.Direction sortOrder = Sort.Direction.ASC;
 
             // when
-            Sort result = itemManager.getSortObject(sortCondition, sortOrder);
+            Sort result = itemManager.createItemSort(sortCondition, sortOrder);
 
             // then
             assertThat(result).isEqualTo(Sort.by(sortOrder, sortCondition.getCondition()));
