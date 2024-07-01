@@ -58,10 +58,9 @@ public class MemberService {
 
     public BrandsForMemberResponse getBrandsForMember(SortCondition sort, Sort.Direction sortOrder, Long brandId, int page, int size) {
         Brand brand =brandManager.getBrand(brandId);
-        Sort sortObj = itemManager.getSortObject(sort, sortOrder);
+        Sort sortObj = itemManager.createItemSort(sort, sortOrder);
         Pageable pageable = PageRequest.of(page, size, sortObj);
         Page<Item> items = itemManager.getAllItemByBrandId(brandId, pageable);
         return BrandsForMemberResponse.of(brand, items.getContent());
-
     }
 }
