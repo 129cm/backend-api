@@ -1,10 +1,14 @@
 package com.d129cm.backendapi.brand.domain;
 
+import com.d129cm.backendapi.item.domain.Item;
 import com.d129cm.backendapi.partners.domain.Partners;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.Mockito.mock;
 
 @SuppressWarnings("NonAsciiCharacters")
 public class BrandTest {
@@ -17,7 +21,7 @@ public class BrandTest {
             String name = "브랜드";
             String image = "이미지";
             String description = "설명";
-            Partners partners = Mockito.mock(Partners.class);
+            Partners partners = mock(Partners.class);
 
             // when
             Brand brand = Brand.builder()
@@ -59,6 +63,44 @@ public class BrandTest {
                     .image(image)
                     .description(description)
                     .build());
+        }
+    }
+
+    @Nested
+    class update {
+
+        @Test
+        void 성공_아이템_추가() {
+            // given
+            Brand brand = Brand.builder()
+                    .name("브랜드")
+                    .image("이미지")
+                    .description("설명")
+                    .build();
+            Item mockItem = mock(Item.class);
+
+            // when
+            brand.addItem(mockItem);
+
+            // then
+            assertThat(brand.getItems()).contains(mockItem);
+            assertThat(brand.getItems()).hasSize(1);
+        }
+
+        @Test
+        void 실패_아이템_null_추가() {
+            // given
+            Brand brand = Brand.builder()
+                    .name("브랜드")
+                    .image("이미지")
+                    .description("설명")
+                    .build();
+
+            // when & then
+            assertThatThrownBy(() -> brand.addItem(null))
+                    .isInstanceOf(IllegalArgumentException.class)
+                    .hasMessage("item은 null일 수 없습니다.");
+
         }
     }
 }

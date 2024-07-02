@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class ItemManager {
+
     private final ItemRepository itemRepository;
 
     public Page<Item> getAllItemByBrandId(Long brandId, Pageable pageable) {

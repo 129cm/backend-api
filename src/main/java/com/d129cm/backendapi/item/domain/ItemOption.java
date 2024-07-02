@@ -19,9 +19,8 @@ public class ItemOption {
     private Integer quantity;
     @Column(nullable = false)
     private Integer optionPrice = 0;
-
     @ManyToOne
-    @JoinColumn(name = "item_id", nullable = false)
+    @JoinColumn(nullable = false)
     private Item item;
 
     @Builder
