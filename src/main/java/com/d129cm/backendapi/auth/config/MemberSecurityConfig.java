@@ -75,7 +75,8 @@ public class MemberSecurityConfig {
     public SecurityFilterChain memberSecurityFilterChain(HttpSecurity http) throws Exception {
         final RequestMatcher ignoredRequests = new OrRequestMatcher(
                 List.of(new AntPathRequestMatcher("/members/signup", HttpMethod.POST.name()),
-                        new AntPathRequestMatcher("/members/login", HttpMethod.POST.name())
+                        new AntPathRequestMatcher("/members/login", HttpMethod.POST.name()),
+                        new AntPathRequestMatcher("/members/brands/{brandId}", HttpMethod.GET.name())
                 ));
 
         http.securityMatcher("/members/**")
