@@ -23,7 +23,7 @@ public class Partners {
     private Password password;
     @Column(unique = true, nullable = false)
     private String businessNumber;
-    @OneToOne(orphanRemoval = true, fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
+    @OneToOne(orphanRemoval = true, fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     private Brand brand;
 
     @Builder

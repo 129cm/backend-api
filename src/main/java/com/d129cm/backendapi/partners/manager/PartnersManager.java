@@ -1,6 +1,5 @@
 package com.d129cm.backendapi.partners.manager;
 
-
 import com.d129cm.backendapi.brand.domain.Brand;
 import com.d129cm.backendapi.partners.domain.Partners;
 import com.d129cm.backendapi.partners.repository.PartnersRepository;
