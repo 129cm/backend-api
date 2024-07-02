@@ -15,10 +15,6 @@ public class ItemManager {
 
     private final ItemRepository itemRepository;
 
-    public void saveItem(Item item){
-        itemRepository.save(item);
-    private final ItemRepository itemRepository;
-
     public Page<Item> getAllItemByBrandId(Long brandId, Pageable pageable) {
         return itemRepository.findAllByBrandId(brandId, pageable);
     }

@@ -1,10 +1,9 @@
-package com.d129cm.backendapi.Item.service;
+package com.d129cm.backendapi.item.service;
 
 import com.d129cm.backendapi.brand.domain.Brand;
 import com.d129cm.backendapi.brand.manager.BrandManager;
 import com.d129cm.backendapi.item.domain.Item;
 import com.d129cm.backendapi.item.dto.ItemCreateRequest;
-import com.d129cm.backendapi.item.service.ItemService;
 import com.d129cm.backendapi.partners.domain.Partners;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -26,10 +25,10 @@ public class ItemServiceTest {
     private BrandManager brandManager;
 
     @Nested
-    class createItem{
+    class createItem {
 
         @Test
-        void 성공_아이템_생성(){
+        void 성공_아이템_생성() {
             // given
             Partners mockPartners = mock(Partners.class);
             ItemCreateRequest mockRequest = mock(ItemCreateRequest.class);
