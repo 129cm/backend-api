@@ -3,6 +3,10 @@ package com.d129cm.backendapi.item.domain;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -17,6 +21,8 @@ public class ItemTest {
             Integer price = 1000;
             String image = "상품 이미지";
             String description = "상품 설명";
+            List<ItemOption> itemOptions = new ArrayList<>();
+            itemOptions.add(Mockito.mock(ItemOption.class));
 
             // when
             Item item = Item.builder()
@@ -24,6 +30,7 @@ public class ItemTest {
                     .price(price)
                     .image(image)
                     .description(description)
+                    .itemOptions(itemOptions)
                     .build();
 
             // then
@@ -32,7 +39,8 @@ public class ItemTest {
                     () -> assertThat(item.getName()).isEqualTo(name),
                     () -> assertThat(item.getPrice()).isEqualTo(price),
                     () -> assertThat(item.getImage()).isEqualTo(image),
-                    () -> assertThat(item.getDescription()).isEqualTo(description)
+                    () -> assertThat(item.getDescription()).isEqualTo(description),
+                    () -> assertThat(item.getItemOptions()).isEqualTo(itemOptions)
             );
         }
 
