@@ -1,10 +1,16 @@
 package com.d129cm.backendapi.member.service;
 
 import com.d129cm.backendapi.auth.domain.MemberDetails;
+import com.d129cm.backendapi.brand.domain.Brand;
+import com.d129cm.backendapi.brand.manager.BrandManager;
 import com.d129cm.backendapi.common.domain.Address;
 import com.d129cm.backendapi.common.dto.AddressRequest;
 import com.d129cm.backendapi.common.exception.ConflictException;
+import com.d129cm.backendapi.item.domain.Item;
+import com.d129cm.backendapi.item.domain.SortCondition;
+import com.d129cm.backendapi.item.manager.ItemManager;
 import com.d129cm.backendapi.member.domain.Member;
+import com.d129cm.backendapi.member.dto.BrandsForMemberResponse;
 import com.d129cm.backendapi.member.dto.MemberMyPageResponse;
 import com.d129cm.backendapi.member.dto.MemberSignupRequest;
 import com.d129cm.backendapi.member.repository.MemberRepository;
@@ -16,11 +22,16 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.util.List;
 import java.util.Optional;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -38,6 +49,12 @@ public class MemberServiceTest {
 
     @Mock
     private PasswordEncoder passwordEncoder;
+
+    @Mock
+    private BrandManager brandManager;
+
+    @Mock
+    private ItemManager itemManager;
 
     @Nested
     class saveMember {
@@ -75,7 +92,7 @@ public class MemberServiceTest {
     @Nested
     class getMemberMyPage {
         @Test
-        void 성공반환_멤버_마이페이지_조회() {
+        void MemberMyPageResponse반환_멤버_마이페이지_조회() {
             // given
             Long memberId = 1L;
             MemberDetails memberDetails = Mockito.mock(MemberDetails.class);
@@ -123,4 +140,40 @@ public class MemberServiceTest {
         }
     }
 
+    @Nested
+    class getBrands {
+        @Test
+        void BrandsForMemberResponse반환_멤버_브랜드_조회() {
+            // given
+            Long brandId = 1L;
+            SortCondition sort = SortCondition.NEW;
+            Sort.Direction sortOrder = Sort.Direction.DESC;
+
+            Brand mockBrand = mock(Brand.class);
+            when(mockBrand.getName()).thenReturn("브랜드 이름");
+            when(mockBrand.getImage()).thenReturn("브랜드 이미지");
+            when(mockBrand.getDescription()).thenReturn("브랜드 설명");
+
+            List<Item> mockItems = List.of(mock(Item.class), mock(Item.class));
+            Page<Item> mockItemPage = new PageImpl<>(mockItems);
+
+            when(brandManager.getBrand(brandId)).thenReturn(mockBrand);
+            when(itemManager.createItemSort(sort, sortOrder)).thenReturn(mock(Sort.class));
+            when(itemManager.getAllItemByBrandId(eq(brandId), any(Pageable.class))).thenReturn(mockItemPage);
+
+            // when
+            BrandsForMemberResponse response = memberService.getBrandsForMember(sort, sortOrder, brandId, 0, 50);
+
+            // then
+            verify(brandManager).getBrand(brandId);
+            verify(itemManager).createItemSort(sort, sortOrder);
+            verify(itemManager).getAllItemByBrandId(eq(brandId), any(Pageable.class));
+
+            assertThat(response).isNotNull();
+            assertThat(response.brandName()).isEqualTo("브랜드 이름");
+            assertThat(response.brandImage()).isEqualTo("브랜드 이미지");
+            assertThat(response.brandDescription()).isEqualTo("브랜드 설명");
+            assertThat(response.itemResponse()).hasSize(2);
+        }
+    }
 }

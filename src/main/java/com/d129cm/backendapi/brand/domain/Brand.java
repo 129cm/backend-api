@@ -1,5 +1,6 @@
 package com.d129cm.backendapi.brand.domain;
 
+import com.d129cm.backendapi.item.domain.Item;
 import com.d129cm.backendapi.partners.domain.Partners;
 import jakarta.persistence.*;
 import lombok.Builder;
@@ -7,6 +8,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.util.Assert;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -25,6 +29,8 @@ public class Brand {
     @Setter
     @OneToOne(mappedBy = "brand", fetch = FetchType.LAZY)
     private Partners partners;
+    @OneToMany(mappedBy = "brand", fetch = FetchType.LAZY, cascade = CascadeType.MERGE, orphanRemoval = true)
+    private List<Item> items = new ArrayList<>();
 
     @Builder
     private Brand(String name, Partners partners, String image, String description) {
@@ -36,5 +42,10 @@ public class Brand {
         this.name = name;
         this.image = image;
         this.description = description;
+    }
+
+    public void addItem(Item item) {
+        Assert.notNull(item, "item은 null일 수 없습니다.");
+        items.add(item);
     }
 }
