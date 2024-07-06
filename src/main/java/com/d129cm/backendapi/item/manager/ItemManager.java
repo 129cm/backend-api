@@ -23,4 +23,8 @@ public class ItemManager {
         String sortProperty = sort.getCondition();
         return Sort.by(sortOrder, sortProperty);
     }
+
+    public void createItem(Item item) {
+        itemRepository.save(item);
+    }
 }

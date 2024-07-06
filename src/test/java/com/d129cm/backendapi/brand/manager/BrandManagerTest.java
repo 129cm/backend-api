@@ -89,9 +89,43 @@ public class BrandManagerTest {
             brandManager.updateBrandItem(brand, item);
 
             // then
-            verify(item).updateBrand(brand);
+            verify(brand).addItem(item);
             verify(brandRepository).save(brand);
 
         }
+    }
+
+    @Nested
+    class getBrandWithItems {
+
+        @Test
+        void 성공_브랜드_반환() {
+            // given
+            Partners partners = mock(Partners.class);
+            Brand brand = mock(Brand.class);
+            when(brandRepository.findByPartners(partners)).thenReturn(Optional.of(brand));
+
+            // when
+            Brand result = brandManager.getBrandWithItems(partners);
+
+            // then
+            verify(brandRepository, times(1)).findByPartners(partners);
+            assertThat(result).isEqualTo(brand);
+        }
+
+        @Test
+        void 실패_파트너스의_브랜드가_없다() {
+            // given
+            Partners partners = mock(Partners.class);
+            when(brandRepository.findByPartners(partners)).thenReturn(Optional.empty());
+
+            // when & then
+            EntityNotFoundException exception = assertThrows(EntityNotFoundException.class,
+                    () -> brandManager.getBrandWithItems(partners));
+
+            verify(brandRepository, times(1)).findByPartners(partners);
+            assertThat(exception.getMessage()).isEqualTo("일치하는 브랜드가 없습니다.");
+        }
+
     }
 }

@@ -37,6 +37,5 @@ public class ItemOption {
     public void updateItem(Item item) {
         Assert.notNull(item, "item은 null일 수 없습니다.");
         this.item = item;
-        item.addItemOption(this);
     }
 }

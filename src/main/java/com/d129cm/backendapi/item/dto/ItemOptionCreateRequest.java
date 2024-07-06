@@ -7,11 +7,11 @@ public record ItemOptionCreateRequest(
         Integer optionQuantity,
         Integer optionPrice
 ) {
-    public ItemOption toItemOptionEntity(){
+    public ItemOption toItemOptionEntity() {
         return ItemOption.builder()
                 .name(optionName)
-                .optionPrice(optionPrice)
                 .quantity(optionQuantity)
+                .optionPrice(optionPrice)
                 .build();
     }
 }
