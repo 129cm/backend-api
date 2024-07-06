@@ -29,7 +29,7 @@ public class Brand {
     @Setter
     @OneToOne(mappedBy = "brand", fetch = FetchType.LAZY)
     private Partners partners;
-    @OneToMany(mappedBy = "brand", fetch = FetchType.LAZY, cascade = CascadeType.MERGE, orphanRemoval = true)
+    @OneToMany(mappedBy = "brand", fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST}, orphanRemoval = true)
     private List<Item> items = new ArrayList<>();
 
     @Builder
@@ -47,5 +47,6 @@ public class Brand {
     public void addItem(Item item) {
         Assert.notNull(item, "item은 null일 수 없습니다.");
         items.add(item);
+        item.updateBrand(this);
     }
 }
