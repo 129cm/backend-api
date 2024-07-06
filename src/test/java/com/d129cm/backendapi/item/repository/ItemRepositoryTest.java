@@ -18,11 +18,7 @@ import org.springframework.boot.testcontainers.context.ImportTestcontainers;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.jdbc.Sql;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
@@ -50,18 +46,20 @@ public class ItemRepositoryTest {
         @Test
         @Sql("/test-item.sql")
         void 성공_아이템_저장() {
-            //given
-            List<ItemOption> itemOptions = new ArrayList<>();
-            ItemOption mockOption = mock(ItemOption.class);
-            itemOptions.add(mockOption);
+            // given
+            ItemOption mockOption = ItemOption.builder()
+                    .name("아이템옵션")
+                    .quantity(100)
+                    .optionPrice(1000)
+                    .build();
 
             Item item = Item.builder()
                     .name("아이템")
                     .image("이미지")
                     .price(10000)
                     .description("설명")
-                    .itemOptions(itemOptions)
                     .build();
+            item.addItemOption(mockOption);
             item.updateBrand(brand);
 
             // when
