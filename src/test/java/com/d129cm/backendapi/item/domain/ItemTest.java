@@ -5,12 +5,10 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 
+@SuppressWarnings("NonAsciiCharacters")
 public class ItemTest {
 
     @Nested
@@ -22,8 +20,6 @@ public class ItemTest {
             Integer price = 1000;
             String image = "상품 이미지";
             String description = "상품 설명";
-            List<ItemOption> itemOptions = new ArrayList<>();
-            itemOptions.add(mock(ItemOption.class));
 
             // when
             Item item = Item.builder()
@@ -31,7 +27,6 @@ public class ItemTest {
                     .price(price)
                     .image(image)
                     .description(description)
-                    .itemOptions(itemOptions)
                     .build();
 
             // then
@@ -40,8 +35,7 @@ public class ItemTest {
                     () -> assertThat(item.getName()).isEqualTo(name),
                     () -> assertThat(item.getPrice()).isEqualTo(price),
                     () -> assertThat(item.getImage()).isEqualTo(image),
-                    () -> assertThat(item.getDescription()).isEqualTo(description),
-                    () -> assertThat(item.getItemOptions()).isEqualTo(itemOptions)
+                    () -> assertThat(item.getDescription()).isEqualTo(description)
             );
         }
 
@@ -52,16 +46,13 @@ public class ItemTest {
             Integer price = 1000;
             String image = "상품 이미지";
             String description = "상품 설명";
-            ItemOption itemOption = mock(ItemOption.class);
-            List<ItemOption> itemOptions = List.of(itemOption);
 
             // when & then
             Assertions.assertAll(
-                    () -> assertThrowsNullPointerException(null, price, image, description, itemOptions),
-                    () -> assertThrowsNullPointerException(name, null, image, description, itemOptions),
-                    () -> assertThrowsNullPointerException(name, price, null, description, itemOptions),
-                    () -> assertThrowsNullPointerException(name, price, image, null, itemOptions),
-                    () -> assertThrowsNullPointerException(name, price, image, description, null)
+                    () -> assertThrowsNullPointerException(null, price, image, description),
+                    () -> assertThrowsNullPointerException(name, null, image, description),
+                    () -> assertThrowsNullPointerException(name, price, null, description),
+                    () -> assertThrowsNullPointerException(name, price, image, null)
             );
         }
 
@@ -82,13 +73,12 @@ public class ItemTest {
                     .build());
         }
 
-        private void assertThrowsNullPointerException(String name, Integer price, String image, String description, List<ItemOption> options) {
+        private void assertThrowsNullPointerException(String name, Integer price, String image, String description) {
             Assertions.assertThrows(IllegalArgumentException.class, () -> Item.builder()
                     .name(name)
                     .price(price)
                     .image(image)
                     .description(description)
-                    .itemOptions(options)
                     .build());
         }
     }
@@ -103,7 +93,6 @@ public class ItemTest {
                     .name("아이템이름")
                     .image("이미지")
                     .description("아이템설명")
-                    .itemOptions(List.of(mock(ItemOption.class)))
                     .price(10000).build();
             Brand brand = mock(Brand.class);
 
@@ -117,21 +106,18 @@ public class ItemTest {
         @Test
         void 성공_아이템_옵션_추가() {
             // given
-            List<ItemOption> options = new ArrayList<>();
             ItemOption option = mock(ItemOption.class);
-            options.add(option);
             Item item = Item.builder()
                     .name("아이템이름")
                     .image("이미지")
                     .description("아이템설명")
-                    .itemOptions(options)
                     .price(10000).build();
 
             // when
             item.addItemOption(option);
 
             // then
-            assertThat(item.getItemOptions()).hasSize(2);
+            assertThat(item.getItemOptions()).hasSize(1);
         }
     }
 }

@@ -12,10 +12,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.*;
 
 import java.util.Arrays;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.data.domain.Sort.Direction.DESC;
 
 @ExtendWith(MockitoExtension.class)
@@ -62,7 +62,7 @@ public class ItemManagerTest {
             Sort sortObj = Sort.by(DESC, SortCondition.NEW.getCondition());
             Pageable pageable = PageRequest.of(page, size, sortObj);
 
-            Page<Item> emptyPage = new PageImpl<>(Arrays.asList());
+            Page<Item> emptyPage = new PageImpl<>(List.of());
             when(itemRepository.findAllByBrandId(brandId, pageable)).thenReturn(emptyPage);
 
             // when
@@ -102,6 +102,22 @@ public class ItemManagerTest {
 
             // then
             assertThat(result).isEqualTo(Sort.by(sortOrder, sortCondition.getCondition()));
+        }
+    }
+
+    @Nested
+    class createItem {
+
+        @Test
+        void 성공_아이템_생성() {
+            // given
+            Item item = new Item("ItemName", 1000, "image.jpg", "description");
+
+            // when
+            itemManager.createItem(item);
+
+            // then
+            verify(itemRepository, times(1)).save(item);
         }
     }
 }
