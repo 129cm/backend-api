@@ -1,8 +1,10 @@
 package com.d129cm.backendapi.item.manager;
 
 import com.d129cm.backendapi.item.domain.Item;
+import com.d129cm.backendapi.item.domain.ItemOption;
 import com.d129cm.backendapi.item.domain.SortCondition;
 import com.d129cm.backendapi.item.repository.ItemRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -11,9 +13,13 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.*;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.springframework.data.domain.Sort.Direction.DESC;
@@ -102,6 +108,44 @@ public class ItemManagerTest {
 
             // then
             assertThat(result).isEqualTo(Sort.by(sortOrder, sortCondition.getCondition()));
+        }
+    }
+
+    @Nested
+    class getItem {
+
+        @Test
+        void Item반환_아이템_조회() {
+            // given
+            Long itemId = 1L;
+            List<ItemOption> itemOptions = new ArrayList<>();
+            ItemOption mockOption = mock(ItemOption.class);
+            itemOptions.add(mockOption);
+            Item item = Item.builder()
+                    .name("아이템")
+                    .image("이미지")
+                    .price(10000)
+                    .description("설명")
+                    .itemOptions(itemOptions)
+                    .build();
+            when(itemRepository.findById(itemId)).thenReturn(Optional.ofNullable(item));
+
+            // when
+            Item result = itemManager.getItem(itemId);
+
+            // then
+            assertThat(result).isEqualTo(item);
+        }
+
+        @Test
+        void 에러반환_아이템_존재하지_않는_경우() {
+            // given
+            Long itemId = 1L;
+            when(itemRepository.findById(itemId)).thenReturn(Optional.empty());
+
+            // when
+            // then
+            assertThrows(EntityNotFoundException.class, () -> itemManager.getItem(itemId));
         }
     }
 }
