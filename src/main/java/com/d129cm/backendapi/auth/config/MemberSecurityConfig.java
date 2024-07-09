@@ -76,7 +76,8 @@ public class MemberSecurityConfig {
         final RequestMatcher ignoredRequests = new OrRequestMatcher(
                 List.of(new AntPathRequestMatcher("/members/signup", HttpMethod.POST.name()),
                         new AntPathRequestMatcher("/members/login", HttpMethod.POST.name()),
-                        new AntPathRequestMatcher("/members/brands/{brandId}", HttpMethod.GET.name())
+                        new AntPathRequestMatcher("/members/brands/{brandId}", HttpMethod.GET.name()),
+                        new AntPathRequestMatcher("/members/items/{itemId}", HttpMethod.GET.name())
                 ));
 
         http.securityMatcher("/members/**")

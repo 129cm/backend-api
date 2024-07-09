@@ -7,10 +7,12 @@ import com.d129cm.backendapi.common.domain.Password;
 import com.d129cm.backendapi.common.dto.AddressResponse;
 import com.d129cm.backendapi.common.exception.ConflictException;
 import com.d129cm.backendapi.item.domain.Item;
+import com.d129cm.backendapi.item.domain.ItemOption;
 import com.d129cm.backendapi.item.domain.SortCondition;
 import com.d129cm.backendapi.item.manager.ItemManager;
 import com.d129cm.backendapi.member.domain.Member;
 import com.d129cm.backendapi.member.dto.BrandsForMemberResponse;
+import com.d129cm.backendapi.member.dto.ItemForMemberResponse;
 import com.d129cm.backendapi.member.dto.MemberMyPageResponse;
 import com.d129cm.backendapi.member.dto.MemberSignupRequest;
 import com.d129cm.backendapi.member.repository.MemberRepository;
@@ -23,6 +25,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @Transactional
@@ -62,5 +66,12 @@ public class MemberService {
         Pageable pageable = PageRequest.of(page, size, sortObj);
         Page<Item> items = itemManager.getAllItemByBrandId(brandId, pageable);
         return BrandsForMemberResponse.of(brand, items.getContent());
+    }
+
+    public ItemForMemberResponse getItemForMember(Long itemId) {
+        Item item = itemManager.getItem(itemId);
+        Brand brand = item.getBrand();
+        List<ItemOption> itemOptions = item.getItemOptions();
+        return ItemForMemberResponse.of(brand, item, itemOptions);
     }
 }

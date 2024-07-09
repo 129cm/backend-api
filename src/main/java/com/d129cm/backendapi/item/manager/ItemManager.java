@@ -3,6 +3,7 @@ package com.d129cm.backendapi.item.manager;
 import com.d129cm.backendapi.item.domain.Item;
 import com.d129cm.backendapi.item.domain.SortCondition;
 import com.d129cm.backendapi.item.repository.ItemRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -26,5 +27,11 @@ public class ItemManager {
 
     public void createItem(Item item) {
         itemRepository.save(item);
+    }
+
+
+    public Item getItem(Long itemId) {
+        return itemRepository.findById(itemId)
+                .orElseThrow(() -> new EntityNotFoundException("일치하는 아이템이 없습니다."));
     }
 }

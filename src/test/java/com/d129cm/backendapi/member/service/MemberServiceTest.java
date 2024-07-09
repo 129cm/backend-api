@@ -7,10 +7,12 @@ import com.d129cm.backendapi.common.domain.Address;
 import com.d129cm.backendapi.common.dto.AddressRequest;
 import com.d129cm.backendapi.common.exception.ConflictException;
 import com.d129cm.backendapi.item.domain.Item;
+import com.d129cm.backendapi.item.domain.ItemOption;
 import com.d129cm.backendapi.item.domain.SortCondition;
 import com.d129cm.backendapi.item.manager.ItemManager;
 import com.d129cm.backendapi.member.domain.Member;
 import com.d129cm.backendapi.member.dto.BrandsForMemberResponse;
+import com.d129cm.backendapi.member.dto.ItemForMemberResponse;
 import com.d129cm.backendapi.member.dto.MemberMyPageResponse;
 import com.d129cm.backendapi.member.dto.MemberSignupRequest;
 import com.d129cm.backendapi.member.repository.MemberRepository;
@@ -174,6 +176,44 @@ public class MemberServiceTest {
             assertThat(response.brandImage()).isEqualTo("브랜드 이미지");
             assertThat(response.brandDescription()).isEqualTo("브랜드 설명");
             assertThat(response.itemResponse()).hasSize(2);
+        }
+    }
+
+    @Nested
+    class getItem {
+        @Test
+        void ItemForMemberRespons반환_멤버_아이템_조회() {
+            // given
+            Long itemId = 1L;
+            Item item = mock(Item.class);
+            Brand brand = mock(Brand.class);
+            ItemOption itemOption1 = mock(ItemOption.class);
+            ItemOption itemOption2 = mock(ItemOption.class);
+            List<ItemOption> itemOptions = List.of(itemOption1, itemOption2);
+
+            when(item.getId()).thenReturn(1L);
+            when(item.getName()).thenReturn("아이템명");
+            when(item.getPrice()).thenReturn(1000);
+            when(item.getImage()).thenReturn("아이템 이미지");
+
+            when(itemManager.getItem(itemId)).thenReturn(item);
+            when(item.getBrand()).thenReturn(brand);
+            when(item.getItemOptions()).thenReturn(itemOptions);
+
+            // when
+            ItemForMemberResponse response = memberService.getItemForMember(itemId);
+
+            // then
+            verify(itemManager).getItem(itemId);
+            verify(item).getBrand();
+            verify(item).getItemOptions();
+
+            assertThat(response).isNotNull();
+            assertThat(response.itemId()).isEqualTo(1L);
+            assertThat(response.itemName()).isEqualTo("아이템명");
+            assertThat(response.itemPrice()).isEqualTo(1000);
+            assertThat(response.itemImage()).isEqualTo("아이템 이미지");
+            assertThat(response.itemOptionResponse()).hasSize(2);
         }
     }
 }
