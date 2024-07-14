@@ -89,7 +89,12 @@ public class MemberService {
         Item item = itemManager.getItem(request.itemId());
         ItemOption itemOption = itemOptionManager.getItemOption(request.itemOptionId());
         Cart cart = member.getCart();
-        ItemCart itemCart = new ItemCart(request.count(), item, itemOption, cart);
+        ItemCart itemCart = ItemCart.builder()
+                .count(request.count())
+                .item(item)
+                .itemOption(itemOption)
+                .cart(cart)
+                .build();
         itemCartManager.createCartItem(itemCart);
     }
 }

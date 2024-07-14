@@ -1,5 +1,6 @@
 package com.d129cm.backendapi.member.repository;
 
+import com.d129cm.backendapi.cart.domain.Cart;
 import com.d129cm.backendapi.common.domain.Address;
 import com.d129cm.backendapi.common.domain.Password;
 import com.d129cm.backendapi.config.InitializeTestContainers;
@@ -37,6 +38,7 @@ public class MemberRepositoryTest {
                     .name("이름")
                     .address(Mockito.mock(Address.class))
                     .build();
+            member.setCart(new Cart());
 
             // when
             Member savedMember = memberRepository.save(member);
@@ -48,7 +50,8 @@ public class MemberRepositoryTest {
                     () -> assertThat(savedMember.getEmail()).isEqualTo(member.getEmail()),
                     () -> assertThat(savedMember.getPassword()).isEqualTo(member.getPassword()),
                     () -> assertThat(savedMember.getName()).isEqualTo(member.getName()),
-                    () -> assertThat(savedMember.getAddress()).isEqualTo(member.getAddress())
+                    () -> assertThat(savedMember.getAddress()).isEqualTo(member.getAddress()),
+                    () -> assertThat(savedMember.getCart()).isEqualTo(member.getCart())
             );
         }
     }
@@ -59,12 +62,14 @@ public class MemberRepositoryTest {
         void 성공_멤버_조회() {
             // given
             Address address = new Address("1234", "Seoul", "Seoul");
+            Cart cart = new Cart();
             Member testMember = Member.builder()
                     .email("test@naver.com")
                     .password(Mockito.mock(Password.class))
                     .name("이름")
                     .address(address)
                     .build();
+            testMember.setCart(cart);
             testMember = memberRepository.save(testMember);
             Long memberId = testMember.getId();
 
@@ -79,7 +84,8 @@ public class MemberRepositoryTest {
                     () -> assertThat(member.get().getName()).isEqualTo("이름"),
                     () -> assertThat(member.get().getAddress().getZipCode()).isEqualTo(address.getZipCode()),
                     () -> assertThat(member.get().getAddress().getAddressDetails()).isEqualTo(address.getAddressDetails()),
-                    () -> assertThat(member.get().getAddress().getRoadNameAddress()).isEqualTo(address.getRoadNameAddress())
+                    () -> assertThat(member.get().getAddress().getRoadNameAddress()).isEqualTo(address.getRoadNameAddress()),
+                    () -> assertThat(member.get().getCart()).isEqualTo(cart)
             );
         }
 
