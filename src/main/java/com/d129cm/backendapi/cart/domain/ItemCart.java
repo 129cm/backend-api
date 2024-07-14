@@ -4,7 +4,7 @@ import com.d129cm.backendapi.item.domain.Item;
 import com.d129cm.backendapi.item.domain.ItemOption;
 import io.jsonwebtoken.lang.Assert;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 @Entity
@@ -16,8 +16,7 @@ public class ItemCart {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column
-    @NotNull
+    @Column(nullable = false)
     private Integer count;
 
     @ManyToOne
@@ -32,6 +31,7 @@ public class ItemCart {
     @JoinColumn(nullable = false)
     private Cart cart;
 
+    @Builder
     public ItemCart(Integer count, Item item, ItemOption itemOption, Cart cart) {
         Assert.notNull(count, "아이템 수량이 null일 수 없습니다.");
         Assert.notNull(cart, "장바구니가 null일 수 없습니다.");

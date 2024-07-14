@@ -2,10 +2,12 @@ package com.d129cm.backendapi.cart.domain;
 
 import com.d129cm.backendapi.member.domain.Member;
 import jakarta.persistence.*;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
+@Getter
 @NoArgsConstructor
 public class Cart {
 
