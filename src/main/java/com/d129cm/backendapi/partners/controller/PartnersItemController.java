@@ -1,4 +1,4 @@
-package com.d129cm.backendapi.brand.controller;
+package com.d129cm.backendapi.partners.controller;
 
 import com.d129cm.backendapi.common.dto.CommonResponse;
 import com.d129cm.backendapi.item.dto.ItemCreateRequest;
@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-public class BrandItemController {
+public class PartnersItemController {
 
     private final ItemService itemService;
 

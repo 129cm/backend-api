@@ -1,4 +1,4 @@
-package com.d129cm.backendapi.brand.controller;
+package com.d129cm.backendapi.partners.controller;
 
 import com.d129cm.backendapi.auth.domain.PartnersDetails;
 import com.d129cm.backendapi.common.domain.Password;
@@ -27,10 +27,10 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(BrandItemController.class)
+@WebMvcTest(PartnersItemController.class)
 @Import(TestSecurityConfig.class)
 @SuppressWarnings("NonAsciiCharacters")
-public class BrandItemControllerTest {
+public class PartnersItemControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
