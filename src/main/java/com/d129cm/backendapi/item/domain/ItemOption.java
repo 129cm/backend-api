@@ -13,7 +13,7 @@ public class ItemOption {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(unique = true, nullable = false, length = 200)
+    @Column(nullable = false)
     private String name;
     @Column(nullable = false)
     private Integer quantity;
