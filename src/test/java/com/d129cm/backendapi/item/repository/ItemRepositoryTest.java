@@ -5,6 +5,7 @@ import com.d129cm.backendapi.common.config.JpaAuditingConfig;
 import com.d129cm.backendapi.config.InitializeTestContainers;
 import com.d129cm.backendapi.item.domain.Item;
 import com.d129cm.backendapi.item.domain.ItemOption;
+import com.d129cm.backendapi.item.domain.SortCondition;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import org.junit.jupiter.api.Assertions;
@@ -16,6 +17,11 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.testcontainers.context.ImportTestcontainers;
 import org.springframework.context.annotation.Import;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.jdbc.Sql;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -24,6 +30,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @ImportTestcontainers(InitializeTestContainers.class)
 @Import(JpaAuditingConfig.class)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 @SuppressWarnings("NonAsciiCharacters")
 public class ItemRepositoryTest {
 
@@ -73,8 +80,31 @@ public class ItemRepositoryTest {
                     () -> assertThat(savedItem.getPrice()).isEqualTo(item.getPrice()),
                     () -> assertThat(savedItem.getDescription()).isEqualTo(item.getDescription()),
                     () -> assertThat(savedItem.getItemOptions()).contains(mockOption)
-
             );
         }
+    }
+
+    @Nested
+    class findBy {
+
+        @Test
+        @Sql("/test-get-item.sql")
+        void 성공_파트너스_아이템_내림차순_조회() {
+            // given
+            Long id = 1L;
+            Sort.Direction sortOrder = Sort.Direction.DESC;
+            String sortProperty = SortCondition.NEW.getCondition();
+            Sort sort = Sort.by(sortOrder, sortProperty);
+            Pageable pageable = PageRequest.of(0, 50, sort);
+
+            // when
+            Page<Item> items = itemRepository.findAllByPartnersId(id, pageable);
+
+            // then
+            assertThat(items).hasSize(2);
+            assertThat(items.getContent()).extracting("name").containsExactlyInAnyOrder("Item 1", "Item 2");
+            assertThat(items.getContent()).extracting("brand.name").containsOnly("Brand A");
+        }
+
     }
 }
