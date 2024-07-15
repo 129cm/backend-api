@@ -34,4 +34,8 @@ public class ItemManager {
         return itemRepository.findById(itemId)
                 .orElseThrow(() -> new EntityNotFoundException("일치하는 아이템이 없습니다."));
     }
+
+    public Page<Item> getAllItemByPartnersId(Long partnersId, Pageable pageable) {
+        return itemRepository.findAllByPartnersId(partnersId, pageable);
+    }
 }
