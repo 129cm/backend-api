@@ -1,7 +1,6 @@
 package com.d129cm.backendapi.item.manager;
 
 import com.d129cm.backendapi.item.domain.Item;
-import com.d129cm.backendapi.item.domain.ItemOption;
 import com.d129cm.backendapi.item.domain.SortCondition;
 import com.d129cm.backendapi.item.repository.ItemRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -13,7 +12,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.*;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -158,6 +156,23 @@ public class ItemManagerTest {
             // when
             // then
             assertThrows(EntityNotFoundException.class, () -> itemManager.getItem(itemId));
+        }
+    }
+
+    @Nested
+    class getItemForPartners {
+
+        @Test
+        void 성공_파트너스_아이템_조회() {
+            // given
+            Long partnersId = 1L;
+            Pageable pageable = mock(Pageable.class);
+
+            // when
+            itemManager.getAllItemByPartnersId(partnersId, pageable);
+
+            // then
+            verify(itemRepository).findAllByPartnersId(any(Long.class), any(Pageable.class));
         }
     }
 }

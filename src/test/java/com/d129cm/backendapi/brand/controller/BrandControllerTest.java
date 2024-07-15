@@ -53,7 +53,7 @@ public class BrandControllerTest {
             doNothing().when(brandService).createBrand(mockPartners, request);
 
             // when
-            ResultActions result = mockMvc.perform(post("/partners/brand")
+            ResultActions result = mockMvc.perform(post("/partners/brands")
                     .contentType(MediaType.APPLICATION_JSON)
                     .characterEncoding(StandardCharsets.UTF_8)
                     .with(SecurityMockMvcRequestPostProcessors.user(spy(new PartnersDetails(mockPartners))))
