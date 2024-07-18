@@ -13,7 +13,7 @@ public class ItemCartManager {
 
     private final ItemCartRepository itemCartRepository;
 
-    public void createCartItem(ItemCart itemCart) {
+    public void createItemCart(ItemCart itemCart) {
         itemCartRepository.save(itemCart);
     }
 }

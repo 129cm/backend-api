@@ -95,6 +95,6 @@ public class MemberService {
                 .itemOption(itemOption)
                 .cart(cart)
                 .build();
-        itemCartManager.createCartItem(itemCart);
+        itemCartManager.createItemCart(itemCart);
     }
 }
