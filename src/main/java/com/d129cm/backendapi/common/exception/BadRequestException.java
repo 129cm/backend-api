@@ -7,7 +7,7 @@ public class BadRequestException extends BaseException {
     private static final String NEGATIVE_QUANTITY = "수량은 0 이하일 수 없습니다. 최소 1 이상의 값을 입력해 주세요.";
 
 
-    private BadRequestException(String message) {
+    public BadRequestException(String message) {
         super(message, HttpStatus.BAD_REQUEST);
     }
 
