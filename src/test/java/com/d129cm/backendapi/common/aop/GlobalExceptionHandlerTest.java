@@ -1,10 +1,7 @@
 package com.d129cm.backendapi.common.aop;
 
 import com.d129cm.backendapi.common.controller.HealthCheckController;
-import com.d129cm.backendapi.common.exception.AuthenticationException;
-import com.d129cm.backendapi.common.exception.BaseException;
-import com.d129cm.backendapi.common.exception.ConflictException;
-import com.d129cm.backendapi.common.exception.GlobalExceptionHandler;
+import com.d129cm.backendapi.common.exception.*;
 import com.d129cm.backendapi.config.TestSecurityConfig;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,6 +58,22 @@ public class GlobalExceptionHandlerTest {
                 .andExpect(status().isUnauthorized())
                 .andExpect(jsonPath("$.status").value(HttpStatus.UNAUTHORIZED.value()))
                 .andExpect(jsonPath("$.message").value("토큰 : 'Token'는 유효하지 않습니다."));
+    }
+
+    @Test
+    void 실패400반환_BadRequestException_발생() throws Exception {
+        // given
+        int limitNumber = 100;
+        String message = String.format("적용할 수 있는 수량 %s(을)를 초과하였습니다", limitNumber);
+
+        // when
+        when(controller.healthCheck()).thenThrow(new BadRequestException(message));
+
+        // then
+        mockMvc.perform(MockMvcRequestBuilders.get("/ping"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.status").value(HttpStatus.BAD_REQUEST.value()))
+                .andExpect(jsonPath("$.message").value(message));
     }
 
     @Test

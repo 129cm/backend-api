@@ -106,5 +106,23 @@ public class ItemRepositoryTest {
             assertThat(items.getContent()).extracting("brand.name").containsOnly("Brand A");
         }
 
+        @Test
+        @Sql("/test-get-item.sql")
+        void 성공_브랜드의_모든아이템_내림차순_조회() {
+            // given
+            Long brandId = 1L;
+            Sort.Direction sortOrder = Sort.Direction.DESC;
+            String sortProperty = SortCondition.NEW.getCondition();
+            Sort sort = Sort.by(sortOrder, sortProperty);
+            Pageable pageable = PageRequest.of(0, 50, sort);
+
+            // when
+            Page<Item> items = itemRepository.findAllByBrandId(brandId, pageable);
+
+            // then
+            assertThat(items).hasSize(2);
+            assertThat(items.getContent()).extracting("name").containsExactlyInAnyOrder("Item 1", "Item 2");
+            assertThat(items.getContent()).extracting("brand.name").containsOnly("Brand A");
+        }
     }
 }

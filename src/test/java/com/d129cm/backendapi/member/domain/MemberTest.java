@@ -1,15 +1,19 @@
 package com.d129cm.backendapi.member.domain;
 
+import com.d129cm.backendapi.cart.domain.Cart;
 import com.d129cm.backendapi.common.domain.Address;
 import com.d129cm.backendapi.common.domain.Password;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.verify;
 
-
+@ExtendWith(MockitoExtension.class)
 public class MemberTest {
 
     @Nested
@@ -64,6 +68,30 @@ public class MemberTest {
                     .name(name)
                     .address(address)
                     .build());
+        }
+    }
+
+    @Nested
+    class SetCart {
+
+        @Test
+        void 연관관계생성_멤버_장바구니() {
+            // given
+            Member member = Member.builder()
+                    .email("test@naver.com")
+                    .password(Mockito.mock(Password.class))
+                    .name("이름")
+                    .address(Mockito.mock(Address.class))
+                    .build();
+
+            Cart cart = Mockito.mock(Cart.class);
+
+            // when
+            member.setCart(cart);
+
+            // then
+            assertThat(member.getCart()).isEqualTo(cart);
+            verify(cart).setMember(member);
         }
     }
 }
