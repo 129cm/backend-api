@@ -86,19 +86,27 @@ public class MemberService {
     public void addItemToCart(Member member, CartItemRequest request) {
         if (request.count() <= 0) {
             throw BadRequestException.negativeQuantityLimit();
-        } else if (request.count() > 100) {
-            throw BadRequestException.exceedQuantityLimit(100);
+        } else if (request.count() > MAX_QUANTITY_FOR_CART) {
+            throw BadRequestException.exceedQuantityLimit(MAX_QUANTITY_FOR_CART);
         }
+
         Item item = itemManager.getItem(request.itemId());
         ItemOption itemOption = itemOptionManager.getItemOption(request.itemOptionId());
         Cart cart = member.getCart();
-        ItemCart itemCart = ItemCart.builder()
-                .count(request.count())
-                .item(item)
-                .itemOption(itemOption)
-                .cart(cart)
-                .build();
-        itemCartManager.createItemCart(itemCart);
+
+        ItemCart itemCart = itemCartManager.findItemCart(request, cart.getId());
+
+        if (itemCart != null) {
+            itemCartManager.increaseCount(itemCart, request.count());
+        } else {
+            ItemCart newItemCart = ItemCart.builder()
+                    .count(request.count())
+                    .item(item)
+                    .itemOption(itemOption)
+                    .cart(cart)
+                    .build();
+            itemCartManager.createItemCart(newItemCart);
+        }
     }
 
         public List<CartForMemberResponse> getCart(Member member) {
