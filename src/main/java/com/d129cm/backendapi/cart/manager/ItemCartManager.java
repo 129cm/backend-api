@@ -6,6 +6,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Component
 @RequiredArgsConstructor
 @Transactional
@@ -15,5 +17,9 @@ public class ItemCartManager {
 
     public void createItemCart(ItemCart itemCart) {
         itemCartRepository.save(itemCart);
+    }
+
+    public List<ItemCart> getItemCart(Long cartId) {
+        return itemCartRepository.findAllByCartId(cartId);
     }
 }

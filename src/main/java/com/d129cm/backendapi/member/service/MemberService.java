@@ -28,6 +28,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -41,6 +42,8 @@ public class MemberService {
     private final ItemManager itemManager;
     private final ItemOptionManager itemOptionManager;
     private final ItemCartManager itemCartManager;
+
+    private static final int MAX_QUANTITY_FOR_CART = 100;
 
     public void saveMember(MemberSignupRequest request) {
         Password newPassword = Password.of(request.password(), passwordEncoder);
@@ -97,4 +100,15 @@ public class MemberService {
                 .build();
         itemCartManager.createItemCart(itemCart);
     }
+
+        public List<CartForMemberResponse> getCart(Member member) {
+            Cart cart = member.getCart();
+            List<ItemCart> itemCarts = itemCartManager.getItemCart(cart.getId());
+            List<CartForMemberResponse> responses = new ArrayList<>();
+            for(ItemCart itemCart : itemCarts) {
+                responses.add(CartForMemberResponse.of(itemCart));
+            }
+            return responses;
+        }
+
 }
