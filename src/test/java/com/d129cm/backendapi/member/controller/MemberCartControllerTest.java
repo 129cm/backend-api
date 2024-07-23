@@ -6,7 +6,7 @@ import com.d129cm.backendapi.common.domain.Password;
 import com.d129cm.backendapi.config.TestSecurityConfig;
 import com.d129cm.backendapi.member.domain.Member;
 import com.d129cm.backendapi.member.dto.CartItemRequest;
-import com.d129cm.backendapi.member.service.MemberService;
+import com.d129cm.backendapi.member.service.MemberCartService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -35,7 +35,7 @@ public class MemberCartControllerTest {
     MockMvc mockMvc;
 
     @MockBean
-    MemberService memberService;
+    MemberCartService memberCartService;
 
     @Nested
     class addItemToCart {
@@ -57,7 +57,7 @@ public class MemberCartControllerTest {
                     .build());
             when(password.getPassword()).thenReturn("asdf123!");
 
-            doNothing().when(memberService).addItemToCart(mockMember, request);
+            doNothing().when(memberCartService).addItemToCart(mockMember, request);
 
             // when
             ResultActions result = mockMvc.perform(post("/members/carts")
