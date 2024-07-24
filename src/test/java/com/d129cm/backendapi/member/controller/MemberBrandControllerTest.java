@@ -4,7 +4,7 @@ import com.d129cm.backendapi.config.TestSecurityConfig;
 import com.d129cm.backendapi.item.domain.SortCondition;
 import com.d129cm.backendapi.member.dto.BrandsForMemberResponse;
 import com.d129cm.backendapi.member.dto.ItemResponse;
-import com.d129cm.backendapi.member.service.MemberService;
+import com.d129cm.backendapi.member.service.MemberBrandService;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +36,7 @@ public class MemberBrandControllerTest {
     MockMvc mockMvc;
 
     @MockBean
-    MemberService memberService;
+    MemberBrandService memberBrandService;
 
     @Nested
     class getBrand {
@@ -58,7 +58,7 @@ public class MemberBrandControllerTest {
                     List.of(new ItemResponse(1L, "ItemName", 100, "ItemImage"))
             );
 
-            when(memberService.getBrandsForMember(sort, sortOrder, brandId, page, size)).thenReturn(mockResponse);
+            when(memberBrandService.getBrandsForMember(sort, sortOrder, brandId, page, size)).thenReturn(mockResponse);
 
             // when
             ResultActions result = mockMvc.perform(get("/members/brands/{brandId}", brandId)

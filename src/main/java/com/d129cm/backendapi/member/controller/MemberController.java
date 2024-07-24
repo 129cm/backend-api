@@ -2,7 +2,6 @@ package com.d129cm.backendapi.member.controller;
 
 import com.d129cm.backendapi.auth.domain.MemberDetails;
 import com.d129cm.backendapi.common.dto.CommonResponse;
-import com.d129cm.backendapi.member.dto.BrandsForMemberResponse;
 import com.d129cm.backendapi.member.dto.MemberMyPageResponse;
 import com.d129cm.backendapi.member.dto.MemberSignupRequest;
 import com.d129cm.backendapi.member.service.MemberService;
@@ -10,7 +9,10 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor

@@ -5,7 +5,7 @@ import com.d129cm.backendapi.config.TestSecurityConfig;
 import com.d129cm.backendapi.item.domain.Item;
 import com.d129cm.backendapi.item.domain.ItemOption;
 import com.d129cm.backendapi.member.dto.ItemForMemberResponse;
-import com.d129cm.backendapi.member.service.MemberService;
+import com.d129cm.backendapi.member.service.MemberItemService;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +37,7 @@ public class MemberItemControllerTest {
     MockMvc mockMvc;
 
     @MockBean
-    MemberService memberService;
+    MemberItemService memberItemService;
 
     @Nested
     class getItem {
@@ -57,7 +57,7 @@ public class MemberItemControllerTest {
                     (brand, item, Arrays.asList(itemOption1, itemOption2));
 
 
-            when(memberService.getItemForMember(itemId)).thenReturn(mockResponse);
+            when(memberItemService.getItemForMember(itemId)).thenReturn(mockResponse);
 
             // when
             ResultActions result = mockMvc.perform(get("/members/items/{itemId}", itemId)

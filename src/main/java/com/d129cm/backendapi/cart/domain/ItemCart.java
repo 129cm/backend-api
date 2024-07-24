@@ -7,7 +7,7 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-@Entity
+@Entity (name = "item_cart")
 @Getter
 @NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
 public class ItemCart {
@@ -19,15 +19,15 @@ public class ItemCart {
     @Column(nullable = false)
     private Integer count;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false)
     private Item item;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false)
     private ItemOption itemOption;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false)
     private Cart cart;
 
@@ -42,4 +42,8 @@ public class ItemCart {
         this.cart = cart;
     }
 
+    public void increaseCount(Integer count) {
+        Assert.notNull(count, "수량은 null일 수 없습니다.");
+        this.count = count;
+    }
 }

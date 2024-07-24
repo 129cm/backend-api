@@ -12,6 +12,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -42,6 +45,24 @@ public class ItemCartManagerTest {
 
             // then
             verify(itemCartRepository, times(1)).save(itemCart);
+        }
+    }
+
+    @Nested
+    class getItemCart {
+
+        @Test
+        void 성공_ItemCart_조회() {
+            // given
+            Long cartId = 1L;
+            List<ItemCart> itemCarts = new ArrayList<>();
+            when(itemCartRepository.findAllByCartId(cartId)).thenReturn(itemCarts);
+
+            // when
+            itemCartManager.getItemCart(cartId);
+
+            // then
+            verify(itemCartRepository, times(1)).findAllByCartId(cartId);
         }
     }
 }
