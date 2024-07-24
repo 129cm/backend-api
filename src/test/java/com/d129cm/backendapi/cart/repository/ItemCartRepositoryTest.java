@@ -1,6 +1,5 @@
 package com.d129cm.backendapi.cart.repository;
 
-import com.d129cm.backendapi.brand.domain.Brand;
 import com.d129cm.backendapi.cart.domain.Cart;
 import com.d129cm.backendapi.cart.domain.ItemCart;
 import com.d129cm.backendapi.common.config.JpaAuditingConfig;
@@ -20,6 +19,8 @@ import org.springframework.boot.testcontainers.context.ImportTestcontainers;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.jdbc.Sql;
 
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
@@ -37,14 +38,19 @@ public class ItemCartRepositoryTest {
 
     private Cart cart;
     private Item item;
+    private Item item2;
     private ItemOption itemOption;
+    private ItemOption itemOption2;
 
     @BeforeEach
     void setup() {
         cart = entityManager.find(Cart.class, 1L);
         item = entityManager.find(Item.class, 1L);
+        item2 = entityManager.find(Item.class, 2L);
         itemOption = entityManager.find(ItemOption.class, 1L);
+        itemOption2 = entityManager.find(ItemOption.class, 2L);
     }
+
 
     @Nested
     class Create {
@@ -52,8 +58,6 @@ public class ItemCartRepositoryTest {
         @Test
         @Sql("/test-item-cart.sql")
         void 성공_ItemCart_저장() {
-            // given
-
             ItemCart itemCart = ItemCart.builder()
                     .count(1)
                     .item(item)
@@ -75,4 +79,37 @@ public class ItemCartRepositoryTest {
             );
         }
     }
+
+    @Nested
+    class findAllByCartId {
+
+        @Test
+        @Sql("/test-item-cart.sql")
+        void 성공_cartId로_모든ItemCart조회() {
+            ItemCart itemCart1 = ItemCart.builder()
+                    .count(1)
+                    .item(item)
+                    .itemOption(itemOption)
+                    .cart(cart)
+                    .build();
+
+            ItemCart itemCart2 = ItemCart.builder()
+                    .count(2)
+                    .item(item)
+                    .itemOption(itemOption2)
+                    .cart(cart)
+                    .build();
+
+            itemCartRepository.save(itemCart1);
+            itemCartRepository.save(itemCart2);
+
+            // when
+            List<ItemCart> itemCarts = itemCartRepository.findAllByCartId(cart.getId());
+
+            // then
+            assertThat(itemCarts).hasSize(2);
+            assertThat(itemCarts).containsExactlyInAnyOrder(itemCart1, itemCart2);
+        }
+    }
 }
+
