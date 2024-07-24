@@ -24,6 +24,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.jdbc.Sql;
 
+import java.util.Optional;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
@@ -123,6 +125,26 @@ public class ItemRepositoryTest {
             assertThat(items).hasSize(2);
             assertThat(items.getContent()).extracting("name").containsExactlyInAnyOrder("Item 1", "Item 2");
             assertThat(items.getContent()).extracting("brand.name").containsOnly("Brand A");
+        }
+    }
+
+    @Nested
+    class findByIdAndPartnersId {
+        @Test
+        @Sql("/test-get-item.sql")
+        void 성공_파트너스_상품_상세조회() {
+            // given
+            Long partnersId = 1L;
+            Long itemId = 1L;
+
+            // when
+            Optional<Item> item = itemRepository.findByIdAndPartnersId(itemId, partnersId);
+
+            // then
+            assertThat(item.isEmpty()).isFalse();
+            assertThat(item.get().getId()).isEqualTo(itemId);
+            assertThat(item.get().getName()).isEqualTo("Item 1");
+            assertThat(item.get().getBrand().getPartners().getId()).isEqualTo(partnersId);
         }
     }
 }

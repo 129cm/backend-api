@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 import static org.springframework.data.domain.Sort.Direction.DESC;
@@ -174,5 +175,40 @@ public class ItemManagerTest {
             // then
             verify(itemRepository).findAllByPartnersId(any(Long.class), any(Pageable.class));
         }
+    }
+
+    @Nested
+    class getItemByIdAndPartnersId {
+
+        @Test
+        void 성공_파트너스_아이템_상세조회() {
+            // given
+            Item item = spy(Item.builder()
+                    .name("Item 1")
+                    .price(10000)
+                    .description("Item desc1")
+                    .image("Item1.png").build());
+
+            // when
+            when(itemRepository.findByIdAndPartnersId(1L, 1L)).thenReturn(Optional.of(item));
+            Item result = itemManager.getItemByIdAndPartnersId(1L, 1L);
+
+            // then
+            assertThat(result).isNotNull();
+            assertThat(result.getName()).isEqualTo("Item 1");
+        }
+
+        @Test
+        void 에러반환_조회_하려는_아이템이_없는_경우() {
+            // when
+            when(itemRepository.findByIdAndPartnersId(anyLong(), anyLong())).thenReturn(Optional.empty());
+
+            // then
+            assertThatThrownBy(() -> itemManager.getItemByIdAndPartnersId(1L, 1L))
+                    .isInstanceOf(EntityNotFoundException.class)
+                    .hasMessage("일치하는 아이템이 없습니다.");
+        }
+
+
     }
 }
