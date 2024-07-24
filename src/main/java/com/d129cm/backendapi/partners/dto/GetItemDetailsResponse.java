@@ -6,21 +6,21 @@ import lombok.Builder;
 import java.util.List;
 
 @Builder
-public record PartnersItemResponseDto(
+public record GetItemDetailsResponse(
         Long itemId,
         String itemName,
         Integer price,
         String itemImage,
         String itemDescription,
-        List<PartnersItemOptionResponse> itemOptions
+        List<GetItemOptionDetailsResponse> itemOptions
 ) {
-    public static PartnersItemResponseDto of(Item item) {
-        List<PartnersItemOptionResponse> options = item.getItemOptions()
+    public static GetItemDetailsResponse of(Item item) {
+        List<GetItemOptionDetailsResponse> options = item.getItemOptions()
                 .stream()
-                .map(PartnersItemOptionResponse::of)
+                .map(GetItemOptionDetailsResponse::of)
                 .toList();
 
-        return PartnersItemResponseDto.builder()
+        return GetItemDetailsResponse.builder()
                 .itemId(item.getId())
                 .itemName(item.getName())
                 .price(item.getPrice())

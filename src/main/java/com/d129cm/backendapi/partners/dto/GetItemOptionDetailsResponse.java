@@ -2,14 +2,14 @@ package com.d129cm.backendapi.partners.dto;
 
 import com.d129cm.backendapi.item.domain.ItemOption;
 
-public record PartnersItemOptionResponse(
+public record GetItemOptionDetailsResponse(
         Long itemOptionId,
         String itemOptionName,
         Integer itemOptionQuantity,
         Integer itemOptionPrice
 ) {
-    public static PartnersItemOptionResponse of(ItemOption itemOption) {
-        return new PartnersItemOptionResponse(
+    public static GetItemOptionDetailsResponse of(ItemOption itemOption) {
+        return new GetItemOptionDetailsResponse(
                 itemOption.getId(),
                 itemOption.getName(),
                 itemOption.getQuantity(),

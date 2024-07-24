@@ -2,7 +2,7 @@ package com.d129cm.backendapi.partners.service;
 
 import com.d129cm.backendapi.item.domain.Item;
 import com.d129cm.backendapi.item.manager.ItemManager;
-import com.d129cm.backendapi.partners.dto.PartnersItemResponseDto;
+import com.d129cm.backendapi.partners.dto.GetItemDetailsResponse;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -40,7 +40,7 @@ public class PartnersItemServiceTest {
             when(itemManager.getItemByIdAndPartnersId(itemId, partnersId)).thenReturn(item);
 
             // when
-            PartnersItemResponseDto response = partnersItemService.getItemDetails(itemId, partnersId);
+            GetItemDetailsResponse response = partnersItemService.getItemDetails(itemId, partnersId);
 
             // then
             assertThat(response).isNotNull();
