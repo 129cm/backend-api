@@ -40,7 +40,7 @@ public class Fixture {
                 .count(1)
                 .item(item)
                 .itemOption(itemOption)
-                .cart(cart  )
+                .cart(cart)
                 .build());
         return itemCart;
     }
