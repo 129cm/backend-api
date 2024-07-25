@@ -111,5 +111,60 @@ public class ItemCartRepositoryTest {
             assertThat(itemCarts).containsExactlyInAnyOrder(itemCart1, itemCart2);
         }
     }
+
+    @Nested
+    class findByItemIdAndItemOptionIdAndCartId {
+
+        @Test
+        @Sql("/test-item-cart.sql")
+        void 성공_itemId_itemOptionId_cartId로_ItemCart조회() {
+            // given
+            ItemCart itemCart = ItemCart.builder()
+                    .count(1)
+                    .item(item)
+                    .itemOption(itemOption)
+                    .cart(cart)
+                    .build();
+
+            itemCartRepository.save(itemCart);
+
+            ItemCart itemCart2 = ItemCart.builder()
+                    .count(2)
+                    .item(item2)
+                    .itemOption(itemOption2)
+                    .cart(cart)
+                    .build();
+
+            itemCartRepository.save(itemCart2);
+
+            // when
+            ItemCart foundItemCart = itemCartRepository.findByItemIdAndItemOptionIdAndCartId(
+                    item.getId(), itemOption.getId(), cart.getId());
+
+            // then
+            assertThat(foundItemCart).isNotNull();
+            assertThat(foundItemCart.getId()).isEqualTo(itemCart.getId());
+            assertThat(foundItemCart.getCount()).isEqualTo(itemCart.getCount());
+            assertThat(foundItemCart.getItem()).isEqualTo(itemCart.getItem());
+            assertThat(foundItemCart.getItemOption()).isEqualTo(itemCart.getItemOption());
+            assertThat(foundItemCart.getCart()).isEqualTo(itemCart.getCart());
+        }
+
+        @Test
+        @Sql("/test-item-cart.sql")
+        void 실패_존재하지않는_조합으로_ItemCart조회() {
+            // given
+            Long nonExistentItemId = 999L;
+            Long nonExistentItemOptionId = 999L;
+            Long nonExistentCartId = 999L;
+
+            // when
+            ItemCart foundItemCart = itemCartRepository.findByItemIdAndItemOptionIdAndCartId(
+                    nonExistentItemId, nonExistentItemOptionId, nonExistentCartId);
+
+            // then
+            assertThat(foundItemCart).isNull();
+        }
+    }
 }
 

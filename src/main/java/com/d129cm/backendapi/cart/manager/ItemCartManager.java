@@ -29,7 +29,7 @@ public class ItemCartManager {
     }
 
     public void increaseCount(ItemCart itemCart, int count) {
-        itemCart.increaseCount(itemCart.getCount() + count);
+        itemCart.increaseCount(count);
         itemCartRepository.save(itemCart);
     }
 }
