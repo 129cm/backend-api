@@ -7,6 +7,7 @@ import com.d129cm.backendapi.item.service.ItemService;
 import com.d129cm.backendapi.partners.domain.Partners;
 import com.d129cm.backendapi.partners.dto.GetItemDetailsResponse;
 import com.d129cm.backendapi.partners.dto.GetItemsForPartnersResponse;
+import com.d129cm.backendapi.partners.dto.PutItemDetailsRequest;
 import com.d129cm.backendapi.partners.service.PartnersItemService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
@@ -49,5 +50,15 @@ public class PartnersItemController {
         GetItemDetailsResponse response = partnersItemService.getItemDetails(itemId, partners.getId());
         CommonResponse<GetItemDetailsResponse> success = CommonResponse.success(response);
         return ResponseEntity.ok(success);
+    }
+
+    @PutMapping("/partners/brands/items/{itemId}")
+    public ResponseEntity<CommonResponse<?>> putItemDetails(
+            @AuthenticationPrincipal(expression = "partners") Partners partners,
+            @PathVariable Long itemId,
+            @RequestBody PutItemDetailsRequest request
+    ) {
+        partnersItemService.putItemDetails(partners.getId(), itemId, request);
+        return ResponseEntity.ok(CommonResponse.success());
     }
 }
