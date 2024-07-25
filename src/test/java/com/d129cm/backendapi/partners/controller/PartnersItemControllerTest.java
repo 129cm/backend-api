@@ -10,9 +10,7 @@ import com.d129cm.backendapi.item.dto.ItemCreateRequest;
 import com.d129cm.backendapi.item.dto.ItemOptionCreateRequest;
 import com.d129cm.backendapi.item.service.ItemService;
 import com.d129cm.backendapi.partners.domain.Partners;
-import com.d129cm.backendapi.partners.dto.GetItemDetailsResponse;
-import com.d129cm.backendapi.partners.dto.GetItemsForPartnersResponse;
-import com.d129cm.backendapi.partners.dto.ItemForPartnersResponse;
+import com.d129cm.backendapi.partners.dto.*;
 import com.d129cm.backendapi.partners.service.PartnersItemService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Nested;
@@ -31,8 +29,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -165,6 +162,43 @@ public class PartnersItemControllerTest {
                     .andReturn();
 
             verify(partnersItemService, times(1)).getItemDetails(anyLong(), anyLong());
+        }
+    }
+
+    @Nested
+    class putItemDetails {
+
+        @Test
+        void 성공200_파트너스_아이템_정보_수정() throws Exception {
+            // given
+            PutItemOptionRequest optionRequest1 = new PutItemOptionRequest(1L, "Small", 10, 0);
+            PutItemOptionRequest optionRequest2 = new PutItemOptionRequest(2L, "Large", 10, 1000);
+            List<PutItemOptionRequest> options = List.of(optionRequest1, optionRequest2);
+            PutItemDetailsRequest request = new PutItemDetailsRequest("옷", 10000, "옷.png", "설명", options);
+
+            Password password = mock(Password.class);
+            Partners mockPartners = spy(Partners.builder()
+                    .email("testPartners@email.com")
+                    .password(password)
+                    .businessNumber("123-45-67890")
+                    .build());
+
+            doReturn(1L).when(mockPartners).getId();
+            when(password.getPassword()).thenReturn("asdf123!");
+
+            // when
+            ResultActions mvcResult = mockMvc.perform(put("/partners/brands/items/1")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(new ObjectMapper().writeValueAsString(request))
+                    .characterEncoding(StandardCharsets.UTF_8)
+                    .with(SecurityMockMvcRequestPostProcessors.user(new PartnersDetails(mockPartners))));
+
+            // then
+            mvcResult.andExpect(status().isOk())
+                    .andExpect(jsonPath("$.status").value(200))
+                    .andExpect(jsonPath("$.message").value("성공"));
+
+            verify(partnersItemService, times(1)).putItemDetails(eq(1L), eq(1L), any(PutItemDetailsRequest.class));
         }
     }
 
