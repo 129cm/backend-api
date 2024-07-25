@@ -1,9 +1,9 @@
 package com.d129cm.backendapi.item.manager;
 
+import com.d129cm.backendapi.common.exception.NotFoundException;
 import com.d129cm.backendapi.item.domain.Item;
 import com.d129cm.backendapi.item.domain.SortCondition;
 import com.d129cm.backendapi.item.repository.ItemRepository;
-import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -32,9 +32,9 @@ public class ItemManagerTest {
     @Mock
     private ItemRepository itemRepository;
 
-    private static Long brandId = 1L;
-    private static int page = 0;
-    private static int size = 50;
+    private static final Long brandId = 1L;
+    private static final int page = 0;
+    private static final int size = 50;
 
     @Nested
     class getBrand {
@@ -156,7 +156,7 @@ public class ItemManagerTest {
 
             // when
             // then
-            assertThrows(EntityNotFoundException.class, () -> itemManager.getItem(itemId));
+            assertThrows(NotFoundException.class, () -> itemManager.getItem(itemId));
         }
     }
 
@@ -205,8 +205,8 @@ public class ItemManagerTest {
 
             // then
             assertThatThrownBy(() -> itemManager.getItemByIdAndPartnersId(1L, 1L))
-                    .isInstanceOf(EntityNotFoundException.class)
-                    .hasMessage("일치하는 아이템이 없습니다.");
+                    .isInstanceOf(NotFoundException.class)
+                    .hasMessage("정보를 찾을 수 없습니다.");
         }
 
 
