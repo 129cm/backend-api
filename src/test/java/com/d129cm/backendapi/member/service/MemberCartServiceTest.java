@@ -13,6 +13,7 @@ import com.d129cm.backendapi.item.manager.ItemOptionManager;
 import com.d129cm.backendapi.member.domain.Member;
 import com.d129cm.backendapi.member.dto.CartForMemberResponse;
 import com.d129cm.backendapi.member.dto.CartItemRequest;
+import com.d129cm.backendapi.member.dto.CartItemUpdateRequest;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -49,9 +50,10 @@ public class MemberCartServiceTest {
 
     private Fixture fixture = new Fixture();
 
+    private static final int MAX_QUANTITY_FOR_CART = 100;
+
     @Nested
     class addItemToCart{
-        private static final int MAX_QUANTITY_FOR_CART = 100;
 
         @Test
         void 성공_아이템을_장바구니에_추가() {
@@ -101,31 +103,6 @@ public class MemberCartServiceTest {
             verify(itemOptionManager).getItemOption(request.itemOptionId());
             verify(itemCartManager).increaseCount(alreadyExistingItemCart, request.count());
         }
-
-        @Test
-        void 예외반환_수량이_음수일_때() {
-            // given
-            Member member = Mockito.mock(Member.class);
-            CartItemRequest request = new CartItemRequest(1L, 2L, -1);
-
-            // when & then
-            BadRequestException e = BadRequestException.negativeQuantityLimit();
-            Assertions.assertThatThrownBy(() -> memberCartService.addItemToCart(member, request))
-                    .isInstanceOf(e.getClass()).hasMessage(e.getMessage());
-        }
-
-
-        @Test
-        void 예외반환_수량이_100을_초과할_때() {
-            // given
-            Member member = Mockito.mock(Member.class);
-            CartItemRequest request = new CartItemRequest(1L, 2L, MAX_QUANTITY_FOR_CART + 1);
-
-            // when & then
-            BadRequestException e = BadRequestException.exceedQuantityLimit(100);
-            Assertions.assertThatThrownBy(() -> memberCartService.addItemToCart(member, request))
-                    .isInstanceOf(e.getClass()).hasMessage(e.getMessage());
-        }
     }
 
     @Nested
@@ -156,6 +133,54 @@ public class MemberCartServiceTest {
             // then
             verify(itemCartManager).getItemCart(cart.getId());
             assertThat(responses).isEqualTo(expectedResponses);
+        }
+    }
+
+    @Nested
+    class updateItemQuantityInCart {
+
+        @Test
+        void CartForMemberResponse리스트반환_카트_조회() {
+            // given
+
+            Member member = fixture.createMember();
+            Cart cart = fixture.createCart(member);
+            CartItemUpdateRequest request = new CartItemUpdateRequest(1L, 2L, 3);
+
+            // when
+            memberCartService.updateItemQuantityInCart(member, request);
+
+            // then
+            verify(itemCartManager).updateItemQuantityInCart(cart, request);
+        }
+    }
+
+    @Nested
+    class countValidation {
+
+        @Test
+        void 예외반환_수량이_음수일_때() {
+            // given
+            Member member = Mockito.mock(Member.class);
+            CartItemRequest request = new CartItemRequest(1L, 2L, -1);
+
+            // when & then
+            BadRequestException e = BadRequestException.negativeQuantityLimit();
+            Assertions.assertThatThrownBy(() -> memberCartService.addItemToCart(member, request))
+                    .isInstanceOf(e.getClass()).hasMessage(e.getMessage());
+        }
+
+
+        @Test
+        void 예외반환_수량이_100을_초과할_때() {
+            // given
+            Member member = Mockito.mock(Member.class);
+            CartItemRequest request = new CartItemRequest(1L, 2L, MAX_QUANTITY_FOR_CART + 1);
+
+            // when & then
+            BadRequestException e = BadRequestException.exceedQuantityLimit(100);
+            Assertions.assertThatThrownBy(() -> memberCartService.addItemToCart(member, request))
+                    .isInstanceOf(e.getClass()).hasMessage(e.getMessage());
         }
     }
 }
