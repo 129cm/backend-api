@@ -38,4 +38,11 @@ public class MemberCartController {
         memberCartService.updateItemQuantityInCart(memberDetails.member(), request);
         return ResponseEntity.ok(CommonResponse.success());
     }
+
+    @DeleteMapping("/members/carts/{itemId}/{itemOptionId}")
+    public ResponseEntity<CommonResponse<?>> deleteItemFromCart(@PathVariable Long itemId, @PathVariable Long itemOptionId,
+                                                                      @AuthenticationPrincipal MemberDetails memberDetails) {
+        memberCartService.deleteItemFromCart(memberDetails.member(), itemId, itemOptionId);
+        return ResponseEntity.ok(CommonResponse.success());
+    }
 }

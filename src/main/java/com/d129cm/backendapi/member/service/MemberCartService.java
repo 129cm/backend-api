@@ -75,4 +75,9 @@ public class MemberCartService {
         Cart cart = member.getCart();
         itemCartManager.updateItemQuantityInCart(cart, request);
     }
+
+    public void deleteItemFromCart(Member member, Long itemId, Long itemOptionId) {
+        Cart cart = member.getCart();
+        itemCartManager.deleteItemFromCart(cart, itemId, itemOptionId);
+    }
 }

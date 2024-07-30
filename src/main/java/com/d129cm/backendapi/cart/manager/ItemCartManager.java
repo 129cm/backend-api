@@ -49,4 +49,12 @@ public class ItemCartManager {
         }
         itemCartOptional.get().updateCount(count);
     }
+
+    public void deleteItemFromCart(Cart cart, Long itemId, Long itemOptionId) {
+        Optional<ItemCart> itemCartOptional = itemCartRepository.findByItemIdAndItemOptionIdAndCartId(itemId, itemOptionId, cart.getId());
+        if (itemCartOptional.isEmpty()) {
+            throw NotFoundException.entityNotFound();
+        }
+        itemCartRepository.delete(itemCartOptional.get());
+    }
 }
