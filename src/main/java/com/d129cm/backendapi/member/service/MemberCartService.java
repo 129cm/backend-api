@@ -67,6 +67,11 @@ public class MemberCartService {
     }
 
     public void updateItemQuantityInCart (Member member, CartItemUpdateRequest request) {
+        if (request.count() <= 0) {
+            throw BadRequestException.negativeQuantityLimit();
+        } else if (request.count() > MAX_QUANTITY_FOR_CART) {
+            throw BadRequestException.exceedQuantityLimit(MAX_QUANTITY_FOR_CART);
+        }
         Cart cart = member.getCart();
         itemCartManager.updateItemQuantityInCart(cart, request);
     }
