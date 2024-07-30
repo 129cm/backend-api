@@ -11,6 +11,7 @@ import com.d129cm.backendapi.item.manager.ItemOptionManager;
 import com.d129cm.backendapi.member.domain.Member;
 import com.d129cm.backendapi.member.dto.CartForMemberResponse;
 import com.d129cm.backendapi.member.dto.CartItemRequest;
+import com.d129cm.backendapi.member.dto.CartItemUpdateRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -63,5 +64,10 @@ public class MemberCartService {
             responses.add(CartForMemberResponse.of(itemCart));
         }
         return responses;
+    }
+
+    public void updateItemQuantityInCart (Member member, CartItemUpdateRequest request) {
+        Cart cart = member.getCart();
+        itemCartManager.updateItemQuantityInCart(cart, request);
     }
 }
