@@ -142,7 +142,6 @@ public class MemberCartServiceTest {
         @Test
         void CartForMemberResponse리스트반환_카트_조회() {
             // given
-
             Member member = fixture.createMember();
             Cart cart = fixture.createCart(member);
             CartItemUpdateRequest request = new CartItemUpdateRequest(1L, 2L, 3);
@@ -152,6 +151,26 @@ public class MemberCartServiceTest {
 
             // then
             verify(itemCartManager).updateItemQuantityInCart(cart, request);
+        }
+    }
+
+
+    @Nested
+    class deleteItemFromCart {
+
+        @Test
+        void 아이템카트_삭제() {
+            // given
+            Member member = fixture.createMember();
+            Cart cart = fixture.createCart(member);
+            Long itemId = 1L;
+            Long itemOptionId = 2L;
+
+            // when
+            memberCartService.deleteItemFromCart(member, itemId, itemOptionId);
+
+            // then
+            verify(itemCartManager).deleteItemFromCart(cart, itemId, itemOptionId);
         }
     }
 

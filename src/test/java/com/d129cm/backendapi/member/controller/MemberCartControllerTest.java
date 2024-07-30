@@ -140,4 +140,36 @@ public class MemberCartControllerTest {
                     .andExpect(jsonPath("$.message").value("성공"));
         }
     }
+
+    @Nested
+    class deleteItemFromCart {
+
+        @Test
+        void 성공200_장바구니_아이템_삭제() throws Exception {
+            // given
+            Password password = mock(Password.class);
+            Member mockMember = Member.builder()
+                    .email("test@email.com")
+                    .password(password)
+                    .name("이름")
+                    .address(mock(Address.class))
+                    .build();
+            when(password.getPassword()).thenReturn("asdf123!");
+
+            Long itemId = 1L;
+            Long itemOptionId = 2L;
+            doNothing().when(memberCartService).deleteItemFromCart(mockMember, itemId, itemOptionId);
+
+            // when
+            ResultActions result = mockMvc.perform(delete("/members/carts/{itemId}/{itemOptionId}", itemId, itemOptionId)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .characterEncoding(StandardCharsets.UTF_8)
+                    .with(SecurityMockMvcRequestPostProcessors.user(spy(new MemberDetails(mockMember)))));
+
+            // then
+            result.andExpect(status().isOk())
+                    .andExpect(jsonPath("$.status").value(200))
+                    .andExpect(jsonPath("$.message").value("성공"));
+        }
+    }
 }

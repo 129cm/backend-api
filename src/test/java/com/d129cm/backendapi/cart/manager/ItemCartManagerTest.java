@@ -80,7 +80,7 @@ public class ItemCartManagerTest {
             // given
             CartItemRequest request = new CartItemRequest(1L, 2L, 10);
             Long cartId = 3L;
-            Optional<ItemCart> mockItemCart = Optional.ofNullable(mock(ItemCart.class));
+            Optional<ItemCart> mockItemCart = Optional.of(mock(ItemCart.class));
 
             when(itemCartRepository.findByItemIdAndItemOptionIdAndCartId(1L, 2L, 3L))
                     .thenReturn(mockItemCart);
@@ -144,6 +144,30 @@ public class ItemCartManagerTest {
             assertThrows(NotFoundException.class, () -> {
                 itemCartManager.updateItemQuantityInCart(cart, request);
             });
+        }
+    }
+
+    @Nested
+    class deleteItemFromCart {
+
+        @Test
+        void 성공_아이템카트_삭제() {
+            // given
+            Long itemId = 1L;
+            Long itemOptionId = 2L;
+            Long cartId = 3L;
+
+            Cart cart = Mockito.mock(Cart.class);
+            ItemCart itemCart = Mockito.mock(ItemCart.class);
+
+            when(cart.getId()).thenReturn(cartId);
+            when(itemCartRepository.findByItemIdAndItemOptionIdAndCartId(itemId, itemOptionId, cartId)).thenReturn(Optional.of(itemCart));
+
+            // when
+            itemCartManager.deleteItemFromCart(cart, itemId, itemOptionId);
+
+            // then
+            verify(itemCartRepository).delete(itemCart);
         }
     }
 }
