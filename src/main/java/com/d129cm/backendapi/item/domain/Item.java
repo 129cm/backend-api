@@ -28,7 +28,7 @@ public class Item extends BaseEntity {
     @Column(nullable = false)
     private String description;
 
-    @OneToMany(mappedBy = "item", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, orphanRemoval = true)
+    @OneToMany(mappedBy = "item", fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
     private List<ItemOption> itemOptions = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -58,5 +58,33 @@ public class Item extends BaseEntity {
     public void updateBrand(Brand brand) {
         Assert.notNull(brand, "brand는 null일 수 없습니다.");
         this.brand = brand;
+    }
+
+    public void updateItem(Item item){
+        Assert.notNull(item, "Item은 null일 수 없습니다.");
+        this.name = item.getName();
+        this.price = item.getPrice();
+        this.image = item.getImage();
+        this.description = item.getDescription();
+        updateItemOptions(item.getItemOptions());
+    }
+
+    private void updateItemOptions(List<ItemOption> newOptions) {
+        this.itemOptions.removeIf(existingOption ->
+                newOptions.stream().noneMatch(newOption -> newOption.getId().equals(existingOption.getId()))
+        );
+
+        for (ItemOption newOption : newOptions) {
+            ItemOption existingOption = this.itemOptions.stream()
+                    .filter(option -> option.getId().equals(newOption.getId()))
+                    .findFirst()
+                    .orElse(null);
+
+            if (existingOption == null) {
+                this.addItemOption(newOption);
+            } else {
+                existingOption.update(newOption);
+            }
+        }
     }
 }
