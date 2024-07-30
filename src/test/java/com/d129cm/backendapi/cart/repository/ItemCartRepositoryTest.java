@@ -20,6 +20,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.context.jdbc.Sql;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -138,11 +139,12 @@ public class ItemCartRepositoryTest {
             itemCartRepository.save(itemCart2);
 
             // when
-            ItemCart foundItemCart = itemCartRepository.findByItemIdAndItemOptionIdAndCartId(
+            Optional<ItemCart> itemCartOptional = itemCartRepository.findByItemIdAndItemOptionIdAndCartId(
                     item.getId(), itemOption.getId(), cart.getId());
 
             // then
-            assertThat(foundItemCart).isNotNull();
+            assertThat(itemCartOptional).isPresent();
+            ItemCart foundItemCart = itemCartOptional.get();
             assertThat(foundItemCart.getId()).isEqualTo(itemCart.getId());
             assertThat(foundItemCart.getCount()).isEqualTo(itemCart.getCount());
             assertThat(foundItemCart.getItem()).isEqualTo(itemCart.getItem());
@@ -159,11 +161,11 @@ public class ItemCartRepositoryTest {
             Long nonExistentCartId = 999L;
 
             // when
-            ItemCart foundItemCart = itemCartRepository.findByItemIdAndItemOptionIdAndCartId(
+            Optional<ItemCart> itemCartOptional = itemCartRepository.findByItemIdAndItemOptionIdAndCartId(
                     nonExistentItemId, nonExistentItemOptionId, nonExistentCartId);
 
             // then
-            assertThat(foundItemCart).isNull();
+            assertThat(itemCartOptional).isEmpty();
         }
     }
 }

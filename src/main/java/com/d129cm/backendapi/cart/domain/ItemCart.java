@@ -46,4 +46,8 @@ public class ItemCart {
         Assert.notNull(count, "수량은 null일 수 없습니다.");
         this.count += count;
     }
+
+    public void updateCount(Integer count) {
+        this.count = count;
+    }
 }

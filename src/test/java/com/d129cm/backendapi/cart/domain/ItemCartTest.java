@@ -92,4 +92,27 @@ public class ItemCartTest {
             assertThat(itemCart.getCount()).isEqualTo(count + additionalCount);
         }
     }
+
+    @Nested
+    class updateCount {
+
+        @Test
+        void count수정_이미_존재하는_제품_수량_수정() {
+            // given
+            int count = 5;
+            ItemCart itemCart = ItemCart.builder()
+                    .count(1)
+                    .item(mock(Item.class))
+                    .itemOption(mock(ItemOption.class))
+                    .cart(mock(Cart.class))
+                    .build();
+            int updateCount = 2;
+
+            // when
+            itemCart.updateCount(updateCount);
+
+            // then
+            assertThat(itemCart.getCount()).isEqualTo(updateCount);
+        }
+    }
 }
