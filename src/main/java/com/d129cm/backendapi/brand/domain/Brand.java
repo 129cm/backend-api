@@ -29,7 +29,7 @@ public class Brand {
     @Setter
     @OneToOne(mappedBy = "brand", fetch = FetchType.LAZY)
     private Partners partners;
-    @OneToMany(mappedBy = "brand", fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST}, orphanRemoval = true)
+    @OneToMany(mappedBy = "brand", fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     private List<Item> items = new ArrayList<>();
 
     @Builder

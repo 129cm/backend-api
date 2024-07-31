@@ -13,7 +13,7 @@ import org.springframework.util.Assert;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class  Member {
+public class Member {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
