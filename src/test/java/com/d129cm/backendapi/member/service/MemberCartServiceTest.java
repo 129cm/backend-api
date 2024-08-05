@@ -5,7 +5,7 @@ import com.d129cm.backendapi.cart.domain.Cart;
 import com.d129cm.backendapi.cart.domain.ItemCart;
 import com.d129cm.backendapi.cart.manager.ItemCartManager;
 import com.d129cm.backendapi.common.exception.BadRequestException;
-import com.d129cm.backendapi.fixture.Fixture;
+import com.d129cm.backendapi.fixture.*;
 import com.d129cm.backendapi.item.domain.Item;
 import com.d129cm.backendapi.item.domain.ItemOption;
 import com.d129cm.backendapi.item.manager.ItemManager;
@@ -14,6 +14,7 @@ import com.d129cm.backendapi.member.domain.Member;
 import com.d129cm.backendapi.member.dto.CartForMemberResponse;
 import com.d129cm.backendapi.member.dto.CartItemRequest;
 import com.d129cm.backendapi.member.dto.CartItemUpdateRequest;
+import com.d129cm.backendapi.partners.domain.Partners;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -48,7 +49,13 @@ public class MemberCartServiceTest {
     @Mock
     private ItemCartManager itemCartManager;
 
-    private Fixture fixture = new Fixture();
+    private MemberFixture memberFixture = new MemberFixture();
+    private ItemFixture itemFixture = new ItemFixture();
+    private BrandFixture brandFixture = new BrandFixture();
+    private ItemOptionFixture itemOptionFixture = new ItemOptionFixture();
+    private CartFixture cartFixture = new CartFixture();
+    private ItemCartFixture itemCartFixture = new ItemCartFixture();
+    private PartnersFixture partnersFixture = new PartnersFixture();
 
     private static final int MAX_QUANTITY_FOR_CART = 100;
 
@@ -112,12 +119,13 @@ public class MemberCartServiceTest {
         void CartForMemberResponse리스트반환_카트_조회() {
             // given
 
-            Member member = fixture.createMember();
-            Cart cart = fixture.createCart(member);
-            Brand brand = fixture.createBrand();
-            Item item = fixture.createItem(brand);
-            ItemOption itemOption = fixture.createItemOption(item);
-            ItemCart itemCart1 = fixture.createItemCart(item, itemOption);
+            Member member = memberFixture.createMember("user@example.com");
+            Cart cart = cartFixture.createCart(member);
+            Partners partners = partnersFixture.createPartners("partners@example.com", "123-12-12345");
+            Brand brand = brandFixture.createBrand(partners);
+            Item item = itemFixture.createItem(brand);
+            ItemOption itemOption = itemOptionFixture.createItemOption(item);
+            ItemCart itemCart1 = itemCartFixture.createItemCart(item, itemOption);
             List<ItemCart> itemCarts = new ArrayList<>();
             itemCarts.add(itemCart1);
 
@@ -142,8 +150,8 @@ public class MemberCartServiceTest {
         @Test
         void CartForMemberResponse리스트반환_카트_조회() {
             // given
-            Member member = fixture.createMember();
-            Cart cart = fixture.createCart(member);
+            Member member = memberFixture.createMember("user@example.com");
+            Cart cart = cartFixture.createCart(member);
             CartItemUpdateRequest request = new CartItemUpdateRequest(1L, 2L, 3);
 
             // when
@@ -161,8 +169,8 @@ public class MemberCartServiceTest {
         @Test
         void 아이템카트_삭제() {
             // given
-            Member member = fixture.createMember();
-            Cart cart = fixture.createCart(member);
+            Member member = memberFixture.createMember("user@example.com");
+            Cart cart = cartFixture.createCart(member);
             Long itemId = 1L;
             Long itemOptionId = 2L;
 

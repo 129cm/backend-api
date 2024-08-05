@@ -1,6 +1,5 @@
 package com.d129cm.backendapi.cart.domain;
 
-import com.d129cm.backendapi.fixture.Fixture;
 import com.d129cm.backendapi.item.domain.Item;
 import com.d129cm.backendapi.item.domain.ItemOption;
 import org.junit.jupiter.api.Assertions;
@@ -11,8 +10,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 
 public class ItemCartTest {
-
-    private Fixture fixture = new Fixture();
 
     @Nested
     class Create {
