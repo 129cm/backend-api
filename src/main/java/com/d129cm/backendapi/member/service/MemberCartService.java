@@ -11,6 +11,7 @@ import com.d129cm.backendapi.item.manager.ItemOptionManager;
 import com.d129cm.backendapi.member.domain.Member;
 import com.d129cm.backendapi.member.dto.CartForMemberResponse;
 import com.d129cm.backendapi.member.dto.CartItemRequest;
+import com.d129cm.backendapi.member.dto.CartItemUpdateRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -63,5 +64,20 @@ public class MemberCartService {
             responses.add(CartForMemberResponse.of(itemCart));
         }
         return responses;
+    }
+
+    public void updateItemQuantityInCart (Member member, CartItemUpdateRequest request) {
+        if (request.count() <= 0) {
+            throw BadRequestException.negativeQuantityLimit();
+        } else if (request.count() > MAX_QUANTITY_FOR_CART) {
+            throw BadRequestException.exceedQuantityLimit(MAX_QUANTITY_FOR_CART);
+        }
+        Cart cart = member.getCart();
+        itemCartManager.updateItemQuantityInCart(cart, request);
+    }
+
+    public void deleteItemFromCart(Member member, Long itemId, Long itemOptionId) {
+        Cart cart = member.getCart();
+        itemCartManager.deleteItemFromCart(cart, itemId, itemOptionId);
     }
 }

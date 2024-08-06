@@ -1,6 +1,5 @@
 package com.d129cm.backendapi.cart.domain;
 
-import com.d129cm.backendapi.fixture.Fixture;
 import com.d129cm.backendapi.item.domain.Item;
 import com.d129cm.backendapi.item.domain.ItemOption;
 import org.junit.jupiter.api.Assertions;
@@ -11,8 +10,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 
 public class ItemCartTest {
-
-    private Fixture fixture = new Fixture();
 
     @Nested
     class Create {
@@ -90,6 +87,29 @@ public class ItemCartTest {
 
             // then
             assertThat(itemCart.getCount()).isEqualTo(count + additionalCount);
+        }
+    }
+
+    @Nested
+    class updateCount {
+
+        @Test
+        void count수정_이미_존재하는_제품_수량_수정() {
+            // given
+            int count = 5;
+            ItemCart itemCart = ItemCart.builder()
+                    .count(1)
+                    .item(mock(Item.class))
+                    .itemOption(mock(ItemOption.class))
+                    .cart(mock(Cart.class))
+                    .build();
+            int updateCount = 2;
+
+            // when
+            itemCart.updateCount(updateCount);
+
+            // then
+            assertThat(itemCart.getCount()).isEqualTo(updateCount);
         }
     }
 }

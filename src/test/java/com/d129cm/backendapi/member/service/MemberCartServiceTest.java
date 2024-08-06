@@ -5,7 +5,7 @@ import com.d129cm.backendapi.cart.domain.Cart;
 import com.d129cm.backendapi.cart.domain.ItemCart;
 import com.d129cm.backendapi.cart.manager.ItemCartManager;
 import com.d129cm.backendapi.common.exception.BadRequestException;
-import com.d129cm.backendapi.fixture.Fixture;
+import com.d129cm.backendapi.fixture.*;
 import com.d129cm.backendapi.item.domain.Item;
 import com.d129cm.backendapi.item.domain.ItemOption;
 import com.d129cm.backendapi.item.manager.ItemManager;
@@ -13,6 +13,8 @@ import com.d129cm.backendapi.item.manager.ItemOptionManager;
 import com.d129cm.backendapi.member.domain.Member;
 import com.d129cm.backendapi.member.dto.CartForMemberResponse;
 import com.d129cm.backendapi.member.dto.CartItemRequest;
+import com.d129cm.backendapi.member.dto.CartItemUpdateRequest;
+import com.d129cm.backendapi.partners.domain.Partners;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -47,11 +49,18 @@ public class MemberCartServiceTest {
     @Mock
     private ItemCartManager itemCartManager;
 
-    private Fixture fixture = new Fixture();
+    private MemberFixture memberFixture = new MemberFixture();
+    private ItemFixture itemFixture = new ItemFixture();
+    private BrandFixture brandFixture = new BrandFixture();
+    private ItemOptionFixture itemOptionFixture = new ItemOptionFixture();
+    private CartFixture cartFixture = new CartFixture();
+    private ItemCartFixture itemCartFixture = new ItemCartFixture();
+    private PartnersFixture partnersFixture = new PartnersFixture();
+
+    private static final int MAX_QUANTITY_FOR_CART = 100;
 
     @Nested
     class addItemToCart{
-        private static final int MAX_QUANTITY_FOR_CART = 100;
 
         @Test
         void 성공_아이템을_장바구니에_추가() {
@@ -101,6 +110,80 @@ public class MemberCartServiceTest {
             verify(itemOptionManager).getItemOption(request.itemOptionId());
             verify(itemCartManager).increaseCount(alreadyExistingItemCart, request.count());
         }
+    }
+
+    @Nested
+    class getCart {
+
+        @Test
+        void CartForMemberResponse리스트반환_카트_조회() {
+            // given
+
+            Member member = memberFixture.createMember("user@example.com");
+            Cart cart = cartFixture.createCart(member);
+            Partners partners = partnersFixture.createPartners("partners@example.com", "123-12-12345");
+            Brand brand = brandFixture.createBrand(partners);
+            Item item = itemFixture.createItem(brand);
+            ItemOption itemOption = itemOptionFixture.createItemOption(item);
+            ItemCart itemCart1 = itemCartFixture.createItemCart(item, itemOption);
+            List<ItemCart> itemCarts = new ArrayList<>();
+            itemCarts.add(itemCart1);
+
+            when(itemCartManager.getItemCart(cart.getId())).thenReturn(itemCarts);
+
+            List<CartForMemberResponse> expectedResponses = itemCarts.stream()
+                    .map(CartForMemberResponse::of)
+                    .collect(Collectors.toList());
+
+            // when
+            List<CartForMemberResponse> responses = memberCartService.getCart(member);
+
+            // then
+            verify(itemCartManager).getItemCart(cart.getId());
+            assertThat(responses).isEqualTo(expectedResponses);
+        }
+    }
+
+    @Nested
+    class updateItemQuantityInCart {
+
+        @Test
+        void CartForMemberResponse리스트반환_카트_조회() {
+            // given
+            Member member = memberFixture.createMember("user@example.com");
+            Cart cart = cartFixture.createCart(member);
+            CartItemUpdateRequest request = new CartItemUpdateRequest(1L, 2L, 3);
+
+            // when
+            memberCartService.updateItemQuantityInCart(member, request);
+
+            // then
+            verify(itemCartManager).updateItemQuantityInCart(cart, request);
+        }
+    }
+
+
+    @Nested
+    class deleteItemFromCart {
+
+        @Test
+        void 아이템카트_삭제() {
+            // given
+            Member member = memberFixture.createMember("user@example.com");
+            Cart cart = cartFixture.createCart(member);
+            Long itemId = 1L;
+            Long itemOptionId = 2L;
+
+            // when
+            memberCartService.deleteItemFromCart(member, itemId, itemOptionId);
+
+            // then
+            verify(itemCartManager).deleteItemFromCart(cart, itemId, itemOptionId);
+        }
+    }
+
+    @Nested
+    class countValidation {
 
         @Test
         void 예외반환_수량이_음수일_때() {
@@ -125,37 +208,6 @@ public class MemberCartServiceTest {
             BadRequestException e = BadRequestException.exceedQuantityLimit(100);
             Assertions.assertThatThrownBy(() -> memberCartService.addItemToCart(member, request))
                     .isInstanceOf(e.getClass()).hasMessage(e.getMessage());
-        }
-    }
-
-    @Nested
-    class getCart {
-
-        @Test
-        void CartForMemberResponse리스트반환_카트_조회() {
-            // given
-
-            Member member = fixture.createMember();
-            Cart cart = fixture.createCart(member);
-            Brand brand = fixture.createBrand();
-            Item item = fixture.createItem(brand);
-            ItemOption itemOption = fixture.createItemOption(item);
-            ItemCart itemCart1 = fixture.createItemCart(item, itemOption);
-            List<ItemCart> itemCarts = new ArrayList<>();
-            itemCarts.add(itemCart1);
-
-            when(itemCartManager.getItemCart(cart.getId())).thenReturn(itemCarts);
-
-            List<CartForMemberResponse> expectedResponses = itemCarts.stream()
-                    .map(CartForMemberResponse::of)
-                    .collect(Collectors.toList());
-
-            // when
-            List<CartForMemberResponse> responses = memberCartService.getCart(member);
-
-            // then
-            verify(itemCartManager).getItemCart(cart.getId());
-            assertThat(responses).isEqualTo(expectedResponses);
         }
     }
 }
