@@ -202,4 +202,37 @@ public class PartnersItemControllerTest {
         }
     }
 
+    @Nested
+    class deleteItem{
+
+        @Test
+        void 성공200_아이템_삭제() throws Exception {
+            // given
+            Long itemId = 1L;
+
+            Password password = mock(Password.class);
+            Partners mockPartners = spy(Partners.builder()
+                    .email("testPartners@email.com")
+                    .password(password)
+                    .businessNumber("123-45-67890")
+                    .build());
+
+            doReturn(1L).when(mockPartners).getId();
+            when(password.getPassword()).thenReturn("asdf123!");
+
+            // when
+            ResultActions mvcResult = mockMvc.perform(delete("/partners/brands/items/" + itemId)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .characterEncoding(StandardCharsets.UTF_8)
+                    .with(SecurityMockMvcRequestPostProcessors.user(new PartnersDetails(mockPartners))));
+
+            // then
+            mvcResult.andExpect(status().isOk())
+                    .andExpect(jsonPath("$.status").value(200))
+                    .andExpect(jsonPath("$.message").value("성공"));
+
+            verify(partnersItemService).deleteItem(eq(1L), eq(itemId));
+        }
+    }
+
 }

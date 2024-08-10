@@ -17,7 +17,6 @@ public class PartnersItemService {
 
     public GetItemDetailsResponse getItemDetails(Long itemId, Long partnersId) {
         Item item = itemManager.getItemByIdAndPartnersId(itemId, partnersId);
-
         return GetItemDetailsResponse.of(item);
     }
 
@@ -27,5 +26,12 @@ public class PartnersItemService {
         Item newItem = request.toItemEntity();
 
         oldItem.updateItem(newItem);
+    }
+
+    @Transactional
+    public void deleteItem(Long partnersId, Long itemId) {
+        Item item = itemManager.getItemByIdAndPartnersId(itemId, partnersId);
+
+        itemManager.deleteItem(item);
     }
 }

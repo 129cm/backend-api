@@ -1,6 +1,8 @@
 package com.d129cm.backendapi.item.manager;
 
+import com.d129cm.backendapi.brand.domain.Brand;
 import com.d129cm.backendapi.common.exception.NotFoundException;
+import com.d129cm.backendapi.fixture.ItemFixture;
 import com.d129cm.backendapi.item.domain.Item;
 import com.d129cm.backendapi.item.domain.SortCondition;
 import com.d129cm.backendapi.item.repository.ItemRepository;
@@ -209,6 +211,21 @@ public class ItemManagerTest {
                     .hasMessage("정보를 찾을 수 없습니다.");
         }
 
+        @Nested
+        class deleteItem{
+
+            @Test
+            void 성공_아이템_삭제(){
+                // given
+                Item item = new ItemFixture().createItem(mock(Brand.class));
+
+                // when
+                itemManager.deleteItem(item);
+
+                // then
+                verify(itemRepository).delete(item);
+            }
+        }
 
     }
 }

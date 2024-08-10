@@ -35,7 +35,8 @@ public class ItemTest {
                     () -> assertThat(item.getName()).isEqualTo(name),
                     () -> assertThat(item.getPrice()).isEqualTo(price),
                     () -> assertThat(item.getImage()).isEqualTo(image),
-                    () -> assertThat(item.getDescription()).isEqualTo(description)
+                    () -> assertThat(item.getDescription()).isEqualTo(description),
+                    () -> assertThat(item.isDeleted()).isFalse()
             );
         }
 
