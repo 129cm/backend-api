@@ -4,7 +4,6 @@ import com.d129cm.backendapi.item.domain.Item;
 import com.d129cm.backendapi.item.domain.ItemOption;
 
 import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.when;
 
 public class ItemOptionFixture {
 
@@ -15,8 +14,6 @@ public class ItemOptionFixture {
                 .optionPrice(200)
                 .build());
         item.addItemOption(itemOption);
-        when(itemOption.getId()).thenReturn(5L);
-        when(itemOption.getOptionPrice()).thenReturn(200);
         return itemOption;
     }
 }

@@ -61,4 +61,13 @@ public class PartnersItemController {
         partnersItemService.putItemDetails(partners.getId(), itemId, request);
         return ResponseEntity.ok(CommonResponse.success());
     }
+
+    @DeleteMapping("/partners/brands/items/{itemId}")
+    public ResponseEntity<CommonResponse<?>> deleteItem(
+            @AuthenticationPrincipal(expression = "partners") Partners partners,
+            @PathVariable Long itemId
+    ) {
+        partnersItemService.deleteItem(partners.getId(), itemId);
+        return ResponseEntity.ok(CommonResponse.success());
+    }
 }

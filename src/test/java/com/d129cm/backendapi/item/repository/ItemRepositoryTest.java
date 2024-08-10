@@ -147,4 +147,31 @@ public class ItemRepositoryTest {
             assertThat(item.get().getBrand().getPartners().getId()).isEqualTo(partnersId);
         }
     }
+
+    @Nested
+    class delete {
+
+        private Item item;
+
+        @BeforeEach
+        void setup() {
+            item = entityManager.find(Item.class, 1L);
+        }
+
+        @Sql("/test-get-item.sql")
+        @Test
+        void deletedTrue_아이템_삭제() {
+            // given
+            Long itemId = item.getId();
+
+            // when
+            itemRepository.delete(item);
+            entityManager.flush();
+            entityManager.clear();
+            Optional<Item> deletedItem = itemRepository.findById(itemId);
+
+            // then
+            assertThat(deletedItem.isEmpty()).isTrue();
+        }
+    }
 }

@@ -83,4 +83,21 @@ public class PartnersItemServiceTest {
             assertThat(newItem.getDescription()).isEqualTo(oldItem.getDescription());
         }
     }
+
+    @Nested
+    class deleteItem{
+
+        @Test
+        void 성공_아이템_삭제(){
+            // given
+            Item item = mock(Item.class);
+            when(itemManager.getItemByIdAndPartnersId(1L, 1L)).thenReturn(item);
+
+            // when
+            partnersItemService.deleteItem(1L, 1L);
+
+            // then
+            verify(itemManager).deleteItem(item);
+        }
+    }
 }

@@ -6,6 +6,8 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
 import org.springframework.util.Assert;
 
 import java.util.ArrayList;
@@ -13,6 +15,8 @@ import java.util.List;
 
 @Entity
 @Getter
+@SQLDelete(sql = "update item set deleted = true where id = ?")
+@SQLRestriction("deleted = false")
 @NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
 public class Item extends BaseEntity {
 
@@ -28,12 +32,15 @@ public class Item extends BaseEntity {
     @Column(nullable = false)
     private String description;
 
-    @OneToMany(mappedBy = "item", fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
+    @OneToMany(mappedBy = "item", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
     private List<ItemOption> itemOptions = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false)
     private Brand brand;
+
+    @Column(columnDefinition = "TINYINT(1) DEFAULT 0", insertable = false, updatable = false)
+    private boolean deleted;
 
     @Builder
     public Item(String name, Integer price, String image, String description) {
@@ -60,7 +67,7 @@ public class Item extends BaseEntity {
         this.brand = brand;
     }
 
-    public void updateItem(Item item){
+    public void updateItem(Item item) {
         Assert.notNull(item, "Item은 null일 수 없습니다.");
         this.name = item.getName();
         this.price = item.getPrice();
