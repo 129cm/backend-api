@@ -38,7 +38,7 @@ public class Item extends BaseEntity {
     private Brand brand;
 
     @Column(columnDefinition = "TINYINT(1) DEFAULT 0", insertable = false, updatable = false)
-    private final boolean deleted = false;
+    private boolean deleted;
 
     @Builder
     public Item(String name, Integer price, String image, String description) {
