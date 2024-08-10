@@ -30,8 +30,7 @@ import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 @SuppressWarnings("NonAsciiCharacters")
@@ -57,12 +56,12 @@ public class MemberCartServiceTest {
         @Test
         void 성공_아이템을_장바구니에_추가() {
             // given
-            Member member = Mockito.mock(Member.class);
-            Cart cart = Mockito.mock(Cart.class);
+            Member member = mock(Member.class);
+            Cart cart = mock(Cart.class);
             when(member.getCart()).thenReturn(cart);
 
-            Item item = Mockito.mock(Item.class);
-            ItemOption itemOption = Mockito.mock(ItemOption.class);
+            Item item = mock(Item.class);
+            ItemOption itemOption = mock(ItemOption.class);
             CartItemRequest request = new CartItemRequest(1L, 2L, 3);
 
             when(itemManager.getItem(request.itemId())).thenReturn(item);
@@ -81,13 +80,13 @@ public class MemberCartServiceTest {
         @Test
         void 성공_이미존재하는_itemCart의_count증가() {
             // given
-            ItemCart alreadyExistingItemCart = Mockito.mock(ItemCart.class);
-            Member member = Mockito.mock(Member.class);
-            Cart cart = Mockito.mock(Cart.class);
+            ItemCart alreadyExistingItemCart = mock(ItemCart.class);
+            Member member = mock(Member.class);
+            Cart cart = mock(Cart.class);
             when(member.getCart()).thenReturn(cart);
 
-            Item item = Mockito.mock(Item.class);
-            ItemOption itemOption = Mockito.mock(ItemOption.class);
+            Item item = mock(Item.class);
+            ItemOption itemOption = mock(ItemOption.class);
             CartItemRequest request = new CartItemRequest(1L, 2L, 3);
 
             when(itemManager.getItem(request.itemId())).thenReturn(item);
@@ -113,8 +112,7 @@ public class MemberCartServiceTest {
 
             Member member = MemberFixture.createMember("user@example.com");
             Cart cart = CartFixture.createCart(member);
-            Partners partners = PartnersFixture.createPartners("partners@example.com", "123-12-12345");
-            Brand brand = BrandFixture.createBrand(partners);
+            Brand brand = BrandFixture.createBrand(mock(Partners.class));
             Item item = ItemFixture.createItem(brand);
             ItemOption itemOption = ItemOptionFixture.createItemOption(item);
             ItemCart itemCart1 = ItemCartFixture.createItemCart(item, itemOption);
@@ -180,7 +178,7 @@ public class MemberCartServiceTest {
         @Test
         void 예외반환_수량이_음수일_때() {
             // given
-            Member member = Mockito.mock(Member.class);
+            Member member = mock(Member.class);
             CartItemRequest request = new CartItemRequest(1L, 2L, -1);
 
             // when & then
@@ -193,7 +191,7 @@ public class MemberCartServiceTest {
         @Test
         void 예외반환_수량이_100을_초과할_때() {
             // given
-            Member member = Mockito.mock(Member.class);
+            Member member = mock(Member.class);
             CartItemRequest request = new CartItemRequest(1L, 2L, MAX_QUANTITY_FOR_CART + 1);
 
             // when & then
