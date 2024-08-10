@@ -43,4 +43,8 @@ public class ItemManager {
         return itemRepository.findByIdAndPartnersId(itemId, partnersId)
                 .orElseThrow(NotFoundException::entityNotFound);
     }
+
+    public void deleteItem(Item item){
+        itemRepository.delete(item);
+    }
 }
