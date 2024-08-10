@@ -9,7 +9,7 @@ import static org.mockito.Mockito.spy;
 
 public class ItemCartFixture {
 
-    public ItemCart createItemCart(Item item, ItemOption itemOption) {
+    public static ItemCart createItemCart(Item item, ItemOption itemOption) {
         Cart cart = CartFixture.createCart(MemberFixture.createMember("user@example.com"));
         ItemCart itemCart = spy(ItemCart.builder()
                 .count(1)

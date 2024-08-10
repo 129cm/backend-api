@@ -49,8 +49,6 @@ public class MemberCartServiceTest {
     @Mock
     private ItemCartManager itemCartManager;
 
-    private ItemCartFixture itemCartFixture = new ItemCartFixture();
-
     private static final int MAX_QUANTITY_FOR_CART = 100;
 
     @Nested
@@ -119,7 +117,7 @@ public class MemberCartServiceTest {
             Brand brand = BrandFixture.createBrand(partners);
             Item item = ItemFixture.createItem(brand);
             ItemOption itemOption = ItemOptionFixture.createItemOption(item);
-            ItemCart itemCart1 = itemCartFixture.createItemCart(item, itemOption);
+            ItemCart itemCart1 = ItemCartFixture.createItemCart(item, itemOption);
             List<ItemCart> itemCarts = new ArrayList<>();
             itemCarts.add(itemCart1);
 
