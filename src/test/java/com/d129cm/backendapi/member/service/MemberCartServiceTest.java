@@ -51,7 +51,6 @@ public class MemberCartServiceTest {
 
     private MemberFixture memberFixture = new MemberFixture();
     private ItemFixture itemFixture = new ItemFixture();
-    private BrandFixture brandFixture = new BrandFixture();
     private ItemOptionFixture itemOptionFixture = new ItemOptionFixture();
     private CartFixture cartFixture = new CartFixture();
     private ItemCartFixture itemCartFixture = new ItemCartFixture();
@@ -122,7 +121,7 @@ public class MemberCartServiceTest {
             Member member = memberFixture.createMember("user@example.com");
             Cart cart = cartFixture.createCart(member);
             Partners partners = partnersFixture.createPartners("partners@example.com", "123-12-12345");
-            Brand brand = brandFixture.createBrand(partners);
+            Brand brand = BrandFixture.createBrand(partners);
             Item item = itemFixture.createItem(brand);
             ItemOption itemOption = itemOptionFixture.createItemOption(item);
             ItemCart itemCart1 = itemCartFixture.createItemCart(item, itemOption);
