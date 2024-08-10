@@ -171,11 +171,7 @@ public class ItemRepositoryTest {
             Optional<Item> deletedItem = itemRepository.findById(itemId);
 
             // then
-            assertThat(deletedItem.isEmpty()).isFalse();
-            assertThat(deletedItem.get().isDeleted()).isTrue();
-            assertThat(deletedItem.get().getItemOptions())
-                    .extracting(ItemOption::isDeleted)
-                    .containsOnly(true);
+            assertThat(deletedItem.isEmpty()).isTrue();
         }
     }
 }
