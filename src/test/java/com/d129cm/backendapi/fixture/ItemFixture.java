@@ -6,7 +6,7 @@ import com.d129cm.backendapi.item.domain.Item;
 import static org.mockito.Mockito.spy;
 
 public class ItemFixture {
-    public Item createItem(Brand brand) {
+    public static Item createItem(Brand brand) {
         Item item = spy(Item.builder()
                 .name("상품 이름")
                 .price(1000)

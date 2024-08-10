@@ -120,7 +120,7 @@ public class MemberCartServiceTest {
             Cart cart = CartFixture.createCart(member);
             Partners partners = partnersFixture.createPartners("partners@example.com", "123-12-12345");
             Brand brand = BrandFixture.createBrand(partners);
-            Item item = itemFixture.createItem(brand);
+            Item item = ItemFixture.createItem(brand);
             ItemOption itemOption = itemOptionFixture.createItemOption(item);
             ItemCart itemCart1 = itemCartFixture.createItemCart(item, itemOption);
             List<ItemCart> itemCarts = new ArrayList<>();
