@@ -4,11 +4,13 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.SQLDelete;
 import org.springframework.util.Assert;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
+@SQLDelete(sql = "update item_option set deleted = true where id = ?")
 public class ItemOption {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,6 +24,8 @@ public class ItemOption {
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     @JoinColumn(nullable = false)
     private Item item;
+    @Column(columnDefinition = "TINYINT(1) DEFAULT 0", insertable = false, updatable = false)
+    private boolean deleted;
 
     @Builder
     private ItemOption(Long id, String name, Integer quantity, Integer optionPrice) {
@@ -40,7 +44,7 @@ public class ItemOption {
         this.item = item;
     }
 
-    public void update(ItemOption option){
+    public void update(ItemOption option) {
         Assert.notNull(option, "itemOption은 null일 수 없습니다.");
         this.name = option.getName();
         this.quantity = option.getQuantity();
