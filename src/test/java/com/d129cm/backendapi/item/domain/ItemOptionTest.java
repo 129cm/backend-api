@@ -31,7 +31,8 @@ public class ItemOptionTest {
             Assertions.assertAll(
                     () -> assertThat(itemOption.getId()).isNull(),
                     () -> assertThat(itemOption.getName()).isEqualTo(name),
-                    () -> assertThat(itemOption.getQuantity()).isEqualTo(quantity)
+                    () -> assertThat(itemOption.getQuantity()).isEqualTo(quantity),
+                    () -> assertThat(itemOption.isDeleted()).isFalse()
             );
         }
 
