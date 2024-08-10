@@ -5,12 +5,14 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
 import org.springframework.util.Assert;
 
 @Entity
 @Getter
-@NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
 @SQLDelete(sql = "update item_option set deleted = true where id = ?")
+@SQLRestriction("deleted = false")
+@NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
 public class ItemOption {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

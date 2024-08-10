@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
 import org.springframework.util.Assert;
 
 import java.util.ArrayList;
@@ -15,6 +16,7 @@ import java.util.List;
 @Entity
 @Getter
 @SQLDelete(sql = "update item set deleted = true where id = ?")
+@SQLRestriction("deleted = false")
 @NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
 public class Item extends BaseEntity {
 
