@@ -49,7 +49,6 @@ public class MemberCartServiceTest {
     @Mock
     private ItemCartManager itemCartManager;
 
-    private MemberFixture memberFixture = new MemberFixture();
     private ItemFixture itemFixture = new ItemFixture();
     private ItemOptionFixture itemOptionFixture = new ItemOptionFixture();
     private ItemCartFixture itemCartFixture = new ItemCartFixture();
@@ -117,7 +116,7 @@ public class MemberCartServiceTest {
         void CartForMemberResponse리스트반환_카트_조회() {
             // given
 
-            Member member = memberFixture.createMember("user@example.com");
+            Member member = MemberFixture.createMember("user@example.com");
             Cart cart = CartFixture.createCart(member);
             Partners partners = partnersFixture.createPartners("partners@example.com", "123-12-12345");
             Brand brand = BrandFixture.createBrand(partners);
@@ -148,7 +147,7 @@ public class MemberCartServiceTest {
         @Test
         void CartForMemberResponse리스트반환_카트_조회() {
             // given
-            Member member = memberFixture.createMember("user@example.com");
+            Member member = MemberFixture.createMember("user@example.com");
             Cart cart = CartFixture.createCart(member);
             CartItemUpdateRequest request = new CartItemUpdateRequest(1L, 2L, 3);
 
@@ -167,7 +166,7 @@ public class MemberCartServiceTest {
         @Test
         void 아이템카트_삭제() {
             // given
-            Member member = memberFixture.createMember("user@example.com");
+            Member member = MemberFixture.createMember("user@example.com");
             Cart cart = CartFixture.createCart(member);
             Long itemId = 1L;
             Long itemOptionId = 2L;
