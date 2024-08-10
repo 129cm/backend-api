@@ -6,7 +6,8 @@ import com.d129cm.backendapi.member.domain.Member;
 import static org.mockito.Mockito.spy;
 
 public class CartFixture {
-    public Cart createCart(Member member) {
+    private CartFixture() {}
+    public static Cart createCart(Member member) {
         Cart cart = spy(new Cart());
         member.setCart(cart);
         return cart;

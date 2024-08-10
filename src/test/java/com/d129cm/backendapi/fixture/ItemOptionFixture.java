@@ -6,8 +6,8 @@ import com.d129cm.backendapi.item.domain.ItemOption;
 import static org.mockito.Mockito.spy;
 
 public class ItemOptionFixture {
-
-    public ItemOption createItemOption(Item item) {
+    private ItemOptionFixture() {}
+    public static ItemOption createItemOption(Item item) {
         ItemOption itemOption = spy(ItemOption.builder()
                 .name("상품 옵션 이름")
                 .quantity(100)

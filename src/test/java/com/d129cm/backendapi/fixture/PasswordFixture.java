@@ -7,7 +7,8 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class PasswordFixture {
-    public Password createPassword() {
+    private PasswordFixture() {}
+    public static Password createPassword() {
         PasswordEncoder passwordEncoder = mock(PasswordEncoder.class);
 
         String rawPassword = "password123";
