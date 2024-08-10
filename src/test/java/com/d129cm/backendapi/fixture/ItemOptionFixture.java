@@ -8,7 +8,7 @@ import static org.mockito.Mockito.when;
 
 public class ItemOptionFixture {
 
-    public ItemOption createItemOption(Item item) {
+    public static ItemOption createItemOption(Item item) {
         ItemOption itemOption = spy(ItemOption.builder()
                 .name("상품 옵션 이름")
                 .quantity(100)

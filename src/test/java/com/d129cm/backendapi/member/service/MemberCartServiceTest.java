@@ -49,7 +49,6 @@ public class MemberCartServiceTest {
     @Mock
     private ItemCartManager itemCartManager;
 
-    private ItemOptionFixture itemOptionFixture = new ItemOptionFixture();
     private ItemCartFixture itemCartFixture = new ItemCartFixture();
 
     private static final int MAX_QUANTITY_FOR_CART = 100;
@@ -119,7 +118,7 @@ public class MemberCartServiceTest {
             Partners partners = PartnersFixture.createPartners("partners@example.com", "123-12-12345");
             Brand brand = BrandFixture.createBrand(partners);
             Item item = ItemFixture.createItem(brand);
-            ItemOption itemOption = itemOptionFixture.createItemOption(item);
+            ItemOption itemOption = ItemOptionFixture.createItemOption(item);
             ItemCart itemCart1 = itemCartFixture.createItemCart(item, itemOption);
             List<ItemCart> itemCarts = new ArrayList<>();
             itemCarts.add(itemCart1);
