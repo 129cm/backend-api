@@ -8,7 +8,7 @@ import com.d129cm.backendapi.item.domain.ItemOption;
 import static org.mockito.Mockito.spy;
 
 public class ItemCartFixture {
-
+    private ItemCartFixture() {}
     public static ItemCart createItemCart(Item item, ItemOption itemOption) {
         Cart cart = CartFixture.createCart(MemberFixture.createMember("user@example.com"));
         ItemCart itemCart = spy(ItemCart.builder()

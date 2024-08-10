@@ -7,7 +7,7 @@ import com.d129cm.backendapi.member.domain.Member;
 import static org.mockito.Mockito.spy;
 
 public class MemberFixture {
-
+    private MemberFixture() {}
     public static Member createMember(String email) {
         Password password = spy(PasswordFixture.createPassword());
         Address address = AddressFixture.createAddress();

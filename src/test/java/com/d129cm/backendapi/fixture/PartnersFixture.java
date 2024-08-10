@@ -6,7 +6,7 @@ import com.d129cm.backendapi.partners.domain.Partners;
 import static org.mockito.Mockito.spy;
 
 public class PartnersFixture {
-
+    private PartnersFixture() {}
     public static Partners createPartners(String email, String businessNumber) {
         Password password = PasswordFixture.createPassword();
         Partners partners = spy(Partners.builder()

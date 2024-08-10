@@ -7,6 +7,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class PasswordFixture {
+    private PasswordFixture() {}
     public static Password createPassword() {
         PasswordEncoder passwordEncoder = mock(PasswordEncoder.class);
 

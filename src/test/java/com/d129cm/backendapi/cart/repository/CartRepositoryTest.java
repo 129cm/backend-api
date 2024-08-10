@@ -5,6 +5,7 @@ import com.d129cm.backendapi.common.config.JpaAuditingConfig;
 import com.d129cm.backendapi.common.domain.Address;
 import com.d129cm.backendapi.common.domain.Password;
 import com.d129cm.backendapi.config.InitializeTestContainers;
+import com.d129cm.backendapi.fixture.AddressFixture;
 import com.d129cm.backendapi.member.domain.Member;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Nested;
