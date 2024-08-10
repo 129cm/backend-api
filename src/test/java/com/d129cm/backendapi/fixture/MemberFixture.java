@@ -8,10 +8,8 @@ import static org.mockito.Mockito.spy;
 
 public class MemberFixture {
 
-    private PasswordFixture passwordFixture = new PasswordFixture();
-
     public Member createMember(String email) {
-        Password password = spy(passwordFixture.createPassword());
+        Password password = spy(PasswordFixture.createPassword());
         Address address = AddressFixture.createAddress();
         Member member = spy(
                 Member.builder()

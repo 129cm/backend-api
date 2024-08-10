@@ -7,10 +7,8 @@ import static org.mockito.Mockito.spy;
 
 public class PartnersFixture {
 
-    private PasswordFixture passwordFixture = new PasswordFixture();
-
     public Partners createPartners(String email, String businessNumber) {
-        Password password = passwordFixture.createPassword();
+        Password password = PasswordFixture.createPassword();
         Partners partners = spy(Partners.builder()
                 .email(email)
                 .businessNumber(businessNumber)
