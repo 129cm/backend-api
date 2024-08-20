@@ -1,7 +1,9 @@
 package com.d129cm.backendapi.common.domain;
 
-import com.d129cm.backendapi.member.domain.Member;
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -21,9 +23,6 @@ public class Address {
     private String roadNameAddress;
 
     private String addressDetails;
-
-    @OneToOne(mappedBy = "address")
-    private Member member;
 
     @Builder
     public Address(String zipCode, String roadNameAddress, String addressDetails) {
