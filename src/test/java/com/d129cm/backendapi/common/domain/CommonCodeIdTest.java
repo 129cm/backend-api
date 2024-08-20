@@ -54,9 +54,11 @@ public class CommonCodeIdTest {
 
         @Test
         public void false_타입이_다른_객체와_비교() {
+            // given
             CommonCodeId commonCodeId = new CommonCodeId(CodeName.결제완료);
             String differentType = "String";
 
+            // when & then
             assertThat(commonCodeId.equals(differentType)).isFalse();
         }
     }
