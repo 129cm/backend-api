@@ -25,7 +25,6 @@ import static org.mockito.Mockito.*;
 import static org.springframework.data.domain.Sort.Direction.DESC;
 
 @ExtendWith(MockitoExtension.class)
-@SuppressWarnings("NonAsciiCharacters")
 public class ItemManagerTest {
 
     @InjectMocks

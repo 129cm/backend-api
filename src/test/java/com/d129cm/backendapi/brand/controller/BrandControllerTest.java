@@ -27,7 +27,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(BrandController.class)
 @Import(TestSecurityConfig.class)
-@SuppressWarnings("NonAsciiCharacters")
 public class BrandControllerTest {
 
     @Autowired

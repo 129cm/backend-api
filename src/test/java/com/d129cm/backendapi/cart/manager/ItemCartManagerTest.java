@@ -25,7 +25,6 @@ import static org.junit.Assert.assertThrows;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-@SuppressWarnings("NonAsciiCharacters")
 public class ItemCartManagerTest {
 
     @InjectMocks
@@ -141,9 +140,7 @@ public class ItemCartManagerTest {
                     .thenReturn(Optional.empty());
 
             // when & then
-            assertThrows(NotFoundException.class, () -> {
-                itemCartManager.updateItemQuantityInCart(cart, request);
-            });
+            assertThrows(NotFoundException.class, () -> itemCartManager.updateItemQuantityInCart(cart, request));
         }
     }
 

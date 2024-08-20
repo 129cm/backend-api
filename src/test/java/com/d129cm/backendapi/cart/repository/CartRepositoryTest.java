@@ -22,7 +22,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @ImportTestcontainers(InitializeTestContainers.class)
 @Import(JpaAuditingConfig.class)
-@SuppressWarnings("NonAsciiCharacters")
 public class CartRepositoryTest {
 
     @Autowired

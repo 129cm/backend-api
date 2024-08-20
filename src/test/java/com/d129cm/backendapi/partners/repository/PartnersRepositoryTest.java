@@ -20,7 +20,6 @@ import static org.mockito.Mockito.mock;
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @ImportTestcontainers(InitializeTestContainers.class)
-@SuppressWarnings("NonAsciiCharacters")
 public class PartnersRepositoryTest {
 
     @Autowired
