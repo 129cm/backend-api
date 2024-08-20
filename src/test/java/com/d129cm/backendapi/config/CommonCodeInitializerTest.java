@@ -27,7 +27,7 @@ public class CommonCodeInitializerTest {
 
     @Test
     public void testCommonCodeInitializer() {
-        CommonCodeGroup group = entityManager.find(CommonCodeGroup.class, "010"); // 예시로 주문의 ID인 "010"
+        CommonCodeGroup group = entityManager.find(CommonCodeGroup.class, "100");
         assertThat(group).isNotNull();
         assertThat(group.getGroupName()).isEqualTo(GroupName.주문);
 
