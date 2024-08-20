@@ -5,7 +5,7 @@ import lombok.Getter;
 @Getter
 public enum GroupName {
 
-    주문("100"), 배송("200");
+    주문("100"), 배송("200"), 회원등급("300");
 
     private final String groupId;
 
