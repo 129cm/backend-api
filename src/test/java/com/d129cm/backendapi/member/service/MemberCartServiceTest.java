@@ -33,7 +33,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-@SuppressWarnings("NonAsciiCharacters")
 public class MemberCartServiceTest {
 
     @InjectMocks

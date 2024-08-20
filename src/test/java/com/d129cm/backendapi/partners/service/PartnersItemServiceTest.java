@@ -18,7 +18,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-@SuppressWarnings("NonAsciiCharacters")
 public class PartnersItemServiceTest {
     @InjectMocks
     private PartnersItemService partnersItemService;

@@ -31,7 +31,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(JwtLoginFilter.class)
 @ContextConfiguration(classes = {MemberSecurityConfig.class})
-@SuppressWarnings("NonAsciiCharacters")
 class JwtLoginFilterTest {
 
     @Autowired

@@ -41,7 +41,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(PartnersController.class)
 @Import({PartnersSecurityConfig.class})
-@SuppressWarnings("NonAsciiCharacters")
 public class PartnersControllerTest {
 
     @Autowired
