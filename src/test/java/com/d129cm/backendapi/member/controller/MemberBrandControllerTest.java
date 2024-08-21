@@ -28,7 +28,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(MemberBrandController.class)
 @Import(TestSecurityConfig.class)
-@SuppressWarnings("NonAsciiCharacters")
 @AutoConfigureMockMvc(addFilters = false)
 public class MemberBrandControllerTest {
 

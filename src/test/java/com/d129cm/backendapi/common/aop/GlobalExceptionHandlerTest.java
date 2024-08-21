@@ -18,7 +18,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(HealthCheckController.class)
 @Import({GlobalExceptionHandler.class, TestSecurityConfig.class})
-@SuppressWarnings("NonAsciiCharacters")
 public class GlobalExceptionHandlerTest {
 
     @Autowired

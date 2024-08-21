@@ -33,7 +33,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ImportTestcontainers(InitializeTestContainers.class)
 @Import(JpaAuditingConfig.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-@SuppressWarnings("NonAsciiCharacters")
 public class ItemRepositoryTest {
 
     @Autowired
