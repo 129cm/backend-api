@@ -216,7 +216,7 @@ public class ItemManagerTest {
             @Test
             void 성공_아이템_삭제(){
                 // given
-                Item item = new ItemFixture().createItem(mock(Brand.class));
+                Item item = ItemFixture.createItem(mock(Brand.class));
 
                 // when
                 itemManager.deleteItem(item);
