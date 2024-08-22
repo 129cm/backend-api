@@ -13,6 +13,6 @@ public class MemberManager {
     private final MemberRepository memberRepository;
 
     public Member getMember (String email) {
-        return memberRepository.findByEmail(email).orElseThrow(NotFoundException::entityNotFound);
+        return memberRepository.findByEmailWithAddress(email).orElseThrow(NotFoundException::entityNotFound);
     }
 }

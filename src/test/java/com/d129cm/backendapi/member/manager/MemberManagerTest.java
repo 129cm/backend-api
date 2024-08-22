@@ -33,7 +33,7 @@ public class MemberManagerTest {
             // given
             String email = "test@exmaple.com";
             Member member = MemberFixture.createMember(email);
-            when(memberRepository.findByEmail(email)).thenReturn(Optional.ofNullable(member));
+            when(memberRepository.findByEmailWithAddress(email)).thenReturn(Optional.ofNullable(member));
 
             // when
             Member result = memberManager.getMember(email);
@@ -46,7 +46,7 @@ public class MemberManagerTest {
         void 에러반환_멤버가_존재하지_않는_경우() {
             // given
             String email = "test@exmaple.com";
-            when(memberRepository.findByEmail(email)).thenReturn(Optional.empty());
+            when(memberRepository.findByEmailWithAddress(email)).thenReturn(Optional.empty());
 
             // when
             // then
