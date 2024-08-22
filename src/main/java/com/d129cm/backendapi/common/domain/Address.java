@@ -1,9 +1,7 @@
 package com.d129cm.backendapi.common.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.d129cm.backendapi.member.domain.Member;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -24,6 +22,9 @@ public class Address {
 
     private String addressDetails;
 
+    @OneToOne(orphanRemoval = true, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Member member;
+
     @Builder
     public Address(String zipCode, String roadNameAddress, String addressDetails) {
         Assert.notNull(zipCode, "우편번호는 null일 수 없습니다.");
@@ -33,5 +34,9 @@ public class Address {
         this.zipCode = zipCode;
         this.roadNameAddress = roadNameAddress;
         this.addressDetails = addressDetails;
+    }
+
+    public void updateMember(Member member) {
+        this.member = member;
     }
 }

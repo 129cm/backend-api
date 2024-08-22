@@ -13,6 +13,7 @@ import org.springframework.util.Assert;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Cacheable
 public class Member {
 
     @Id
@@ -28,7 +29,7 @@ public class Member {
     @Column(nullable = false)
     private String name;
 
-    @OneToOne(orphanRemoval = true, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "member", cascade = CascadeType.ALL)
     private Address address;
 
     @OneToOne(mappedBy = "member", cascade = CascadeType.ALL)
@@ -45,6 +46,7 @@ public class Member {
         this.password = password;
         this.name = name;
         this.address = address;
+        address.updateMember(this);
     }
 
     public void setCart(Cart cart) {
