@@ -3,17 +3,21 @@ package com.d129cm.backendapi.member.domain;
 import com.d129cm.backendapi.cart.domain.Cart;
 import com.d129cm.backendapi.common.domain.Address;
 import com.d129cm.backendapi.common.domain.Password;
+
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.springframework.util.Assert;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Cacheable
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Member {
 
     @Id
