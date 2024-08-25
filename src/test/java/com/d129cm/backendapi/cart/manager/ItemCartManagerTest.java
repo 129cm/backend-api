@@ -88,7 +88,8 @@ public class ItemCartManagerTest {
             Optional<ItemCart> result = itemCartManager.findItemCart(request, cartId);
 
             // then
-            assertThat(result).isEqualTo(mockItemCart.get());
+            assertThat(result).isNotEmpty();
+            assertThat(result.get()).isEqualTo(mockItemCart.get());
             verify(itemCartRepository).findByItemIdAndItemOptionIdAndCartId(1L, 2L, 3L);
         }
     }

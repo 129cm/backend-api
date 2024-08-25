@@ -65,7 +65,7 @@ public class MemberCartServiceTest {
 
             when(itemManager.getItem(request.itemId())).thenReturn(item);
             when(itemOptionManager.getItemOption(request.itemOptionId())).thenReturn(itemOption);
-            when(itemCartManager.findItemCart(request, cart.getId())).thenReturn(null);
+            when(itemCartManager.findItemCart(request, cart.getId())).thenReturn(Optional.empty());
 
             // when
             memberCartService.addItemToCart(member, request);
