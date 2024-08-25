@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -31,16 +32,16 @@ public class MemberCartService {
     private static final int MAX_QUANTITY_FOR_CART = 100;
 
     public void addItemToCart(Member member, CartItemRequest request) {
-        countValidation(request.count());
+        validateCount(request.count());
 
         Item item = itemManager.getItem(request.itemId());
         ItemOption itemOption = itemOptionManager.getItemOption(request.itemOptionId());
         Cart cart = member.getCart();
 
-        ItemCart itemCart = itemCartManager.findItemCart(request, cart.getId());
+        Optional<ItemCart> itemCart = itemCartManager.findItemCart(request, cart.getId());
 
-        if (itemCart != null) {
-            itemCartManager.increaseCount(itemCart, request.count());
+        if (itemCart.isPresent()) {
+            itemCartManager.increaseCount(itemCart.get(), request.count());
         } else {
             ItemCart newItemCart = ItemCart.builder()
                     .count(request.count())
@@ -63,7 +64,7 @@ public class MemberCartService {
     }
 
     public void updateItemQuantityInCart (Member member, CartItemUpdateRequest request) {
-        countValidation(request.count());
+        validateCount(request.count());
         Cart cart = member.getCart();
         itemCartManager.updateItemQuantityInCart(cart, request);
     }
@@ -73,7 +74,7 @@ public class MemberCartService {
         itemCartManager.deleteItemFromCart(cart, itemId, itemOptionId);
     }
 
-    private static void countValidation(Integer request) {
+    private static void validateCount(Integer request) {
         if (request <= 0) {
             throw BadRequestException.negativeQuantityLimit();
         } else if (request > MAX_QUANTITY_FOR_CART) {

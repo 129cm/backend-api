@@ -85,7 +85,7 @@ public class ItemCartManagerTest {
                     .thenReturn(mockItemCart);
 
             // when
-            ItemCart result = itemCartManager.findItemCart(request, cartId);
+            Optional<ItemCart> result = itemCartManager.findItemCart(request, cartId);
 
             // then
             assertThat(result).isEqualTo(mockItemCart.get());

@@ -21,11 +21,11 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -90,7 +90,7 @@ public class MemberCartServiceTest {
 
             when(itemManager.getItem(request.itemId())).thenReturn(item);
             when(itemOptionManager.getItemOption(request.itemOptionId())).thenReturn(itemOption);
-            when(itemCartManager.findItemCart(request, cart.getId())).thenReturn(alreadyExistingItemCart);
+            when(itemCartManager.findItemCart(request, cart.getId())).thenReturn(Optional.ofNullable(alreadyExistingItemCart));
 
             // when
             memberCartService.addItemToCart(member, request);
@@ -98,6 +98,7 @@ public class MemberCartServiceTest {
             // then
             verify(itemManager).getItem(request.itemId());
             verify(itemOptionManager).getItemOption(request.itemOptionId());
+            assert alreadyExistingItemCart != null;
             verify(itemCartManager).increaseCount(alreadyExistingItemCart, request.count());
         }
     }
