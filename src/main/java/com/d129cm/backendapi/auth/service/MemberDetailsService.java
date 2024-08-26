@@ -2,6 +2,7 @@ package com.d129cm.backendapi.auth.service;
 
 import com.d129cm.backendapi.auth.domain.MemberDetails;
 import com.d129cm.backendapi.member.domain.Member;
+import com.d129cm.backendapi.member.manager.MemberManager;
 import com.d129cm.backendapi.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -12,12 +13,11 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class MemberDetailsService implements UserDetailsService {
 
-    private final MemberRepository memberRepository;
+    private final MemberManager memberManager;
 
     @Override
-    public MemberDetails loadUserByUsername(String memberEmail) throws UsernameNotFoundException {
-        Member member = memberRepository.findByEmail(memberEmail)
-                .orElseThrow(() -> new UsernameNotFoundException("Member Not Found with email: " + memberEmail));
+    public MemberDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        Member member = memberManager.getMember(email);
         return new MemberDetails(member);
 
     }

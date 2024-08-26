@@ -28,12 +28,8 @@ public class ItemCartManager {
         return itemCartRepository.findAllByCartId(cartId);
     }
 
-    public ItemCart findItemCart(CartItemRequest request, Long cartId) {
-        Optional<ItemCart> itemCartOptional= itemCartRepository.findByItemIdAndItemOptionIdAndCartId(request.itemId(), request.itemOptionId(), cartId);
-        if (itemCartOptional.isEmpty()) {
-            throw NotFoundException.entityNotFound();
-        }
-        return itemCartOptional.get();
+    public Optional<ItemCart> findItemCart(CartItemRequest request, Long cartId) {
+        return itemCartRepository.findByItemIdAndItemOptionIdAndCartId(request.itemId(), request.itemOptionId(), cartId);
     }
 
     public void increaseCount(ItemCart itemCart, int count) {

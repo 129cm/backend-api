@@ -22,7 +22,7 @@ public class Address {
 
     private String addressDetails;
 
-    @OneToOne(mappedBy = "address")
+    @OneToOne(orphanRemoval = true, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Member member;
 
     @Builder
@@ -34,5 +34,9 @@ public class Address {
         this.zipCode = zipCode;
         this.roadNameAddress = roadNameAddress;
         this.addressDetails = addressDetails;
+    }
+
+    public void updateMember(Member member) {
+        this.member = member;
     }
 }
