@@ -1,16 +1,4 @@
-SET FOREIGN_KEY_CHECKS = 0;
-
-TRUNCATE TABLE item_cart;
-TRUNCATE TABLE item_option;
-TRUNCATE TABLE item;
-TRUNCATE TABLE cart;
-TRUNCATE TABLE member;
-TRUNCATE TABLE address;
-TRUNCATE TABLE brand;
-
-SET FOREIGN_KEY_CHECKS = 1;
-
-    -- Brand 데이터 삽입
+-- Brand 데이터 삽입
 INSERT INTO brand (name, image, description)
 VALUES ('Brand1', 'image_url1', 'description1');
 SET @brand_id1 = LAST_INSERT_ID();
@@ -60,11 +48,8 @@ INSERT INTO address (zip_code, road_name_address, address_details, member_id)
 VALUES ('67892', '서울시 송파구', '상세주소3', @member_id3);
 SET @address_id3 = LAST_INSERT_ID();
 
-
-
 -- Cart 데이터 삽입
 INSERT INTO cart (member_id)
 VALUES (@member_id1),
        (@member_id2),
        (@member_id3);
-

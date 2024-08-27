@@ -56,7 +56,6 @@ public class ItemCartRepositoryTest {
     class Create {
 
         @Test
-        @Sql("/test-item-cart.sql")
         void 성공_ItemCart_저장() {
             ItemCart itemCart = ItemCart.builder()
                     .count(1)
@@ -84,7 +83,6 @@ public class ItemCartRepositoryTest {
     class findAllByCartId {
 
         @Test
-        @Sql("/test-item-cart.sql")
         void 성공_cartId로_모든ItemCart조회() {
             ItemCart itemCart1 = ItemCart.builder()
                     .count(1)
@@ -116,7 +114,6 @@ public class ItemCartRepositoryTest {
     class findByItemIdAndItemOptionIdAndCartId {
 
         @Test
-        @Sql("/test-item-cart.sql")
         void 성공_itemId_itemOptionId_cartId로_ItemCart조회() {
             // given
             ItemCart itemCart = ItemCart.builder()
@@ -152,7 +149,6 @@ public class ItemCartRepositoryTest {
         }
 
         @Test
-        @Sql("/test-item-cart.sql")
         void 실패_존재하지않는_조합으로_ItemCart조회() {
             // given
             Long nonExistentItemId = 999L;
