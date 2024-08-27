@@ -1,27 +1,21 @@
 package com.d129cm.backendapi.cart.repository;
 
 import com.d129cm.backendapi.cart.domain.Cart;
+import com.d129cm.backendapi.common.annotation.JpaSliceTest;
 import com.d129cm.backendapi.common.config.JpaAuditingConfig;
 import com.d129cm.backendapi.common.domain.Address;
 import com.d129cm.backendapi.common.domain.Password;
-import com.d129cm.backendapi.config.InitializeTestContainers;
-import com.d129cm.backendapi.fixture.AddressFixture;
 import com.d129cm.backendapi.member.domain.Member;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.testcontainers.context.ImportTestcontainers;
 import org.springframework.context.annotation.Import;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@DataJpaTest
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@ImportTestcontainers(InitializeTestContainers.class)
+@JpaSliceTest
 @Import(JpaAuditingConfig.class)
 public class CartRepositoryTest {
 

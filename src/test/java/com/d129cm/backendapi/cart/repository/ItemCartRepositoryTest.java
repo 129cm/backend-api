@@ -2,8 +2,7 @@ package com.d129cm.backendapi.cart.repository;
 
 import com.d129cm.backendapi.cart.domain.Cart;
 import com.d129cm.backendapi.cart.domain.ItemCart;
-import com.d129cm.backendapi.common.config.JpaAuditingConfig;
-import com.d129cm.backendapi.config.InitializeTestContainers;
+import com.d129cm.backendapi.common.annotation.JpaSliceTest;
 import com.d129cm.backendapi.item.domain.Item;
 import com.d129cm.backendapi.item.domain.ItemOption;
 import jakarta.persistence.EntityManager;
@@ -13,10 +12,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.testcontainers.context.ImportTestcontainers;
-import org.springframework.context.annotation.Import;
 import org.springframework.test.context.jdbc.Sql;
 
 import java.util.List;
@@ -24,10 +19,8 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@DataJpaTest
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@ImportTestcontainers(InitializeTestContainers.class)
-@Import(JpaAuditingConfig.class)
+@JpaSliceTest
+@Sql({"/clean-up.sql", "/test-item-cart.sql"})
 public class ItemCartRepositoryTest {
 
     @Autowired
@@ -56,7 +49,6 @@ public class ItemCartRepositoryTest {
     class Create {
 
         @Test
-        @Sql("/test-item-cart.sql")
         void 성공_ItemCart_저장() {
             ItemCart itemCart = ItemCart.builder()
                     .count(1)
@@ -84,7 +76,6 @@ public class ItemCartRepositoryTest {
     class findAllByCartId {
 
         @Test
-        @Sql("/test-item-cart.sql")
         void 성공_cartId로_모든ItemCart조회() {
             ItemCart itemCart1 = ItemCart.builder()
                     .count(1)
@@ -116,7 +107,6 @@ public class ItemCartRepositoryTest {
     class findByItemIdAndItemOptionIdAndCartId {
 
         @Test
-        @Sql("/test-item-cart.sql")
         void 성공_itemId_itemOptionId_cartId로_ItemCart조회() {
             // given
             ItemCart itemCart = ItemCart.builder()
@@ -152,7 +142,6 @@ public class ItemCartRepositoryTest {
         }
 
         @Test
-        @Sql("/test-item-cart.sql")
         void 실패_존재하지않는_조합으로_ItemCart조회() {
             // given
             Long nonExistentItemId = 999L;
