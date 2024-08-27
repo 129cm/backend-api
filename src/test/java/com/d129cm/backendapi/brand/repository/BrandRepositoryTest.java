@@ -1,19 +1,14 @@
 package com.d129cm.backendapi.brand.repository;
 
 import com.d129cm.backendapi.brand.domain.Brand;
-import com.d129cm.backendapi.config.InitializeTestContainers;
+import com.d129cm.backendapi.common.annotation.JpaSliceTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.testcontainers.context.ImportTestcontainers;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@DataJpaTest
-@ImportTestcontainers(InitializeTestContainers.class)
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@JpaSliceTest
 public class BrandRepositoryTest {
 
     @Autowired
