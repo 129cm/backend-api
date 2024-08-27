@@ -1,23 +1,18 @@
 package com.d129cm.backendapi.common.repository;
 
+import com.d129cm.backendapi.common.annotation.JpaSliceTest;
 import com.d129cm.backendapi.common.domain.CommonCodeGroup;
 import com.d129cm.backendapi.common.domain.code.GroupName;
-import com.d129cm.backendapi.config.InitializeTestContainers;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.testcontainers.context.ImportTestcontainers;
 import org.springframework.test.context.jdbc.Sql;
 
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@DataJpaTest
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@ImportTestcontainers(InitializeTestContainers.class)
+@JpaSliceTest
 public class CommonCodeGroupRepositoryTest {
 
     @Autowired
