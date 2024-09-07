@@ -6,7 +6,6 @@ import com.d129cm.backendapi.member.dto.BrandsForOrderResponse;
 import java.util.List;
 
 public record CreateOrderDto (
-        Long orderMemberId,
         String receiverName,
         Address receiverAddress,
         List<BrandsForOrderResponse> brandsForOrderResponse
