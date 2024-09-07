@@ -24,6 +24,7 @@ public class Order extends BaseEntity {
     })
     private CommonCodeId commonCodeId;
 
+    @Setter
     private String orderSerial;
 
     @Setter
@@ -33,10 +34,9 @@ public class Order extends BaseEntity {
     private Member member;
 
     @Builder
-    private Order(CommonCodeId commonCodeId, Member member, String orderSerial) {
+    private Order(CommonCodeId commonCodeId, Member member) {
         Assert.isTrue(GroupName.주문.getGroupId().equals(commonCodeId.getGroupId()), "올바른 그룹 코드가 아닙니다.");
         this.commonCodeId = commonCodeId;
         this.member = member;
-        this.orderSerial = orderSerial;
     }
 }
