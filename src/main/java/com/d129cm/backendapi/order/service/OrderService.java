@@ -18,8 +18,8 @@ public class OrderService {
     private final OrderItemOptionManager orderItemOptionManager;
 
     public String createOrder(CreateOrderDto createOrderDto, Member member) {
-        Order order = orderManager.createOrder(createOrderDto, member);
+        Order order = orderManager.createOrder(member);
         orderItemOptionManager.createOrderItemOption(order, createOrderDto);
-        return order.getTossOrderId();
+        return order.getOrderSerial();
     }
 }
