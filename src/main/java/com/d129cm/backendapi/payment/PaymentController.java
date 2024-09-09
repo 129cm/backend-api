@@ -93,7 +93,7 @@ public class PaymentController {
                 OutputStream cancelOutputStream = connection.getOutputStream();
                 cancelOutputStream.write(obj.toString().getBytes("UTF-8"));
 
-                PaymentResultDto result = PaymentResultDto.fail("결제 완료 처리 중 에러 발생하여 취소 API 호출을 완료했습니다.");
+                PaymentResultDto result = PaymentResultDto.withdraw("결제 완료 처리 중 에러 발생하여 취소 API 호출을 완료했습니다.");
 
                 return ResponseEntity.ok(result);
             }
