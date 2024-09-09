@@ -22,4 +22,8 @@ public class OrderService {
         orderItemOptionManager.createOrderItemOption(order, createOrderDto);
         return order.getOrderSerial();
     }
+
+    public void getOrder(Long orderId) {
+        orderManager.getOrderById(orderId);
+    }
 }
