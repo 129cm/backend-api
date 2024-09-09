@@ -39,4 +39,8 @@ public class Order extends BaseEntity {
         this.commonCodeId = commonCodeId;
         this.member = member;
     }
+
+    public void changeOrderState(CommonCodeId commonCodeId) {
+        this.commonCodeId = commonCodeId;
+    }
 }
