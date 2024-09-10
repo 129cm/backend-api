@@ -1,4 +1,4 @@
-package com.d129cm.backendapi.payment;
+package com.d129cm.backendapi.payment.dto;
 
 public record PaymentResultDto (
         boolean isPaymentSuccess,

@@ -1,8 +1,10 @@
-package com.d129cm.backendapi.payment;
+package com.d129cm.backendapi.payment.controller;
 
 import com.d129cm.backendapi.common.exception.BadRequestException;
 import com.d129cm.backendapi.order.domain.Order;
 import com.d129cm.backendapi.order.service.OrderService;
+import com.d129cm.backendapi.payment.dto.PaymentResultDto;
+import com.d129cm.backendapi.payment.service.PaymentService;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import lombok.RequiredArgsConstructor;

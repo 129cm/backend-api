@@ -1,4 +1,4 @@
-package com.d129cm.backendapi.payment;
+package com.d129cm.backendapi.payment.service;
 
 import com.d129cm.backendapi.common.domain.CommonCodeId;
 import com.d129cm.backendapi.common.domain.code.CodeName;
