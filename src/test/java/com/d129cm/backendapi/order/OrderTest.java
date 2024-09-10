@@ -1,6 +1,7 @@
 package com.d129cm.backendapi.order;
 
 import com.d129cm.backendapi.common.domain.CommonCodeId;
+import com.d129cm.backendapi.common.domain.code.CodeName;
 import com.d129cm.backendapi.common.domain.code.GroupName;
 import com.d129cm.backendapi.member.domain.Member;
 import com.d129cm.backendapi.order.domain.Order;
@@ -21,22 +22,42 @@ public class OrderTest {
             // given
             CommonCodeId mockId = mock(CommonCodeId.class);
             Member mockMember = mock(Member.class);
-            String orderSerial = "주문번호";
             String orderGroupCode = GroupName.주문.getGroupId();
 
             when(mockId.getGroupId()).thenReturn(orderGroupCode);
             // when
             Order order = Order.builder()
                     .commonCodeId(mockId)
-                    .orderSerial(orderSerial)
                     .member(mockMember)
                     .build();
 
             // then
-            assertThat(order.getOrderSerial()).isEqualTo(orderSerial);
             assertThat(order.getMember()).isSameAs(mockMember);
             assertThat(order.getCommonCodeId()).isSameAs(mockId);
             assertThat(order.getCommonCodeId().getGroupId()).isEqualTo(orderGroupCode);
         }
     }
+
+    @Nested
+    class changeOrderState{
+
+        @Test
+        void 변경성공_주문_상태() {
+            // given
+            CommonCodeId oldCommonCodeId = new CommonCodeId(CodeName.주문대기);
+            Member mockMember = mock(Member.class);
+            Order order = Order.builder()
+                    .commonCodeId(oldCommonCodeId)
+                    .member(mockMember)
+                    .build();
+
+            CommonCodeId newCommonCodeId = new CommonCodeId(CodeName.결제완료);
+            // when
+            order.changeOrderState(newCommonCodeId);
+
+            // then
+            assertThat(order.getCommonCodeId()).isEqualTo(newCommonCodeId);
+        }
+    }
+
 }
