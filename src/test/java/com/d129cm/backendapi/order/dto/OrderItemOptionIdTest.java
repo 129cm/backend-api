@@ -1,4 +1,4 @@
-package com.d129cm.backendapi.order;
+package com.d129cm.backendapi.order.dto;
 
 import com.d129cm.backendapi.order.domain.OrderItemOptionId;
 import org.junit.jupiter.api.Nested;
