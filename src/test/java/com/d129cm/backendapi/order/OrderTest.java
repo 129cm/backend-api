@@ -60,4 +60,48 @@ public class OrderTest {
         }
     }
 
+
+    @Nested
+    class setter {
+
+        @Test
+        void 설정성공_결제키(){
+            // given
+            CommonCodeId mockId = new CommonCodeId(CodeName.주문대기);
+            Member mockMember = mock(Member.class);
+
+            Order order = Order.builder()
+                    .commonCodeId(mockId)
+                    .member(mockMember)
+                    .build();
+
+            String payAuthKey = "test-payment-key";
+
+            // when
+            order.setPayAuthKey(payAuthKey);
+
+            // then
+            assertThat(order.getPayAuthKey()).isEqualTo(payAuthKey);
+        }
+
+        @Test
+        void 설정성공_주문번호(){
+            // given
+            CommonCodeId mockId = new CommonCodeId(CodeName.주문대기);
+            Member mockMember = mock(Member.class);
+
+            Order order = Order.builder()
+                    .commonCodeId(mockId)
+                    .member(mockMember)
+                    .build();
+
+            String orderSerial = "orderSerial";
+
+            // when
+            order.setOrderSerial(orderSerial);
+
+            // then
+            assertThat(order.getOrderSerial()).isEqualTo(orderSerial);
+        }
+    }
 }
