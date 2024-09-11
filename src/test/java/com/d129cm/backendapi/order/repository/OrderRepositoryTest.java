@@ -44,11 +44,12 @@ public class OrderRepositoryTest {
         void 성공_주문_저장() {
             // given
             CommonCodeId commonCodeId = new CommonCodeId(CodeName.주문대기);
-
+            String orderSerial = "orderSerial";
             Order order = Order.builder()
                     .commonCodeId(commonCodeId)
                     .member(member)
                     .build();
+            order.setOrderSerial(orderSerial);
 
             // when
             Order savedOrder = orderRepository.save(order);
