@@ -36,7 +36,7 @@ public class OrderManager {
         String orderSerial = "";
         int retryCount = 0;
         do {
-            orderSerial = generateOrderSerial();
+            orderSerial = generateFrontOrderSerial() + "-" + generateBackOrderSerial(BACKNUMBER_LENGTH);;
             retryCount++;
             if (retryCount == 3) throw new RuntimeException("주문번호 생성 실패: 최대 재시도 횟수를 초과했습니다.");
         } while (orderRepository.existsByOrderSerial(orderSerial));
@@ -44,15 +44,12 @@ public class OrderManager {
         return orderRepository.save(order);
     }
 
-    private String generateOrderSerial() {
+    private String generateFrontOrderSerial() {
         LocalDate today = LocalDate.now();
-        String frontNumber = today.format(DateTimeFormatter.ofPattern("yyyyMMdd"));
-        String backNumber = generateRandomBase36(BACKNUMBER_LENGTH);
-
-        return frontNumber + "-" + backNumber;
+        return today.format(DateTimeFormatter.ofPattern("yyyyMMdd"));
     }
 
-    private static String generateRandomBase36(int length) {
+    private static String generateBackOrderSerial(int length) {
         StringBuilder sb = new StringBuilder(length);
         for (int i = 0; i < length; i++) {
             sb.append(BASE36_CHARS.charAt(random.nextInt(36)));
