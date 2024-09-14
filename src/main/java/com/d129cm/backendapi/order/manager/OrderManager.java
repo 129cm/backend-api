@@ -5,7 +5,6 @@ import com.d129cm.backendapi.common.domain.code.CodeName;
 import com.d129cm.backendapi.common.exception.NotFoundException;
 import com.d129cm.backendapi.member.domain.Member;
 import com.d129cm.backendapi.order.domain.Order;
-import com.d129cm.backendapi.order.dto.CreateOrderDto;
 import com.d129cm.backendapi.order.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
