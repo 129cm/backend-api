@@ -3,10 +3,12 @@ package com.d129cm.backendapi.order.manager;
 import com.d129cm.backendapi.common.domain.CommonCodeId;
 import com.d129cm.backendapi.common.domain.code.CodeName;
 import com.d129cm.backendapi.common.exception.ConflictException;
+import com.d129cm.backendapi.common.exception.NotFoundException;
 import com.d129cm.backendapi.fixture.MemberFixture;
 import com.d129cm.backendapi.member.domain.Member;
 import com.d129cm.backendapi.order.domain.Order;
 import com.d129cm.backendapi.order.repository.OrderRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -53,6 +55,18 @@ public class OrderManagerTest {
 
             // then
             assertThat(result).isEqualTo(order);
+        }
+
+        @Test
+        void 에러반환_Order가_없는_경우() {
+            Long orderId = 1L;
+            String message = "정보를 찾을 수 없습니다.";
+            when(orderRepository.findById(orderId)).thenReturn(Optional.empty());
+
+            // when & then
+            NotFoundException exception = assertThrows(NotFoundException.class,
+                    () -> orderManager.getOrderById(orderId));
+            assertThat(message).isEqualTo(exception.getMessage());
         }
     }
 
