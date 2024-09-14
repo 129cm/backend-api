@@ -2,6 +2,7 @@ package com.d129cm.backendapi.order.manager;
 
 import com.d129cm.backendapi.common.domain.CommonCodeId;
 import com.d129cm.backendapi.common.domain.code.CodeName;
+import com.d129cm.backendapi.common.exception.ConflictException;
 import com.d129cm.backendapi.common.exception.NotFoundException;
 import com.d129cm.backendapi.member.domain.Member;
 import com.d129cm.backendapi.order.domain.Order;
@@ -38,7 +39,7 @@ public class OrderManager {
         do {
             orderSerial = generateFrontOrderSerial() + "-" + generateBackOrderSerial(BACKNUMBER_LENGTH);;
             retryCount++;
-            if (retryCount == 3) throw new RuntimeException("주문번호 생성 실패: 최대 재시도 횟수를 초과했습니다.");
+            if (retryCount == 3) throw ConflictException.exceedMaxRetries("주문번호 생성");
         } while (orderRepository.existsByOrderSerial(orderSerial));
         order.setOrderSerial(orderSerial);
         return orderRepository.save(order);
