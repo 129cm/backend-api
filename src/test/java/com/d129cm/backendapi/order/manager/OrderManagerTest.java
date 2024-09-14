@@ -2,6 +2,7 @@ package com.d129cm.backendapi.order.manager;
 
 import com.d129cm.backendapi.common.domain.CommonCodeId;
 import com.d129cm.backendapi.common.domain.code.CodeName;
+import com.d129cm.backendapi.common.exception.ConflictException;
 import com.d129cm.backendapi.fixture.MemberFixture;
 import com.d129cm.backendapi.member.domain.Member;
 import com.d129cm.backendapi.order.domain.Order;
@@ -15,9 +16,9 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
-import java.util.Random;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -86,6 +87,20 @@ public class OrderManagerTest {
                 softly.assertThat(result.getOrderSerial()).hasSize(FRONTNUMBER_LENGTH + BACKNUMBER_LENGTH);
                 verify(orderRepository).save(any(Order.class));
             });
+        }
+
+        @Test
+        void 에러반환_주문번호_생성_실패() {
+            // given
+            Member member = MemberFixture.createMember("abc@example.com");
+            String message = "주문번호 생성 실패: 최대 재시도 횟수를 초과했습니다.";
+
+            when(orderRepository.existsByOrderSerial(any())).thenReturn(true);
+
+            // when & then
+            ConflictException exception = assertThrows(ConflictException.class,
+                    () -> orderManager.createOrder(member));
+            assertThat(message).isEqualTo(exception.getMessage());
         }
     }
 }
