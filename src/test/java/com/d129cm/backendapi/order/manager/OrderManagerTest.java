@@ -2,24 +2,24 @@ package com.d129cm.backendapi.order.manager;
 
 import com.d129cm.backendapi.common.domain.CommonCodeId;
 import com.d129cm.backendapi.common.domain.code.CodeName;
-import com.d129cm.backendapi.common.exception.NotFoundException;
+import com.d129cm.backendapi.fixture.MemberFixture;
 import com.d129cm.backendapi.member.domain.Member;
 import com.d129cm.backendapi.order.domain.Order;
 import com.d129cm.backendapi.order.repository.OrderRepository;
+import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.testcontainers.shaded.org.checkerframework.checker.units.qual.N;
 
 import java.util.Optional;
 import java.util.Random;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class OrderManagerTest {
@@ -30,9 +30,7 @@ public class OrderManagerTest {
     @Mock
     private OrderRepository orderRepository;
 
-    private static final String BASE36_CHARS = "0123456789abcdefghijklmnopqrstuvwxyz";
     private static final int BACKNUMBER_LENGTH = 7;  // 36진법으로 7자리
-    private static final Random random = new Random();
 
     @Nested
     class getOrderById {
@@ -54,6 +52,40 @@ public class OrderManagerTest {
 
             // then
             assertThat(result).isEqualTo(order);
+        }
+    }
+
+    @Nested
+    class createOrder {
+
+        @Test
+        void Order반환_order_생성() {
+            // given
+            Member member = MemberFixture.createMember("abc@example.com");
+            CommonCodeId commonCodeId = new CommonCodeId(CodeName.주문대기);
+            int FRONTNUMBER_LENGTH = "yyyyMMdd-".length();
+            String orderSerial = "20240914-1234567";
+
+            Order order = spy(Order.builder()
+                    .member(member)
+                    .commonCodeId(commonCodeId)
+                    .build());
+            order.setOrderSerial(orderSerial);
+
+            when(orderRepository.existsByOrderSerial(any())).thenReturn(false);
+            when(orderRepository.save(any(Order.class))).thenReturn(order);
+
+            // when
+            Order result = orderManager.createOrder(member);
+
+            // then
+            SoftAssertions.assertSoftly(softly -> {
+                softly.assertThat(result.getMember()).isEqualTo(member);
+                softly.assertThat(result.getCommonCodeId()).isEqualTo(commonCodeId);
+                softly.assertThat(result.getOrderSerial()).isNotNull();
+                softly.assertThat(result.getOrderSerial()).hasSize(FRONTNUMBER_LENGTH + BACKNUMBER_LENGTH);
+                verify(orderRepository).save(any(Order.class));
+            });
         }
     }
 }
