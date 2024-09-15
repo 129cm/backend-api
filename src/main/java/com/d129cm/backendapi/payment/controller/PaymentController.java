@@ -40,7 +40,6 @@ public class PaymentController {
     public ResponseEntity<PaymentResultDto> confirmPayment(@RequestParam String paymentKey, @RequestParam("orderId") String tossOrderId, @RequestParam Integer amount) throws Exception {
         Order order = paymentService.getOrderByOrderSerial(tossOrderId);
         Long orderId = order.getId();
-        orderService.getOrder(orderId);
 
         Integer totalPrice = paymentService.getTotalPrice(orderId);
         if (!Objects.equals(amount, totalPrice)) {

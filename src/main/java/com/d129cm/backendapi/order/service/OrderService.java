@@ -23,7 +23,4 @@ public class OrderService {
         return order.getOrderSerial();
     }
 
-    public void getOrder(Long orderId) {
-        orderManager.getOrderById(orderId);
-    }
 }
