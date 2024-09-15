@@ -8,7 +8,6 @@ import com.d129cm.backendapi.fixture.MemberFixture;
 import com.d129cm.backendapi.member.domain.Member;
 import com.d129cm.backendapi.order.domain.Order;
 import com.d129cm.backendapi.order.repository.OrderRepository;
-import jakarta.persistence.EntityNotFoundException;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
