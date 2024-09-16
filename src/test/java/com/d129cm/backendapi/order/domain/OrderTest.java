@@ -1,9 +1,8 @@
-package com.d129cm.backendapi.order;
+package com.d129cm.backendapi.order.domain;
 
 import com.d129cm.backendapi.common.domain.CommonCodeId;
 import com.d129cm.backendapi.common.domain.code.GroupName;
 import com.d129cm.backendapi.member.domain.Member;
-import com.d129cm.backendapi.order.domain.Order;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 

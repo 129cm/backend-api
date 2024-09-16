@@ -1,5 +1,6 @@
 package com.d129cm.backendapi.config;
 
+import com.d129cm.backendapi.common.annotation.JpaSliceTest;
 import com.d129cm.backendapi.common.config.CommonCodeInitializer;
 import com.d129cm.backendapi.common.domain.CommonCode;
 import com.d129cm.backendapi.common.domain.CommonCodeGroup;
@@ -9,16 +10,11 @@ import com.d129cm.backendapi.common.domain.code.GroupName;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.testcontainers.context.ImportTestcontainers;
 import org.springframework.context.annotation.Import;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@DataJpaTest
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@ImportTestcontainers(InitializeTestContainers.class)
+@JpaSliceTest
 @Import(CommonCodeInitializer.class)
 public class CommonCodeInitializerTest {
 
