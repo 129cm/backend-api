@@ -1,7 +1,8 @@
 insert into common_code_group values ('100', '주문'),
                                      ('200', '배송');
 
-insert into common_code values ('010', '100', '결제완료'),
+insert into common_code values ('000', '100', '주문대기'),
+                               ('010', '100', '결제완료'),
                                ('020', '100', '주문완료'),
                                ('030', '100', '주문취소'),
                                ('010', '200', '배송중'),

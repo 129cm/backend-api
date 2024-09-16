@@ -5,10 +5,7 @@ import com.d129cm.backendapi.common.domain.CommonCodeId;
 import com.d129cm.backendapi.common.domain.code.GroupName;
 import com.d129cm.backendapi.member.domain.Member;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.util.Assert;
 
 @Entity
@@ -27,16 +24,23 @@ public class Order extends BaseEntity {
     })
     private CommonCodeId commonCodeId;
 
+    @Setter
     private String orderSerial;
+
+    @Setter
+    private String payAuthKey;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Member member;
 
     @Builder
-    private Order(CommonCodeId commonCodeId, Member member, String orderSerial) {
+    private Order(CommonCodeId commonCodeId, Member member) {
         Assert.isTrue(GroupName.주문.getGroupId().equals(commonCodeId.getGroupId()), "올바른 그룹 코드가 아닙니다.");
         this.commonCodeId = commonCodeId;
         this.member = member;
-        this.orderSerial = orderSerial;
+    }
+
+    public void changeOrderState(CommonCodeId commonCodeId) {
+        this.commonCodeId = commonCodeId;
     }
 }
