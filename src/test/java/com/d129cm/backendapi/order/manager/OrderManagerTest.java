@@ -5,6 +5,7 @@ import com.d129cm.backendapi.common.domain.code.CodeName;
 import com.d129cm.backendapi.common.exception.ConflictException;
 import com.d129cm.backendapi.common.exception.NotFoundException;
 import com.d129cm.backendapi.fixture.MemberFixture;
+import com.d129cm.backendapi.fixture.OrderFixture;
 import com.d129cm.backendapi.member.domain.Member;
 import com.d129cm.backendapi.order.domain.Order;
 import com.d129cm.backendapi.order.repository.OrderRepository;
@@ -113,6 +114,40 @@ public class OrderManagerTest {
             // when & then
             ConflictException exception = assertThrows(ConflictException.class,
                     () -> orderManager.createOrder(member));
+            assertThat(message).isEqualTo(exception.getMessage());
+        }
+    }
+
+    @Nested
+    class getOrderByOrderSerial {
+
+        @Test
+        void 주문반환_주분_번호로_조회() {
+            // given
+            String orderSerial = "20240914-1234567";
+            Order order = OrderFixture.makeOrderWithOrderSerial(mock(Member.class), orderSerial);
+
+            when(orderRepository.findByOrderSerial(orderSerial)).thenReturn(Optional.of(order));
+
+            // when
+            Order result = orderManager.getOrderByOrderSerial(orderSerial);
+
+            // then
+            verify(orderRepository).findByOrderSerial(orderSerial);
+        }
+
+        @Test
+        void 에러반환_주문_번호로_조회_실패() {
+            // given
+            String orderSerial = "20240914-1234567";
+            Order order = OrderFixture.makeOrderWithOrderSerial(mock(Member.class), orderSerial);
+            String message = "정보를 찾을 수 없습니다.";
+
+            when(orderRepository.findByOrderSerial(orderSerial)).thenReturn(Optional.empty());
+
+            // when & then
+            NotFoundException exception = assertThrows(NotFoundException.class,
+                    () -> orderManager.getOrderByOrderSerial(orderSerial));
             assertThat(message).isEqualTo(exception.getMessage());
         }
     }
