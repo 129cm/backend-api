@@ -24,9 +24,9 @@ public class OrderItemOptionManager {
 
 
     public void createOrderItemOption(Order order, CreateOrderDto createOrderDto) {
-        for(BrandsForOrderResponse response: createOrderDto.brandsForOrderResponse()) {
+        for (BrandsForOrderResponse response : createOrderDto.brandsForOrderResponse()) {
             List<ItemWithOptionForOrderResponse> itemResponseList = response.itemResponse();
-            for(ItemWithOptionForOrderResponse itemResponse: itemResponseList) {
+            for (ItemWithOptionForOrderResponse itemResponse : itemResponseList) {
                 OrderItemOption orderItemOption = OrderItemOption.builder()
                         .itemOption(itemOptionManager.getItemOption(itemResponse.itemOptionId()))
                         .order(order)

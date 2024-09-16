@@ -7,7 +7,8 @@ import com.d129cm.backendapi.order.domain.Order;
 
 public class OrderFixture {
 
-    private OrderFixture() {}
+    private OrderFixture() {
+    }
 
     public static Order makeOrder(Member member) {
         return Order.builder()

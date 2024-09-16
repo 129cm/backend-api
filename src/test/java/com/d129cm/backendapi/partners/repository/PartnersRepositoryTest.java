@@ -1,25 +1,20 @@
 package com.d129cm.backendapi.partners.repository;
 
+import com.d129cm.backendapi.common.annotation.JpaSliceTest;
 import com.d129cm.backendapi.common.domain.Password;
-import com.d129cm.backendapi.config.InitializeTestContainers;
 import com.d129cm.backendapi.partners.domain.Partners;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.testcontainers.context.ImportTestcontainers;
 
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 
-@DataJpaTest
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@ImportTestcontainers(InitializeTestContainers.class)
+@JpaSliceTest
 public class PartnersRepositoryTest {
 
     @Autowired

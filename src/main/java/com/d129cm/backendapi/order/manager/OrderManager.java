@@ -6,11 +6,15 @@ import com.d129cm.backendapi.common.exception.ConflictException;
 import com.d129cm.backendapi.common.exception.NotFoundException;
 import com.d129cm.backendapi.member.domain.Member;
 import com.d129cm.backendapi.order.domain.Order;
+import com.d129cm.backendapi.order.dto.OrdersSearchResultDto;
 import com.d129cm.backendapi.order.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Random;
 
@@ -24,6 +28,18 @@ public class OrderManager {
 
     private final OrderRepository orderRepository;
 
+    public OrdersSearchResultDto searchResult(String itemName, String startDate, String endDate, String orderState, int size, int page) {
+        LocalDateTime startTime = Strings.isNotEmpty(startDate) ? LocalDateTime.parse(startDate) : LocalDateTime.of(1900, 1, 1, 0, 0);
+        LocalDateTime endTime = Strings.isNotEmpty(endDate)
+                ? LocalDateTime.parse(endDate)
+                : LocalDateTime.of(LocalDate.now(), LocalTime.of(LocalTime.now().getHour(), LocalTime.now().getMinute()));
+
+        size = Math.max(1, Math.min(size, 100));
+        page = Math.max(0, page);
+
+        return orderRepository.searchOrders(itemName, startTime, endTime, orderState, size, page);
+    }
+
     public Order getOrderById(Long orderId) {
         return orderRepository.findById(orderId).orElseThrow(NotFoundException::entityNotFound);
     }
@@ -34,10 +50,10 @@ public class OrderManager {
                 .commonCodeId(new CommonCodeId(CodeName.주문대기))
                 .build();
 
-        String orderSerial = "";
+        String orderSerial;
         int retryCount = 0;
         do {
-            orderSerial = generateFrontOrderSerial() + "-" + generateBackOrderSerial(BACKNUMBER_LENGTH);;
+            orderSerial = generateFrontOrderSerial() + "-" + generateBackOrderSerial(BACKNUMBER_LENGTH);
             retryCount++;
             if (retryCount == 3) throw ConflictException.exceedMaxRetries("주문번호 생성");
         } while (orderRepository.existsByOrderSerial(orderSerial));

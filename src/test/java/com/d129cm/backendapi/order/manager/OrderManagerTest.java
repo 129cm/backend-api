@@ -17,6 +17,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -34,6 +37,25 @@ public class OrderManagerTest {
     private OrderRepository orderRepository;
 
     private static final int BACKNUMBER_LENGTH = 7;  // 36진법으로 7자리
+
+    @Nested
+    class searchOrder {
+        @Test
+        void 검색결과반환_검색어_없음_10개_조회() {
+            // given
+            int size = 10;
+            int page = 0;
+            LocalDate today = LocalDate.now();
+            LocalTime nowTime = LocalTime.now();
+
+            // when
+            orderManager.searchResult(null, null, null, null, size, page);
+
+            // then
+            LocalDateTime endTime = LocalDateTime.of(today, LocalTime.of(nowTime.getHour(), nowTime.getMinute()));
+            verify(orderRepository, times(1)).searchOrders(null, LocalDateTime.of(1900, 1, 1, 0, 0), endTime, null, size, page);
+        }
+    }
 
     @Nested
     class getOrderById {

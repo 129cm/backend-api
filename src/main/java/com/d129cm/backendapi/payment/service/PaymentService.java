@@ -21,7 +21,7 @@ public class PaymentService {
     private final OrderManager orderManager;
     private final OrderItemOptionManager orderItemOptionManager;
 
-    public Integer getTotalPrice (Long orderId) {
+    public Integer getTotalPrice(Long orderId) {
         List<OrderItemOption> orderItemOptions = orderItemOptionManager.getOrderItemOptionByOrderId(orderId);
         Integer totalPrice = 0;
         for (OrderItemOption orderItemOption : orderItemOptions) {

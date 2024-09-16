@@ -3,7 +3,6 @@ package com.d129cm.backendapi.order.repository;
 import com.d129cm.backendapi.common.annotation.JpaSliceTest;
 import com.d129cm.backendapi.common.config.JpaAuditingConfig;
 import com.d129cm.backendapi.item.domain.ItemOption;
-import com.d129cm.backendapi.member.domain.Member;
 import com.d129cm.backendapi.order.domain.Order;
 import com.d129cm.backendapi.order.domain.OrderItemOption;
 import jakarta.persistence.EntityManager;

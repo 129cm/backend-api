@@ -2,11 +2,11 @@ package com.d129cm.backendapi.order.repository;
 
 import com.d129cm.backendapi.common.annotation.JpaSliceTest;
 import com.d129cm.backendapi.common.config.JpaAuditingConfig;
-import com.d129cm.backendapi.common.domain.CommonCode;
 import com.d129cm.backendapi.common.domain.CommonCodeId;
 import com.d129cm.backendapi.common.domain.code.CodeName;
 import com.d129cm.backendapi.member.domain.Member;
 import com.d129cm.backendapi.order.domain.Order;
+import com.d129cm.backendapi.order.dto.OrdersSearchResultDto;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import org.junit.jupiter.api.Assertions;
@@ -20,7 +20,7 @@ import org.springframework.test.context.jdbc.Sql;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @JpaSliceTest
-@Sql({"/clean-up.sql", "/test-item-cart.sql"})
+@Sql(value = {"/clean-up.sql", "/test-common-code.sql", "/test-order.sql"})
 @Import(JpaAuditingConfig.class)
 public class OrderRepositoryTest {
 
@@ -35,6 +35,24 @@ public class OrderRepositoryTest {
     @BeforeEach
     void init() {
         member = em.find(Member.class, 1L);
+    }
+
+    @Nested
+    class searchOrders {
+
+        @Test
+        void OrdersSearchResponseDto반환_파라메터_없이_검색() {
+            // given
+            int size = 10;
+            int page = 0;
+
+            // when
+            OrdersSearchResultDto responseDtos = orderRepository.searchOrders(null, null, null, null, size, page);
+
+            // then
+            assertThat(responseDtos.getOrders()).isNotNull();
+            assertThat(responseDtos.getOrders().size()).isEqualTo(size);
+        }
     }
 
     @Nested
@@ -63,5 +81,4 @@ public class OrderRepositoryTest {
             );
         }
     }
-
 }

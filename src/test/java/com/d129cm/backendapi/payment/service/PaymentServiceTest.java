@@ -2,7 +2,6 @@ package com.d129cm.backendapi.payment.service;
 
 import com.d129cm.backendapi.common.domain.CommonCodeId;
 import com.d129cm.backendapi.common.domain.code.CodeName;
-import com.d129cm.backendapi.fixture.ItemFixture;
 import com.d129cm.backendapi.fixture.ItemOptionFixture;
 import com.d129cm.backendapi.fixture.OrderFixture;
 import com.d129cm.backendapi.item.domain.Item;
@@ -127,8 +126,8 @@ public class PaymentServiceTest {
 
             // then
             assertThat(paymentKey).isEqualTo(order.getPayAuthKey());
-            assertThat(itemOption1.getQuantity()).isEqualTo(beforeQuantity1-count1);
-            assertThat(itemOption2.getQuantity()).isEqualTo(beforeQuantity2-count2);
+            assertThat(itemOption1.getQuantity()).isEqualTo(beforeQuantity1 - count1);
+            assertThat(itemOption2.getQuantity()).isEqualTo(beforeQuantity2 - count2);
         }
     }
 

@@ -1,10 +1,10 @@
 package com.d129cm.backendapi.payment.dto;
 
-public record PaymentResultDto (
+public record PaymentResultDto(
         boolean isPaymentSuccess,
         String message
 ) {
-    public static PaymentResultDto withdraw( String message) {
+    public static PaymentResultDto withdraw(String message) {
         return new PaymentResultDto(false, message);
     }
 
