@@ -142,7 +142,7 @@ public class PaymentServiceTest {
             CommonCodeId newCommonCodeId = new CommonCodeId(CodeName.결제완료);
 
             // when
-            order.changeOrderState(newCommonCodeId);
+            paymentService.completeOrder(order);
 
             // then
             assertThat(order.getCommonCodeId()).isEqualTo(newCommonCodeId);
@@ -159,10 +159,30 @@ public class PaymentServiceTest {
             CommonCodeId newCommonCodeId = new CommonCodeId(CodeName.주문취소);
 
             // when
-            order.changeOrderState(newCommonCodeId);
+            paymentService.undoOrder(order);
 
             // then
             assertThat(order.getCommonCodeId()).isEqualTo(newCommonCodeId);
+        }
+    }
+
+    @Nested
+    class getOrderByOrderSerial {
+
+        @Test
+        void Order반환_orderSerial로_order_조회() {
+            // given
+            String orderSerial = "20240916-2345678";
+            Order order = OrderFixture.makeOrderWithOrderSerial(mock(Member.class), orderSerial);
+
+            when(orderManager.getOrderByOrderSerial(orderSerial)).thenReturn(order);
+
+            // when
+            Order result = paymentService.getOrderByOrderSerial(orderSerial);
+
+            // then
+            verify(orderManager).getOrderByOrderSerial(orderSerial);
+            assertThat(result).isEqualTo(order);
         }
     }
 }
