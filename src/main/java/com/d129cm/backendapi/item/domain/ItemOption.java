@@ -52,4 +52,8 @@ public class ItemOption {
         this.quantity = option.getQuantity();
         this.optionPrice = option.getOptionPrice();
     }
+
+    public void decreaseQuantity(Integer count) {
+        this.quantity -= count;
+    }
 }

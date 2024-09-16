@@ -30,7 +30,7 @@ public class PaymentService {
         return totalPrice;
     }
 
-    public void prepareOrder(Order order, String tossOrderId, String paymentKey) {
+    public void prepareOrder(Order order, String paymentKey) {
         order.setPayAuthKey(paymentKey);
         decreaseStockQuantity(order.getId());
     }
@@ -39,8 +39,7 @@ public class PaymentService {
         List<OrderItemOption> orderItemOptions = orderItemOptionManager.getOrderItemOptionByOrderId(orderId);
         for (OrderItemOption orderItemOption : orderItemOptions) {
             ItemOption itemOption = orderItemOption.getItemOption();
-            Integer quantity = itemOption.getQuantity();
-            quantity -= orderItemOption.getCount();
+            itemOption.decreaseQuantity(orderItemOption.getCount());
         }
     }
 
