@@ -6,7 +6,7 @@ import lombok.Getter;
 public enum CodeName {
 
     // 주문 (100)
-    결제완료("010", GroupName.주문), 주문완료("020", GroupName.주문), 주문취소("030", GroupName.주문),
+    주문대기("000", GroupName.주문), 결제완료("010", GroupName.주문), 주문완료("020", GroupName.주문), 주문취소("030", GroupName.주문),
 
     // 배송 (200)
     배송중("010", GroupName.배송), 배송완료("020", GroupName.배송),

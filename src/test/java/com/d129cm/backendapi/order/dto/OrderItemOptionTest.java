@@ -1,4 +1,4 @@
-package com.d129cm.backendapi.order;
+package com.d129cm.backendapi.order.dto;
 
 import com.d129cm.backendapi.item.domain.ItemOption;
 import com.d129cm.backendapi.order.domain.Order;

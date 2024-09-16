@@ -32,6 +32,9 @@ dependencies {
     implementation 'javax.cache:cache-api:1.1.1'
     implementation 'org.ehcache:ehcache:3.10.0'
 
+    // gson
+    implementation group: 'com.google.code.gson', name: 'gson', version: '2.10.1'
+
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-web'
