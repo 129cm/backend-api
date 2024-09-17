@@ -21,4 +21,13 @@ public enum CodeName {
         this.codeId = codeId;
         this.groupName = groupName;
     }
+
+    public static String from(String codeId, GroupName groupName) {
+        for (CodeName codeName : CodeName.values()) {
+            if (codeName.codeId.equals(codeId) && codeName.groupName.equals(groupName)) {
+                return codeName.name();
+            }
+        }
+        throw new IllegalArgumentException("No enum constant for codeId: " + codeId + " and groupName: " + groupName);
+    }
 }
