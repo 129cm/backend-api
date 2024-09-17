@@ -8,6 +8,7 @@ import com.d129cm.backendapi.fixture.MemberFixture;
 import com.d129cm.backendapi.fixture.OrderFixture;
 import com.d129cm.backendapi.member.domain.Member;
 import com.d129cm.backendapi.order.domain.Order;
+import com.d129cm.backendapi.order.dto.OrderDetailsDto;
 import com.d129cm.backendapi.order.repository.OrderRepository;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.Nested;
@@ -54,6 +55,26 @@ public class OrderManagerTest {
             // then
             LocalDateTime endTime = LocalDateTime.of(today, LocalTime.of(nowTime.getHour(), nowTime.getMinute()));
             verify(orderRepository, times(1)).searchOrders(null, LocalDateTime.of(1900, 1, 1, 0, 0), endTime, null, size, page);
+        }
+    }
+
+    @Nested
+    class getOrderDetailsByOrderId {
+
+        @Test
+        void OrderDetailsDto반환_orderId로_조회() {
+            // given
+            Long orderId = 1L;
+            OrderDetailsDto dto = mock(OrderDetailsDto.class);
+            when(dto.getOrderId()).thenReturn(orderId);
+            when(orderRepository.findOrderDetailsByOrderId(orderId)).thenReturn(dto);
+
+            // when
+            OrderDetailsDto detailsDto = orderManager.getOrderDetailsByOrderId(orderId);
+
+            // then
+            verify(orderRepository, times(1)).findOrderDetailsByOrderId(orderId);
+            assertThat(detailsDto.getOrderId()).isEqualTo(orderId);
         }
     }
 

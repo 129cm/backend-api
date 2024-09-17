@@ -6,6 +6,7 @@ import com.d129cm.backendapi.common.exception.ConflictException;
 import com.d129cm.backendapi.common.exception.NotFoundException;
 import com.d129cm.backendapi.member.domain.Member;
 import com.d129cm.backendapi.order.domain.Order;
+import com.d129cm.backendapi.order.dto.OrderDetailsDto;
 import com.d129cm.backendapi.order.dto.OrdersSearchResultDto;
 import com.d129cm.backendapi.order.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
@@ -38,6 +39,10 @@ public class OrderManager {
         page = Math.max(0, page);
 
         return orderRepository.searchOrders(itemName, startTime, endTime, orderState, size, page);
+    }
+
+    public OrderDetailsDto getOrderDetailsByOrderId(Long orderId) {
+        return orderRepository.findOrderDetailsByOrderId(orderId);
     }
 
     public Order getOrderById(Long orderId) {
