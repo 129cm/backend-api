@@ -2,13 +2,16 @@ package com.d129cm.backendapi.partners.controller;
 
 import com.d129cm.backendapi.auth.domain.PartnersDetails;
 import com.d129cm.backendapi.common.domain.Password;
+import com.d129cm.backendapi.order.dto.OrderAddressDto;
+import com.d129cm.backendapi.order.dto.OrderDetailsDto;
 import com.d129cm.backendapi.order.dto.OrdersSearchResponseDto;
 import com.d129cm.backendapi.order.dto.OrdersSearchResultDto;
 import com.d129cm.backendapi.order.service.OrderService;
 import com.d129cm.backendapi.partners.domain.Partners;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -16,6 +19,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
@@ -36,9 +40,6 @@ public class PartnersOrderControllerTest {
 
     @MockBean
     private OrderService orderService;
-
-    @Autowired
-    private ObjectMapper objectMapper;
 
     @Nested
     class SearchOrders {
@@ -79,6 +80,47 @@ public class PartnersOrderControllerTest {
                     .andExpect(jsonPath("$.data.orders[0].orderId").value(1L))
                     .andExpect(jsonPath("$.data.orders[1].orderId").value(2L))
                     .andExpect(jsonPath("$.data.total").value(2));
+        }
+    }
+
+    @Nested
+    class GetOrderDetailsByOrderId {
+        @Test
+        @DisplayName("주문 상세 정보 조회 API 테스트")
+        public void getOrderDetailsByOrderId_success() throws Exception {
+            // given
+            Password password = mock(Password.class);
+            Partners mockPartners = spy(Partners.builder()
+                    .email("testPartners@email.com")
+                    .password(password)
+                    .businessNumber("123-45-67890")
+                    .build());
+
+            OrderDetailsDto orderDetailsDto = new OrderDetailsDto(
+                    1L, "010", LocalDateTime.now(),
+                    List.of(),
+                    1L, "John Doe",
+                    new OrderAddressDto("아파트 101호", "서울시 강남구", "12345")
+            );
+
+            Mockito.when(orderService.getOrderDetailsByOrderId(anyLong()))
+                    .thenReturn(orderDetailsDto);
+
+            // when & then
+            mockMvc.perform(get("/partners/brands/orders/{orderId}", 1L)
+                            .with(SecurityMockMvcRequestPostProcessors.user(new PartnersDetails(mockPartners)))
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .characterEncoding(StandardCharsets.UTF_8)
+                    )
+
+                    .andExpect(status().isOk())
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.status").value(200))
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("성공"))
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.data.orderId").value(1L))
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.data.orderState").value("배송중"))
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.data.memberName").value("John Doe"))
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.data.address.roadNameAddress").value("서울시 강남구"))
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.data.address.addressDetails").value("아파트 101호"));
         }
     }
 }

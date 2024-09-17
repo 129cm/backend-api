@@ -3,14 +3,12 @@ package com.d129cm.backendapi.order.dto;
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
 @NoArgsConstructor
-@ToString
 public class OrdersSearchResponseDto {
     private Long memberId;
     private String memberName;

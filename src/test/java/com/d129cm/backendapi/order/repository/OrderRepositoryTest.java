@@ -6,6 +6,7 @@ import com.d129cm.backendapi.common.domain.CommonCodeId;
 import com.d129cm.backendapi.common.domain.code.CodeName;
 import com.d129cm.backendapi.member.domain.Member;
 import com.d129cm.backendapi.order.domain.Order;
+import com.d129cm.backendapi.order.dto.OrderDetailsDto;
 import com.d129cm.backendapi.order.dto.OrdersSearchResultDto;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -52,6 +53,24 @@ public class OrderRepositoryTest {
             // then
             assertThat(responseDtos.getOrders()).isNotNull();
             assertThat(responseDtos.getOrders().size()).isEqualTo(size);
+        }
+    }
+
+    @Nested
+    class findOrderDetailsByOrderId {
+
+        @Test
+        void OrderDetailsDto반환_주문_상세_조회() {
+            // given
+            Long orderId = 1L;
+
+            // when
+            OrderDetailsDto details = orderRepository.findOrderDetailsByOrderId(orderId);
+
+            // then
+            assertThat(details).isNotNull();
+            assertThat(details.getOrderId()).isEqualTo(orderId);
+            assertThat(details.getMemberId()).isEqualTo(member.getId());
         }
     }
 
