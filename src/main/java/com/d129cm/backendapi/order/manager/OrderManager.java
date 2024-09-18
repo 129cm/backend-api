@@ -1,7 +1,5 @@
 package com.d129cm.backendapi.order.manager;
 
-import com.d129cm.backendapi.common.domain.CommonCodeId;
-import com.d129cm.backendapi.common.domain.code.CodeName;
 import com.d129cm.backendapi.common.exception.ConflictException;
 import com.d129cm.backendapi.common.exception.NotFoundException;
 import com.d129cm.backendapi.member.domain.Member;
@@ -13,11 +11,11 @@ import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.stereotype.Component;
 
+import java.security.SecureRandom;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Random;
 
 @Component
 @RequiredArgsConstructor
@@ -25,7 +23,7 @@ public class OrderManager {
 
     private static final String BASE36_CHARS = "0123456789abcdefghijklmnopqrstuvwxyz";
     private static final int BACKNUMBER_LENGTH = 7;  // 36진법으로 7자리
-    private static final Random random = new Random();
+    private static final SecureRandom random = new SecureRandom();
 
     private final OrderRepository orderRepository;
 
