@@ -55,14 +55,14 @@ VALUES (@member_id1),
        (@member_id3);
 
 -- Order 데이터 삽입
-INSERT INTO orders (code_id, group_id, order_serial, pay_auth_key, member_id, created_at, modified_at)
-VALUES ('CODE001', 'ORDER_GROUP', '20240916-2345678', 'payment_key_001', @member_id1, NOW(), NOW());
+INSERT INTO orders (order_serial, pay_auth_key, member_id, created_at, modified_at)
+VALUES ( '20240916-2345678', 'payment_key_001', @member_id1, NOW(), NOW());
 SET @order_id1 = LAST_INSERT_ID();
 
-INSERT INTO orders (code_id, group_id, order_serial, pay_auth_key, member_id, created_at, modified_at)
-VALUES ('CODE002', 'ORDER_GROUP', '20240916-3456789', 'payment_key_002', @member_id2, NOW(), NOW());
+INSERT INTO orders (order_serial, pay_auth_key, member_id, created_at, modified_at)
+VALUES ('20240916-3456789', 'payment_key_002', @member_id2, NOW(), NOW());
 SET @order_id2 = LAST_INSERT_ID();
 
-INSERT INTO orders (code_id, group_id, order_serial, pay_auth_key, member_id, created_at, modified_at)
-VALUES ('CODE003', 'ORDER_GROUP', '20240916-4567890', 'payment_key_003', @member_id3, NOW(), NOW());
+INSERT INTO orders (order_serial, pay_auth_key, member_id, created_at, modified_at)
+VALUES ('20240916-4567890', 'payment_key_003', @member_id3, NOW(), NOW());
 SET @order_id3 = LAST_INSERT_ID();
