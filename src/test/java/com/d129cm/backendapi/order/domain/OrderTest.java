@@ -20,19 +20,14 @@ public class OrderTest {
             // given
             CommonCodeId mockId = mock(CommonCodeId.class);
             Member mockMember = mock(Member.class);
-            String orderGroupCode = GroupName.주문.getGroupId();
+            String orderSerial = "20240918-1234567";
 
-            when(mockId.getGroupId()).thenReturn(orderGroupCode);
             // when
-            Order order = Order.builder()
-                    .commonCodeId(mockId)
-                    .member(mockMember)
-                    .build();
+            Order order = new Order(mockMember, orderSerial);
 
             // then
             assertThat(order.getMember()).isSameAs(mockMember);
-            assertThat(order.getCommonCodeId()).isSameAs(mockId);
-            assertThat(order.getCommonCodeId().getGroupId()).isEqualTo(orderGroupCode);
+            assertThat(order.getOrderSerial()).isSameAs(orderSerial);
         }
     }
 }
