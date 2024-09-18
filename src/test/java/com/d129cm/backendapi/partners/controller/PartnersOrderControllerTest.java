@@ -6,8 +6,8 @@ import com.d129cm.backendapi.order.dto.OrderAddressDto;
 import com.d129cm.backendapi.order.dto.OrderDetailsDto;
 import com.d129cm.backendapi.order.dto.OrdersSearchResponseDto;
 import com.d129cm.backendapi.order.dto.OrdersSearchResultDto;
-import com.d129cm.backendapi.order.service.OrderService;
 import com.d129cm.backendapi.partners.domain.Partners;
+import com.d129cm.backendapi.partners.service.PartnersOrderService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -39,7 +39,7 @@ public class PartnersOrderControllerTest {
     private MockMvc mockMvc;
 
     @MockBean
-    private OrderService orderService;
+    private PartnersOrderService partnersOrderService;
 
     @Nested
     class SearchOrders {
@@ -58,7 +58,7 @@ public class PartnersOrderControllerTest {
                     .businessNumber("123-45-67890")
                     .build());
 
-            when(orderService.searchResult(any(), any(), any(), any(), anyInt(), anyInt()))
+            when(partnersOrderService.searchResult(any(), any(), any(), any(), anyInt(), anyInt()))
                     .thenReturn(searchResult);
 
             // when
@@ -103,7 +103,7 @@ public class PartnersOrderControllerTest {
                     new OrderAddressDto("아파트 101호", "서울시 강남구", "12345")
             );
 
-            Mockito.when(orderService.getOrderDetailsByOrderId(anyLong()))
+            Mockito.when(partnersOrderService.getOrderDetailsByOrderId(anyLong()))
                     .thenReturn(orderDetailsDto);
 
             // when & then
