@@ -39,15 +39,15 @@ public class PartnersOrderServiceTest {
         @Test
         void searchResult_성공() {
             // given
-            OrdersSearchResponseDto order1 = new OrdersSearchResponseDto(1L, "User 1", LocalDateTime.now(), 1L, List.of(), "Completed");
-            OrdersSearchResponseDto order2 = new OrdersSearchResponseDto(2L, "User 2", LocalDateTime.now(), 2L, List.of(), "Pending");
+            OrdersSearchResponseDto order1 = new OrdersSearchResponseDto(1L, "User 1", LocalDateTime.now(), 1L, List.of());
+            OrdersSearchResponseDto order2 = new OrdersSearchResponseDto(2L, "User 2", LocalDateTime.now(), 2L, List.of());
             OrdersSearchResultDto mockResult = new OrdersSearchResultDto(List.of(order1, order2), 2L);
 
             when(orderManager.searchResult(anyString(), anyString(), anyString(), anyString(), anyInt(), anyInt()))
                     .thenReturn(mockResult);
 
             // when
-            OrdersSearchResultDto result = partnersOrderService.searchResult("item", "2023-01-01T00:00:00", "2023-12-31T23:59:59", "Completed", 10, 0);
+            OrdersSearchResultDto result = partnersOrderService.searchResult("item", "2023-01-01T00:00:00", "2023-12-31T23:59:59", "주문대기", 10, 0);
 
             // then
             assertEquals(2, result.getOrders().size());
