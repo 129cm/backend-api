@@ -1,7 +1,5 @@
 package com.d129cm.backendapi.member.service;
 
-import com.d129cm.backendapi.common.domain.CommonCodeId;
-import com.d129cm.backendapi.common.domain.code.CodeName;
 import com.d129cm.backendapi.common.exception.BadRequestException;
 import com.d129cm.backendapi.fixture.BrandFixture;
 import com.d129cm.backendapi.fixture.ItemFixture;
@@ -16,7 +14,8 @@ import com.d129cm.backendapi.member.dto.BrandsForOrderResponse;
 import com.d129cm.backendapi.member.dto.ItemWithOptionForOrderResponse;
 import com.d129cm.backendapi.member.dto.OrderFormForMemberResponse;
 import com.d129cm.backendapi.order.domain.Order;
-import com.d129cm.backendapi.order.dto.*;
+import com.d129cm.backendapi.order.dto.CreateOrderDto;
+import com.d129cm.backendapi.order.dto.OrderFormDto;
 import com.d129cm.backendapi.order.manager.OrderItemOptionManager;
 import com.d129cm.backendapi.order.manager.OrderManager;
 import com.d129cm.backendapi.partners.domain.Partners;
@@ -28,16 +27,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
-import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 public class MemberOrderServiceTest {
@@ -69,16 +64,19 @@ public class MemberOrderServiceTest {
     @BeforeEach
     void setUp() {
         member = MemberFixture.createMember("member@email.com");
-        item = ItemFixture.createItem(BrandFixture.createBrand(mock(Partners.class)));
-        itemOption = ItemOptionFixture.createItemOption(item);
-
-        when(itemManager.getItem(1L)).thenReturn(item);
-        when(itemOptionManager.getItemOption(2L)).thenReturn(itemOption);
     }
-
 
     @Nested
     class getOrderForm {
+
+        @BeforeEach
+        void setUp() {
+            item = ItemFixture.createItem(BrandFixture.createBrand(mock(Partners.class)));
+            itemOption = ItemOptionFixture.createItemOption(item);
+
+            when(itemManager.getItem(1L)).thenReturn(item);
+            when(itemOptionManager.getItemOption(2L)).thenReturn(itemOption);
+        }
 
         @Test
         void 성공_아이템을_장바구니에_추가() {
@@ -147,11 +145,7 @@ public class MemberOrderServiceTest {
             Member member = MemberFixture.createMember("abc@example.com");
             String orderSerial = "20240915-2345678";
 
-            Order order = Order.builder()
-                    .commonCodeId(new CommonCodeId(CodeName.주문대기))
-                    .member(member)
-                    .build();
-            order.setOrderSerial(orderSerial);
+            Order order = new Order(member, orderSerial);
 
             when(orderManager.createOrder(member)).thenReturn(order);
             doNothing().when(orderItemOptionManager).createOrderItemOption(order, createOrderDto);
