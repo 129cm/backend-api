@@ -31,7 +31,7 @@ public class PaymentService {
     }
 
     public void prepareOrder(Order order, String paymentKey) {
-        order.setPayAuthKey(paymentKey);
+        order.updatePayAuthKey(paymentKey);
         decreaseStockQuantity(order.getId());
     }
 
@@ -43,12 +43,18 @@ public class PaymentService {
         }
     }
 
-    public void completeOrder(Order order) {
-        order.changeOrderState(new CommonCodeId(CodeName.결제완료));
+    public void completeOrder(Long orderId) {
+        List<OrderItemOption> orderItemOptions = orderItemOptionManager.getOrderItemOptionByOrderId(orderId);
+        for (OrderItemOption orderItemOption : orderItemOptions) {
+            orderItemOption.changeOrderState(new CommonCodeId(CodeName.결제완료));
+        }
     }
 
-    public void undoOrder(Order order) {
-        order.changeOrderState(new CommonCodeId(CodeName.주문취소));
+    public void undoOrder(Long orderId) {
+        List<OrderItemOption> orderItemOptions = orderItemOptionManager.getOrderItemOptionByOrderId(orderId);
+        for (OrderItemOption orderItemOption : orderItemOptions) {
+            orderItemOption.changeOrderState(new CommonCodeId(CodeName.주문취소));
+        }
     }
 
     public Order getOrderByOrderSerial(String tossOrderId) {
