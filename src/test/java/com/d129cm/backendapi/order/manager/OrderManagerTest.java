@@ -85,12 +85,9 @@ public class OrderManagerTest {
         void Order반환_id로_조회() {
             // given
             Long orderId = 1L;
-            CommonCodeId oldCommonCodeId = new CommonCodeId(CodeName.주문대기);
             Member mockMember = mock(Member.class);
-            Order order = Order.builder()
-                    .commonCodeId(oldCommonCodeId)
-                    .member(mockMember)
-                    .build();
+            String orderSerial = "20240918-2345678";
+            Order order = new Order(mockMember, orderSerial);
             when(orderRepository.findById(orderId)).thenReturn(Optional.ofNullable(order));
 
             // when
@@ -120,15 +117,10 @@ public class OrderManagerTest {
         void Order반환_order_생성() {
             // given
             Member member = MemberFixture.createMember("abc@example.com");
-            CommonCodeId commonCodeId = new CommonCodeId(CodeName.주문대기);
             int FRONTNUMBER_LENGTH = "yyyyMMdd-".length();
             String orderSerial = "20240914-1234567";
 
-            Order order = spy(Order.builder()
-                    .member(member)
-                    .commonCodeId(commonCodeId)
-                    .build());
-            order.setOrderSerial(orderSerial);
+            Order order = new Order(member, orderSerial);
 
             when(orderRepository.existsByOrderSerial(any())).thenReturn(false);
             when(orderRepository.save(any(Order.class))).thenReturn(order);
@@ -139,7 +131,6 @@ public class OrderManagerTest {
             // then
             SoftAssertions.assertSoftly(softly -> {
                 softly.assertThat(result.getMember()).isEqualTo(member);
-                softly.assertThat(result.getCommonCodeId()).isEqualTo(commonCodeId);
                 softly.assertThat(result.getOrderSerial()).isNotNull();
                 softly.assertThat(result.getOrderSerial()).hasSize(FRONTNUMBER_LENGTH + BACKNUMBER_LENGTH);
                 verify(orderRepository).save(any(Order.class));
