@@ -2,8 +2,6 @@ package com.d129cm.backendapi.order.repository;
 
 import com.d129cm.backendapi.common.annotation.JpaSliceTest;
 import com.d129cm.backendapi.common.config.JpaAuditingConfig;
-import com.d129cm.backendapi.common.domain.CommonCodeId;
-import com.d129cm.backendapi.common.domain.code.CodeName;
 import com.d129cm.backendapi.member.domain.Member;
 import com.d129cm.backendapi.order.domain.Order;
 import com.d129cm.backendapi.order.dto.OrderDetailsDto;
@@ -80,13 +78,8 @@ public class OrderRepositoryTest {
         @Test
         void 성공_주문_저장() {
             // given
-            CommonCodeId commonCodeId = new CommonCodeId(CodeName.주문대기);
             String orderSerial = "orderSerial";
-            Order order = Order.builder()
-                    .commonCodeId(commonCodeId)
-                    .member(member)
-                    .build();
-            order.setOrderSerial(orderSerial);
+            Order order = new Order(member, orderSerial);
 
             // when
             Order savedOrder = orderRepository.save(order);
@@ -95,8 +88,7 @@ public class OrderRepositoryTest {
             Assertions.assertAll(
                     () -> assertThat(savedOrder).isNotNull(),
                     () -> assertThat(savedOrder.getId()).isEqualTo(order.getId()),
-                    () -> assertThat(savedOrder.getMember()).isEqualTo(order.getMember()),
-                    () -> assertThat(savedOrder.getCommonCodeId()).isEqualTo(order.getCommonCodeId())
+                    () -> assertThat(savedOrder.getMember()).isEqualTo(order.getMember())
             );
         }
     }

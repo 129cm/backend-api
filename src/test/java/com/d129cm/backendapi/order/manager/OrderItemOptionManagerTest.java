@@ -1,5 +1,7 @@
 package com.d129cm.backendapi.order.manager;
 
+import com.d129cm.backendapi.common.domain.CommonCodeId;
+import com.d129cm.backendapi.common.domain.code.CodeName;
 import com.d129cm.backendapi.fixture.MemberFixture;
 import com.d129cm.backendapi.fixture.OrderFixture;
 import com.d129cm.backendapi.item.domain.ItemOption;
@@ -72,6 +74,7 @@ public class OrderItemOptionManagerTest {
             Long itemOptionId = 3L;
             Integer itemOptionPrice = 100;
             Integer count = 1;
+            CommonCodeId commonCodeId = new CommonCodeId(CodeName.주문대기);
 
             List<ItemWithOptionForOrderResponse> itemResponse = new ArrayList<>();
             itemResponse.add(new ItemWithOptionForOrderResponse(itemId, "아이템 이름", itemPrice, "아이템 이미지", itemOptionId, "아이템 옵션 이름", itemOptionPrice, count));
@@ -106,7 +109,8 @@ public class OrderItemOptionManagerTest {
                     () -> assertThat(capturedOrderItemOption.getOrder()).isEqualTo(order),
                     () -> assertThat(capturedOrderItemOption.getItemOption()).isEqualTo(itemOption),
                     () -> assertThat(capturedOrderItemOption.getSalesPrice()).isEqualTo(itemPrice + itemOptionPrice),
-                    () -> assertThat(capturedOrderItemOption.getCount()).isEqualTo(count)
+                    () -> assertThat(capturedOrderItemOption.getCount()).isEqualTo(count),
+                    () -> assertThat(capturedOrderItemOption.getCommonCodeId()).isEqualTo(commonCodeId)
             );
         }
     }

@@ -6,8 +6,8 @@ import com.d129cm.backendapi.order.dto.OrderAddressDto;
 import com.d129cm.backendapi.order.dto.OrderDetailsDto;
 import com.d129cm.backendapi.order.dto.OrdersSearchResponseDto;
 import com.d129cm.backendapi.order.dto.OrdersSearchResultDto;
-import com.d129cm.backendapi.order.service.OrderService;
 import com.d129cm.backendapi.partners.domain.Partners;
+import com.d129cm.backendapi.partners.service.PartnersOrderService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -39,7 +39,7 @@ public class PartnersOrderControllerTest {
     private MockMvc mockMvc;
 
     @MockBean
-    private OrderService orderService;
+    private PartnersOrderService partnersOrderService;
 
     @Nested
     class SearchOrders {
@@ -47,8 +47,8 @@ public class PartnersOrderControllerTest {
         @Test
         void 성공200_주문_조회() throws Exception {
             // given
-            OrdersSearchResponseDto order1 = new OrdersSearchResponseDto(1L, "User 1", LocalDateTime.now(), 1L, List.of(), "Completed");
-            OrdersSearchResponseDto order2 = new OrdersSearchResponseDto(2L, "User 2", LocalDateTime.now(), 2L, List.of(), "Pending");
+            OrdersSearchResponseDto order1 = new OrdersSearchResponseDto(1L, "User 1", LocalDateTime.now(), 1L, List.of());
+            OrdersSearchResponseDto order2 = new OrdersSearchResponseDto(2L, "User 2", LocalDateTime.now(), 2L, List.of());
             OrdersSearchResultDto searchResult = new OrdersSearchResultDto(List.of(order1, order2), 2L);
 
             Password password = mock(Password.class);
@@ -58,7 +58,7 @@ public class PartnersOrderControllerTest {
                     .businessNumber("123-45-67890")
                     .build());
 
-            when(orderService.searchResult(any(), any(), any(), any(), anyInt(), anyInt()))
+            when(partnersOrderService.searchResult(any(), any(), any(), any(), anyInt(), anyInt()))
                     .thenReturn(searchResult);
 
             // when
@@ -97,13 +97,13 @@ public class PartnersOrderControllerTest {
                     .build());
 
             OrderDetailsDto orderDetailsDto = new OrderDetailsDto(
-                    1L, "010", LocalDateTime.now(),
+                    1L, LocalDateTime.now(),
                     List.of(),
                     1L, "John Doe",
                     new OrderAddressDto("아파트 101호", "서울시 강남구", "12345")
             );
 
-            Mockito.when(orderService.getOrderDetailsByOrderId(anyLong()))
+            Mockito.when(partnersOrderService.getOrderDetailsByOrderId(anyLong()))
                     .thenReturn(orderDetailsDto);
 
             // when & then
@@ -117,7 +117,6 @@ public class PartnersOrderControllerTest {
                     .andExpect(MockMvcResultMatchers.jsonPath("$.status").value(200))
                     .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("성공"))
                     .andExpect(MockMvcResultMatchers.jsonPath("$.data.orderId").value(1L))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$.data.orderState").value("배송중"))
                     .andExpect(MockMvcResultMatchers.jsonPath("$.data.memberName").value("John Doe"))
                     .andExpect(MockMvcResultMatchers.jsonPath("$.data.address.roadNameAddress").value("서울시 강남구"))
                     .andExpect(MockMvcResultMatchers.jsonPath("$.data.address.addressDetails").value("아파트 101호"));

@@ -2,6 +2,8 @@ package com.d129cm.backendapi.order.repository;
 
 import com.d129cm.backendapi.common.annotation.JpaSliceTest;
 import com.d129cm.backendapi.common.config.JpaAuditingConfig;
+import com.d129cm.backendapi.common.domain.CommonCodeId;
+import com.d129cm.backendapi.common.domain.code.CodeName;
 import com.d129cm.backendapi.item.domain.ItemOption;
 import com.d129cm.backendapi.order.domain.Order;
 import com.d129cm.backendapi.order.domain.OrderItemOption;
@@ -43,11 +45,13 @@ public class OrderItemOptionRepositoryTest {
         @Test
         void 성공_주문_아이템_저장() {
             // given
+            CommonCodeId commonCodeId = new CommonCodeId(CodeName.주문대기);
             OrderItemOption orderItemOption = OrderItemOption.builder()
                     .itemOption(itemOption)
                     .order(order)
                     .salesPrice(1000)
                     .count(1)
+                    .commonCodeId(commonCodeId)
                     .build();
 
             // when
@@ -60,7 +64,8 @@ public class OrderItemOptionRepositoryTest {
                     () -> assertThat(savedOrderItemOption.getItemOption()).isEqualTo(orderItemOption.getItemOption()),
                     () -> assertThat(savedOrderItemOption.getOrder()).isEqualTo(orderItemOption.getOrder()),
                     () -> assertThat(savedOrderItemOption.getSalesPrice()).isEqualTo(orderItemOption.getSalesPrice()),
-                    () -> assertThat(savedOrderItemOption.getCount()).isEqualTo(orderItemOption.getCount())
+                    () -> assertThat(savedOrderItemOption.getCount()).isEqualTo(orderItemOption.getCount()),
+                    () -> assertThat(savedOrderItemOption.getCommonCodeId()).isEqualTo(commonCodeId)
             );
         }
     }

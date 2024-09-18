@@ -11,7 +11,11 @@ import com.d129cm.backendapi.member.dto.AddressResponse;
 import com.d129cm.backendapi.member.dto.BrandsForOrderResponse;
 import com.d129cm.backendapi.member.dto.ItemWithOptionForOrderResponse;
 import com.d129cm.backendapi.member.dto.OrderFormForMemberResponse;
+import com.d129cm.backendapi.order.domain.Order;
+import com.d129cm.backendapi.order.dto.CreateOrderDto;
 import com.d129cm.backendapi.order.dto.OrderFormDto;
+import com.d129cm.backendapi.order.manager.OrderItemOptionManager;
+import com.d129cm.backendapi.order.manager.OrderManager;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -28,6 +32,8 @@ public class MemberOrderService {
 
     private final ItemManager itemManager;
     private final ItemOptionManager itemOptionManager;
+    private final OrderManager orderManager;
+    private final OrderItemOptionManager orderItemOptionManager;
 
     public OrderFormForMemberResponse getOrderForm(List<OrderFormDto> orderFormDto, Member member) {
         String username = member.getName();
@@ -68,5 +74,11 @@ public class MemberOrderService {
     private void validateCount(Integer count) {
         if (count < 0) throw BadRequestException.negativeQuantityLimit();
         if (count > 100) throw BadRequestException.exceedQuantityLimit(100);
+    }
+
+    public String createOrder(CreateOrderDto createOrderDto, Member member) {
+        Order order = orderManager.createOrder(member);
+        orderItemOptionManager.createOrderItemOption(order, createOrderDto);
+        return order.getOrderSerial();
     }
 }
