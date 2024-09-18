@@ -5,7 +5,6 @@ import com.d129cm.backendapi.common.config.JpaAuditingConfig;
 import com.d129cm.backendapi.member.domain.Member;
 import com.d129cm.backendapi.order.domain.Order;
 import com.d129cm.backendapi.order.dto.OrderDetailsDto;
-import com.d129cm.backendapi.order.dto.OrdersSearchResponseDto;
 import com.d129cm.backendapi.order.dto.OrdersSearchResultDto;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
