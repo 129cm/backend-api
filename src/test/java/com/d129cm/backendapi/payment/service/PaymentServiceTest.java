@@ -2,15 +2,18 @@ package com.d129cm.backendapi.payment.service;
 
 import com.d129cm.backendapi.common.domain.CommonCodeId;
 import com.d129cm.backendapi.common.domain.code.CodeName;
-import com.d129cm.backendapi.fixture.ItemOptionFixture;
-import com.d129cm.backendapi.fixture.OrderFixture;
+import com.d129cm.backendapi.fixture.*;
 import com.d129cm.backendapi.item.domain.Item;
 import com.d129cm.backendapi.item.domain.ItemOption;
+import com.d129cm.backendapi.item.manager.ItemManager;
+import com.d129cm.backendapi.item.manager.ItemOptionManager;
 import com.d129cm.backendapi.member.domain.Member;
 import com.d129cm.backendapi.order.domain.Order;
 import com.d129cm.backendapi.order.domain.OrderItemOption;
 import com.d129cm.backendapi.order.manager.OrderItemOptionManager;
 import com.d129cm.backendapi.order.manager.OrderManager;
+import com.d129cm.backendapi.partners.domain.Partners;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -32,10 +35,27 @@ public class PaymentServiceTest {
     private PaymentService paymentService;
 
     @Mock
+    private ItemManager itemManager;
+
+    @Mock
+    private ItemOptionManager itemOptionManager;
+
+    @Mock
     private OrderManager orderManager;
 
     @Mock
     private OrderItemOptionManager orderItemOptionManager;
+
+    private Member member;
+    private Item item;
+    private ItemOption itemOption;
+
+    @BeforeEach
+    void setUp() {
+        member = MemberFixture.createMember("member@email.com");
+        item = ItemFixture.createItem(BrandFixture.createBrand(mock(Partners.class)));
+        itemOption = ItemOptionFixture.createItemOption(item);
+    }
 
     @Nested
     class getTotalPrice {
@@ -61,12 +81,14 @@ public class PaymentServiceTest {
                     .itemOption(itemOption1)
                     .count(count1)
                     .salesPrice(salePrice1)
+                    .commonCodeId(new CommonCodeId(CodeName.주문대기))
                     .build();
             OrderItemOption orderItemOption2 = OrderItemOption.builder()
                     .order(order)
                     .itemOption(itemOption2)
                     .count(count2)
                     .salesPrice(salePrice2)
+                    .commonCodeId(new CommonCodeId(CodeName.주문대기))
                     .build();
             orderItemOptions.add(orderItemOption1);
             orderItemOptions.add(orderItemOption2);
@@ -109,12 +131,14 @@ public class PaymentServiceTest {
                     .itemOption(itemOption1)
                     .count(count1)
                     .salesPrice(salePrice1)
+                    .commonCodeId(new CommonCodeId(CodeName.주문대기))
                     .build();
             OrderItemOption orderItemOption2 = OrderItemOption.builder()
                     .order(order)
                     .itemOption(itemOption2)
                     .count(count2)
                     .salesPrice(salePrice2)
+                    .commonCodeId(new CommonCodeId(CodeName.주문대기))
                     .build();
             orderItemOptions.add(orderItemOption1);
             orderItemOptions.add(orderItemOption2);
@@ -138,13 +162,28 @@ public class PaymentServiceTest {
         void 주문상태변경_주문_완료() {
             // given
             Order order = OrderFixture.makeOrderWithOrderSerial(mock(Member.class), "20240916-2345678");
+            Long orderId = 1L;
             CommonCodeId newCommonCodeId = new CommonCodeId(CodeName.결제완료);
 
+            ItemOption itemOption = ItemOptionFixture.createItemOption(mock(Item.class));
+            OrderItemOption orderItemOption = OrderItemOption.builder()
+                    .order(order)
+                    .itemOption(itemOption)
+                    .count(1)
+                    .salesPrice(1000)
+                    .commonCodeId(new CommonCodeId(CodeName.주문대기))
+                    .build();
+
+            List<OrderItemOption> orderItemOptions = new ArrayList<>();
+            orderItemOptions.add(orderItemOption);
+
+            when(orderItemOptionManager.getOrderItemOptionByOrderId(orderId)).thenReturn(orderItemOptions);
+
             // when
-            paymentService.completeOrder(order);
+            paymentService.completeOrder(orderId);
 
             // then
-            assertThat(order.getCommonCodeId()).isEqualTo(newCommonCodeId);
+            assertThat(orderItemOption.getCommonCodeId()).isEqualTo(newCommonCodeId);
         }
     }
 
@@ -155,13 +194,28 @@ public class PaymentServiceTest {
         void 주문상태변경_주문_취소() {
             // given
             Order order = OrderFixture.makeOrderWithOrderSerial(mock(Member.class), "20240916-2345678");
+            Long orderId = 1L;
             CommonCodeId newCommonCodeId = new CommonCodeId(CodeName.주문취소);
 
+            ItemOption itemOption = ItemOptionFixture.createItemOption(mock(Item.class));
+            OrderItemOption orderItemOption = OrderItemOption.builder()
+                    .order(order)
+                    .itemOption(itemOption)
+                    .commonCodeId(new CommonCodeId(CodeName.주문대기))
+                    .count(1)
+                    .salesPrice(1000)
+                    .build();
+
+            List<OrderItemOption> orderItemOptions = new ArrayList<>();
+            orderItemOptions.add(orderItemOption);
+
+            when(orderItemOptionManager.getOrderItemOptionByOrderId(orderId)).thenReturn(orderItemOptions);
+
             // when
-            paymentService.undoOrder(order);
+            paymentService.undoOrder(orderId);
 
             // then
-            assertThat(order.getCommonCodeId()).isEqualTo(newCommonCodeId);
+            assertThat(orderItemOption.getCommonCodeId()).isEqualTo(newCommonCodeId);
         }
     }
 

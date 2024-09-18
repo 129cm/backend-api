@@ -61,9 +61,10 @@ public class PaymentControllerTest {
         void 결제성공_toss_api_호출() throws Exception {
             // given
             Order mockOrder = mock(Order.class);
+            Long orderId = 1L;
             when(paymentService.getOrderByOrderSerial(tossOrderId)).thenReturn(mockOrder);
-            when(mockOrder.getId()).thenReturn(1L);
-            when(paymentService.getTotalPrice(1L)).thenReturn(amount);
+            when(mockOrder.getId()).thenReturn(orderId);
+            when(paymentService.getTotalPrice(orderId)).thenReturn(amount);
 
             doNothing().when(paymentService).prepareOrder(eq(mockOrder), eq(paymentKey));
 
@@ -76,7 +77,7 @@ public class PaymentControllerTest {
                     eq(String.class)
             )).thenReturn(restTemplateResponse);
 
-            doNothing().when(paymentService).completeOrder(mockOrder);
+            doNothing().when(paymentService).completeOrder(orderId);
 
             // when
             ResultActions result = mockMvc.perform(post("/members/payments/confirm")
@@ -96,18 +97,19 @@ public class PaymentControllerTest {
             verify(paymentService).getOrderByOrderSerial(tossOrderId);
             verify(paymentService).getTotalPrice(1L);
             verify(paymentService).prepareOrder(mockOrder, paymentKey);
-            verify(paymentService).completeOrder(mockOrder);
+            verify(paymentService).completeOrder(orderId);
         }
 
         @Test
         void 결제실패_금액_불일치() throws Exception {
             // given
             Integer wrongAmount = 40000;
+            Long orderId = 1L;
 
             Order mockOrder = mock(Order.class);
             when(paymentService.getOrderByOrderSerial(tossOrderId)).thenReturn(mockOrder);
-            when(mockOrder.getId()).thenReturn(1L);
-            when(paymentService.getTotalPrice(1L)).thenReturn(wrongAmount);
+            when(mockOrder.getId()).thenReturn(orderId);
+            when(paymentService.getTotalPrice(orderId)).thenReturn(wrongAmount);
 
             // when
             ResultActions result = mockMvc.perform(post("/members/payments/confirm")
@@ -148,9 +150,11 @@ public class PaymentControllerTest {
         void 결제실패_토스API호출실패() throws Exception {
             // given
             Order mockOrder = mock(Order.class);
+            Long orderId = 1L;
+
             when(paymentService.getOrderByOrderSerial(tossOrderId)).thenReturn(mockOrder);
-            when(mockOrder.getId()).thenReturn(1L);
-            when(paymentService.getTotalPrice(1L)).thenReturn(amount);
+            when(mockOrder.getId()).thenReturn(orderId);
+            when(paymentService.getTotalPrice(orderId)).thenReturn(amount);
 
             doNothing().when(paymentService).prepareOrder(eq(mockOrder), eq(paymentKey));
 
@@ -183,9 +187,11 @@ public class PaymentControllerTest {
         void 결제실패_주문완료처리중오류() throws Exception {
             // given
             Order mockOrder = mock(Order.class);
+            Long orderId = 1L;
+
             when(paymentService.getOrderByOrderSerial(tossOrderId)).thenReturn(mockOrder);
-            when(mockOrder.getId()).thenReturn(1L);
-            when(paymentService.getTotalPrice(1L)).thenReturn(amount);
+            when(mockOrder.getId()).thenReturn(orderId);
+            when(paymentService.getTotalPrice(orderId)).thenReturn(amount);
 
             doNothing().when(paymentService).prepareOrder(eq(mockOrder), eq(paymentKey));
 
@@ -198,7 +204,7 @@ public class PaymentControllerTest {
                     eq(String.class)
             )).thenReturn(restTemplateResponse);
 
-            doThrow(new RuntimeException("주문 완료 처리 중 오류 발생")).when(paymentService).completeOrder(mockOrder);
+            doThrow(new RuntimeException("주문 완료 처리 중 오류 발생")).when(paymentService).completeOrder(orderId);
 
             when(restTemplate.postForEntity(
                     eq("https://api.tosspayments.com/v1/payments/" + paymentKey + "/cancel"),

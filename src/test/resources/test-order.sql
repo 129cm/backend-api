@@ -51,31 +51,31 @@ INSERT INTO item_cart (count, cart_id, item_id, item_option_id) VALUES
 
 -- 주문(Order) 더미 데이터 삽입
 -- 총 10개의 주문 데이터를 추가
-INSERT INTO orders (created_at, modified_at, member_id, code_id, group_id, order_serial) VALUES
-                                                                                             (NOW(), NOW(), 1, '010', '100', 'ORD123456'),
-                                                                                             (NOW(), NOW(), 2, '020', '100', 'ORD123457'),
-                                                                                             (NOW(), NOW(), 3, '020', '100', 'ORD123458'),
-                                                                                             (NOW(), NOW(), 4, '030', '100', 'ORD123459'),
-                                                                                             (NOW(), NOW(), 5, '010', '100', 'ORD123460'),
-                                                                                             (NOW(), NOW(), 1, '020', '100', 'ORD123461'),
-                                                                                             (NOW(), NOW(), 2, '020', '100', 'ORD123462'),
-                                                                                             (NOW(), NOW(), 3, '030', '100', 'ORD123463'),
-                                                                                             (NOW(), NOW(), 4, '010', '100', 'ORD123464'),
-                                                                                             (NOW(), NOW(), 5, '020', '100', 'ORD123465');
+INSERT INTO orders (created_at, modified_at, member_id, order_serial) VALUES
+                                                                                             (NOW(), NOW(), 1, 'ORD123456'),
+                                                                                             (NOW(), NOW(), 2, 'ORD123457'),
+                                                                                             (NOW(), NOW(), 3, 'ORD123458'),
+                                                                                             (NOW(), NOW(), 4, 'ORD123459'),
+                                                                                             (NOW(), NOW(), 5, 'ORD123460'),
+                                                                                             (NOW(), NOW(), 1, 'ORD123461'),
+                                                                                             (NOW(), NOW(), 2, 'ORD123462'),
+                                                                                             (NOW(), NOW(), 3, 'ORD123463'),
+                                                                                             (NOW(), NOW(), 4, 'ORD123464'),
+                                                                                             (NOW(), NOW(), 5, 'ORD123465');
 
 -- 주문 항목 옵션(OrderItemOption) 더미 데이터 삽입
-INSERT INTO order_item_option (count, sales_price, created_at, modified_at, item_option_id, order_id) VALUES
-                                                                                                          (2, 1000, NOW(), NOW(), 1, 1),
-                                                                                                          (2, 1000, NOW(), NOW(), 2, 1),
-                                                                                                          (1, 700, NOW(), NOW(), 3, 2),
-                                                                                                          (3, 1200, NOW(), NOW(), 4, 3),
-                                                                                                          (1, 1300, NOW(), NOW(), 1, 4),
-                                                                                                          (2, 1500, NOW(), NOW(), 2, 5),
-                                                                                                          (1, 700, NOW(), NOW(), 3, 6),
-                                                                                                          (3, 1200, NOW(), NOW(), 4, 7),
-                                                                                                          (2, 1500, NOW(), NOW(), 2, 8),
-                                                                                                          (1, 700, NOW(), NOW(), 3, 9),
-                                                                                                          (3, 1200, NOW(), NOW(), 4, 10);
+INSERT INTO order_item_option (count, sales_price, created_at, modified_at, item_option_id, order_id, code_id, group_id) VALUES
+                                                                                                          (2, 1000, NOW(), NOW(), 1, 1,'000', '100'),
+                                                                                                          (2, 1000, NOW(), NOW(), 2, 1,'000', '100'),
+                                                                                                          (1, 700, NOW(), NOW(), 3, 2,'010', '100'),
+                                                                                                          (3, 1200, NOW(), NOW(), 4, 3,'010', '100'),
+                                                                                                          (1, 1300, NOW(), NOW(), 1, 4,'020', '100'),
+                                                                                                          (2, 1500, NOW(), NOW(), 2, 5,'020', '100'),
+                                                                                                          (1, 700, NOW(), NOW(), 3, 6,'020', '200'),
+                                                                                                          (3, 1200, NOW(), NOW(), 4, 7,'010', '200'),
+                                                                                                          (2, 1500, NOW(), NOW(), 2, 8,'020', '200'),
+                                                                                                          (1, 700, NOW(), NOW(), 3, 9,'010', '100'),
+                                                                                                          (3, 1200, NOW(), NOW(), 4, 10,'020', '100');
 
 -- 파트너스(Partners) 더미 데이터 삽입
 INSERT INTO partners (email, password, business_number, brand_id) VALUES

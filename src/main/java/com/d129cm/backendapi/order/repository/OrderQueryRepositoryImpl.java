@@ -39,8 +39,7 @@ public class OrderQueryRepositoryImpl implements OrderQueryRepository {
                 .from(order)
                 .where(
                         itemNameContains(itemName),
-                        orderDateBetween(startDate, endDate),
-                        orderStateEq(orderState)
+                        orderDateBetween(startDate, endDate)
                 )
                 .limit(size)
                 .offset(page * size)
@@ -57,7 +56,8 @@ public class OrderQueryRepositoryImpl implements OrderQueryRepository {
                 .leftJoin(orderItemOption).on(orderItemOption.order.eq(order))
                 .leftJoin(orderItemOption.itemOption, itemOption)
                 .leftJoin(itemOption.item, item)
-                .where(order.id.in(orderIds))
+                .where(order.id.in(orderIds),
+                        orderStateEq(orderState))
                 .orderBy(order.id.desc())
                 .transform(groupBy(order.id).list(
                         Projections.constructor(OrdersSearchResponseDto.class,
@@ -71,10 +71,10 @@ public class OrderQueryRepositoryImpl implements OrderQueryRepository {
                                                 item.image,
                                                 item.name,
                                                 itemOption.id,
-                                                itemOption.name
+                                                itemOption.name,
+                                                orderItemOption.commonCodeId.codeId
                                         )
-                                ),
-                                order.commonCodeId.codeId
+                                )
                         )
                 ));
 
@@ -109,7 +109,6 @@ public class OrderQueryRepositoryImpl implements OrderQueryRepository {
                         groupBy(order.id).as(
                                 Projections.constructor(OrderDetailsDto.class,
                                         order.id,
-                                        order.commonCodeId.codeId,
                                         order.createdAt,
                                         GroupBy.list(Projections.constructor(OrderItemDetailsDto.class,
                                                 item.id,
@@ -118,7 +117,8 @@ public class OrderQueryRepositoryImpl implements OrderQueryRepository {
                                                 itemOption.id,
                                                 itemOption.name,
                                                 orderItemOption.count,
-                                                orderItemOption.salesPrice)),
+                                                orderItemOption.salesPrice,
+                                                orderItemOption.commonCodeId.codeId)),
                                         member.id,
                                         member.name,
                                         Projections.constructor(OrderAddressDto.class,
@@ -147,6 +147,6 @@ public class OrderQueryRepositoryImpl implements OrderQueryRepository {
     }
 
     private BooleanExpression orderStateEq(String orderState) {
-        return orderState != null ? QOrder.order.commonCodeId.codeId.eq(orderState) : null;
+        return orderState != null ? QOrderItemOption.orderItemOption.commonCodeId.codeId.eq(orderState) : null;
     }
 }

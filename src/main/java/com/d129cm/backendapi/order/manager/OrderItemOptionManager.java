@@ -1,5 +1,7 @@
 package com.d129cm.backendapi.order.manager;
 
+import com.d129cm.backendapi.common.domain.CommonCodeId;
+import com.d129cm.backendapi.common.domain.code.CodeName;
 import com.d129cm.backendapi.item.manager.ItemOptionManager;
 import com.d129cm.backendapi.member.dto.BrandsForOrderResponse;
 import com.d129cm.backendapi.member.dto.ItemWithOptionForOrderResponse;
@@ -32,6 +34,7 @@ public class OrderItemOptionManager {
                         .order(order)
                         .salesPrice(itemResponse.itemPrice() + itemResponse.itemOptionPrice())
                         .count(itemResponse.count())
+                        .commonCodeId(new CommonCodeId(CodeName.주문대기))
                         .build();
                 orderItemOptionRepository.save(orderItemOption);
             }
