@@ -50,11 +50,6 @@ public class OrderManager {
     }
 
     public Order createOrder(Member member) {
-        Order order = Order.builder()
-                .member(member)
-                .commonCodeId(new CommonCodeId(CodeName.주문대기))
-                .build();
-
         String orderSerial;
         int retryCount = 0;
         do {
@@ -62,7 +57,8 @@ public class OrderManager {
             retryCount++;
             if (retryCount == 3) throw ConflictException.exceedMaxRetries("주문번호 생성");
         } while (orderRepository.existsByOrderSerial(orderSerial));
-        order.setOrderSerial(orderSerial);
+
+        Order order = new Order(member, orderSerial);
         return orderRepository.save(order);
     }
 
