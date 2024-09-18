@@ -72,7 +72,7 @@ public class PaymentController {
 
         if (responseEntity.getStatusCode().is2xxSuccessful() && status.equalsIgnoreCase("DONE")) {
             try {
-                paymentService.completeOrder(order);
+                paymentService.completeOrder(orderId);
             } catch (Exception e) {
                 // 결제 완료 처리 중 오류 발생 시 결제 취소 호출
                 String cancelUrl = "https://api.tosspayments.com/v1/payments/" + paymentKey + "/cancel";
@@ -87,7 +87,7 @@ public class PaymentController {
         }
 
         // 결제 실패
-        paymentService.undoOrder(order);
+        paymentService.undoOrder(orderId);
         PaymentResultDto result = PaymentResultDto.fail("결제 승인 처리가 정상적으로 완료되지 않았습니다. \nStatus: " + jsonObject.get("status").getAsString());
         return ResponseEntity.status(responseEntity.getStatusCode()).body(result);
     }
