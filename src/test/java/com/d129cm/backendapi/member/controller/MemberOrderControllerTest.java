@@ -145,4 +145,27 @@ public class MemberOrderControllerTest {
                     .andExpect(jsonPath("$.data").isArray());
         }
     }
+
+    @Nested
+    class getMyOrderDetails {
+
+        @Test
+        void 성공200_주문_상세_조회() throws Exception {
+            // given
+            Member member = MemberFixture.createMember("test@email.com");
+            Long orderId = 1L;
+
+            // when
+            ResultActions result = mockMvc.perform(get("/members/orders/my-order/{orderId}", orderId)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .characterEncoding(StandardCharsets.UTF_8)
+                    .with(SecurityMockMvcRequestPostProcessors.user(spy(new MemberDetails(member))))
+            );
+
+            // then
+            result.andExpect(status().isOk())
+                    .andExpect(jsonPath("$.status").value(200))
+                    .andExpect(jsonPath("$.message").value("성공"));
+        }
+    }
 }
