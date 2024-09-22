@@ -2,6 +2,7 @@ package com.d129cm.backendapi.member.controller;
 
 import com.d129cm.backendapi.auth.domain.MemberDetails;
 import com.d129cm.backendapi.common.dto.CommonResponse;
+import com.d129cm.backendapi.member.dto.MyOrderResponse;
 import com.d129cm.backendapi.member.dto.OrderFormForMemberResponse;
 import com.d129cm.backendapi.member.service.MemberOrderService;
 import com.d129cm.backendapi.order.dto.CreateOrderDto;
@@ -33,5 +34,14 @@ public class MemberOrderController {
     public ResponseEntity<CommonResponse<String>> createOrder(@RequestBody CreateOrderDto createOrderDto, @AuthenticationPrincipal MemberDetails memberDetails) throws Exception {
         String orderId = memberOrderService.createOrder(createOrderDto, memberDetails.member());
         return ResponseEntity.ok().body(CommonResponse.success(orderId));
+    }
+
+    @GetMapping("/orders/my-order")
+    public ResponseEntity<CommonResponse<List<MyOrderResponse>>> getMyOrders(
+            @AuthenticationPrincipal MemberDetails memberDetails,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        List<MyOrderResponse> myOrderResponse = memberOrderService.getMyOrders(memberDetails.member(), page, size);
+        return ResponseEntity.ok(CommonResponse.success(myOrderResponse));
     }
 }
