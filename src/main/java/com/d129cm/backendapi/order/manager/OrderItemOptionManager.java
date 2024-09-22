@@ -2,11 +2,13 @@ package com.d129cm.backendapi.order.manager;
 
 import com.d129cm.backendapi.common.domain.CommonCodeId;
 import com.d129cm.backendapi.common.domain.code.CodeName;
+import com.d129cm.backendapi.common.exception.NotFoundException;
 import com.d129cm.backendapi.item.manager.ItemOptionManager;
 import com.d129cm.backendapi.member.dto.BrandsForOrderResponse;
 import com.d129cm.backendapi.member.dto.ItemWithOptionForOrderResponse;
 import com.d129cm.backendapi.order.domain.Order;
 import com.d129cm.backendapi.order.domain.OrderItemOption;
+import com.d129cm.backendapi.order.domain.OrderItemOptionId;
 import com.d129cm.backendapi.order.dto.CreateOrderDto;
 import com.d129cm.backendapi.order.repository.OrderItemOptionRepository;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +26,6 @@ public class OrderItemOptionManager {
         return orderItemOptionRepository.findByOrderId(orderId);
     }
 
-
     public void createOrderItemOption(Order order, CreateOrderDto createOrderDto) {
         for (BrandsForOrderResponse response : createOrderDto.brandsForOrderResponse()) {
             List<ItemWithOptionForOrderResponse> itemResponseList = response.itemResponse();
@@ -39,5 +40,9 @@ public class OrderItemOptionManager {
                 orderItemOptionRepository.save(orderItemOption);
             }
         }
+    }
+
+    public OrderItemOption getOrderItemOptionId(OrderItemOptionId orderItemOptionId) {
+        return orderItemOptionRepository.findById(orderItemOptionId).orElseThrow(NotFoundException::entityNotFound);
     }
 }
