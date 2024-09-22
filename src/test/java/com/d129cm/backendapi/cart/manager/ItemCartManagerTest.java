@@ -167,5 +167,21 @@ public class ItemCartManagerTest {
             // then
             verify(itemCartRepository).delete(itemCart);
         }
+
+        @Test
+        void 실패_존재하지_않는_아이템카트() {
+            // given
+            Long itemId = 1L;
+            Long itemOptionId = 2L;
+            Long cartId = 3L;
+
+            Cart cart = Mockito.mock(Cart.class);
+
+            when(cart.getId()).thenReturn(cartId);
+            when(itemCartRepository.findByItemIdAndItemOptionIdAndCartId(itemId, itemOptionId, cartId)).thenReturn(Optional.empty());
+
+            // when & then
+            assertThrows(NotFoundException.class, () -> itemCartManager.deleteItemFromCart(cart, itemId, itemOptionId));
+        }
     }
 }
