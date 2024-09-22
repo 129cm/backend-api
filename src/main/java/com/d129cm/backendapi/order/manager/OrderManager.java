@@ -9,6 +9,8 @@ import com.d129cm.backendapi.order.dto.OrdersSearchResultDto;
 import com.d129cm.backendapi.order.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.util.Strings;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 import java.security.SecureRandom;
@@ -75,5 +77,9 @@ public class OrderManager {
 
     public Order getOrderByOrderSerial(String OrderSerial) {
         return orderRepository.findByOrderSerial(OrderSerial).orElseThrow(NotFoundException::entityNotFound);
+    }
+
+    public Page<Order> getOrdersByMemberId(Long memberId, Pageable pageable) {
+        return orderRepository.findOrderByMemberId(memberId, pageable);
     }
 }
