@@ -1,7 +1,6 @@
 package com.d129cm.backendapi.member.service;
 
 import com.d129cm.backendapi.brand.domain.Brand;
-import com.d129cm.backendapi.common.domain.CommonCodeId;
 import com.d129cm.backendapi.common.exception.BadRequestException;
 import com.d129cm.backendapi.item.domain.Item;
 import com.d129cm.backendapi.item.domain.ItemOption;
@@ -15,6 +14,7 @@ import com.d129cm.backendapi.order.dto.CreateOrderDto;
 import com.d129cm.backendapi.order.dto.OrderFormDto;
 import com.d129cm.backendapi.order.manager.OrderItemOptionManager;
 import com.d129cm.backendapi.order.manager.OrderManager;
+import com.d129cm.backendapi.payment.manager.PaymentManager;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -38,6 +38,7 @@ public class MemberOrderService {
     private final ItemOptionManager itemOptionManager;
     private final OrderManager orderManager;
     private final OrderItemOptionManager orderItemOptionManager;
+    private final PaymentManager paymentManager;
 
     public OrderFormForMemberResponse getOrderForm(List<OrderFormDto> orderFormDto, Member member) {
         String username = member.getName();
@@ -103,5 +104,16 @@ public class MemberOrderService {
 
                 })
                 .collect((Collectors.toList()));
+    }
+
+    public MyOrderInfoResponse getMyOrderDetails(Member member, Long orderId) {
+        Order order = orderManager.getOrderById(orderId);
+        List<OrderItemOption> orderItemOptionList = orderItemOptionManager.getOrderItemOptionByOrderId(orderId);
+        List<MyOrderDetailsResponse> itemInfoList = orderItemOptionList.stream()
+                .map(MyOrderDetailsResponse::of)
+                .collect(Collectors.toList());
+        Integer totalPrice = paymentManager.getTotalPrice(orderId);
+        OrderInfoResponse orderInfoResponse = new OrderInfoResponse(member.getName(), member.getEmail(), totalPrice);
+        return MyOrderInfoResponse.of(order, itemInfoList, orderInfoResponse);
     }
 }

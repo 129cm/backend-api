@@ -13,6 +13,7 @@ import com.d129cm.backendapi.order.domain.OrderItemOption;
 import com.d129cm.backendapi.order.manager.OrderItemOptionManager;
 import com.d129cm.backendapi.order.manager.OrderManager;
 import com.d129cm.backendapi.partners.domain.Partners;
+import com.d129cm.backendapi.payment.manager.PaymentManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -46,6 +47,9 @@ public class PaymentServiceTest {
     @Mock
     private OrderItemOptionManager orderItemOptionManager;
 
+    @Mock
+    private PaymentManager paymentManager;
+
     private Member member;
     private Item item;
     private ItemOption itemOption;
@@ -64,44 +68,13 @@ public class PaymentServiceTest {
         void 총금액반환_주문한_아이템_가격을_모두_합한_총_금액_조회() {
             // given
             Long orderId = 1L;
-            Order order = mock(Order.class);
-            ItemOption itemOption1 = ItemOptionFixture.createItemOption(mock(Item.class));
-            ItemOption itemOption2 = ItemOptionFixture.createItemOption(mock(Item.class));
-
-            when(order.getId()).thenReturn(orderId);
-
-            Integer count1 = 3;
-            Integer salePrice1 = 1000;
-            Integer count2 = 2;
-            Integer salePrice2 = 2000;
-
-            List<OrderItemOption> orderItemOptions = new ArrayList<>();
-            OrderItemOption orderItemOption1 = OrderItemOption.builder()
-                    .order(order)
-                    .itemOption(itemOption1)
-                    .count(count1)
-                    .salesPrice(salePrice1)
-                    .commonCodeId(new CommonCodeId(CodeName.주문대기))
-                    .build();
-            OrderItemOption orderItemOption2 = OrderItemOption.builder()
-                    .order(order)
-                    .itemOption(itemOption2)
-                    .count(count2)
-                    .salesPrice(salePrice2)
-                    .commonCodeId(new CommonCodeId(CodeName.주문대기))
-                    .build();
-            orderItemOptions.add(orderItemOption1);
-            orderItemOptions.add(orderItemOption2);
-
-            when(orderItemOptionManager.getOrderItemOptionByOrderId(orderId)).thenReturn(orderItemOptions);
 
             // when
             Integer result = paymentService.getTotalPrice(orderId);
 
             // then
             assertAll(
-                    () -> assertThat(result).isEqualTo(salePrice1 + salePrice2),
-                    () -> verify(orderItemOptionManager).getOrderItemOptionByOrderId(orderId)
+                    () -> verify(paymentManager).getTotalPrice(orderId)
             );
         }
     }
