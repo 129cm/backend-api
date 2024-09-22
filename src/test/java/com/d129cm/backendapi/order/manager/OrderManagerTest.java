@@ -1,7 +1,5 @@
 package com.d129cm.backendapi.order.manager;
 
-import com.d129cm.backendapi.common.domain.CommonCodeId;
-import com.d129cm.backendapi.common.domain.code.CodeName;
 import com.d129cm.backendapi.common.exception.ConflictException;
 import com.d129cm.backendapi.common.exception.NotFoundException;
 import com.d129cm.backendapi.fixture.MemberFixture;
@@ -22,7 +20,6 @@ import org.springframework.data.domain.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
