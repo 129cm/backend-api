@@ -1,5 +1,6 @@
 package com.d129cm.backendapi.member.service;
 
+import com.d129cm.backendapi.common.domain.code.CodeName;
 import com.d129cm.backendapi.common.exception.BadRequestException;
 import com.d129cm.backendapi.fixture.*;
 import com.d129cm.backendapi.item.domain.Item;
@@ -10,6 +11,7 @@ import com.d129cm.backendapi.member.domain.Member;
 import com.d129cm.backendapi.member.dto.*;
 import com.d129cm.backendapi.order.domain.Order;
 import com.d129cm.backendapi.order.domain.OrderItemOption;
+import com.d129cm.backendapi.order.domain.OrderItemOptionId;
 import com.d129cm.backendapi.order.dto.CreateOrderDto;
 import com.d129cm.backendapi.order.dto.OrderFormDto;
 import com.d129cm.backendapi.order.manager.OrderItemOptionManager;
@@ -185,8 +187,8 @@ public class MemberOrderServiceTest {
             Sort sortObj = Sort.by(Sort.Direction.DESC, "createdAt");
             Pageable pageable = PageRequest.of(page, size, sortObj);
 
-            Order order1 = mock(Order.class); // Order를 Mock 객체로 생성
-            Order order2 = mock(Order.class); // Order를 Mock 객체로 생성
+            Order order1 = mock(Order.class);
+            Order order2 = mock(Order.class);
             when(order1.getId()).thenReturn(orderId1);
             when(order1.getOrderSerial()).thenReturn("20240913-2345678");
             when(order1.getCreatedAt()).thenReturn(LocalDateTime.now());
@@ -262,6 +264,27 @@ public class MemberOrderServiceTest {
             assertThat(result.orderInfo().email()).isEqualTo(member.getEmail());
             assertThat(result.orderInfo().totalPrice()).isEqualTo(totalPrice);
             assertThat(result.address().getRoadNameAddress()).isEqualTo(member.getAddress().getRoadNameAddress());
+        }
+    }
+
+    @Nested
+    class withdrawOrder {
+
+        @Test
+        void 성공_주문상태_변경() {
+            // given
+            Long orderId = 1L;
+            Long itemOptionId = 2L;
+            OrderItemOptionId orderItemOptionId = new OrderItemOptionId(orderId, itemOptionId);
+            OrderItemOption orderItemOption = OrderItemOptionFixture.makeOrderItemOption();
+
+            when(orderItemOptionManager.getOrderItemOptionId(orderItemOptionId)).thenReturn(orderItemOption);
+
+            // when
+            memberOrderService.withdrawOrder(orderId, itemOptionId);
+
+            // then
+            assertThat(orderItemOption.getCommonCodeId().getCodeId()).isEqualTo(CodeName.주문취소.getCodeId());
         }
     }
 }
