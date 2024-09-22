@@ -17,10 +17,13 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -183,6 +186,29 @@ public class OrderManagerTest {
             NotFoundException exception = assertThrows(NotFoundException.class,
                     () -> orderManager.getOrderByOrderSerial(orderSerial));
             assertThat(message).isEqualTo(exception.getMessage());
+        }
+    }
+
+    @Nested
+    class getOrdersByMemberId {
+
+        @Test
+        void Order페이지반환_멤버아이디로_주문내역_조회() {
+            // given
+            Long memberId = 1L;
+            Sort sortObj = Sort.by(Sort.Direction.DESC, "createdAt");
+            Pageable pageable = PageRequest.of(0, 10, sortObj);
+
+            List<Order> orders = List.of(mock(Order.class), mock(Order.class));
+            Page<Order> orderList = new PageImpl<>(orders, pageable, orders.size());
+            when(orderRepository.findOrderByMemberId(memberId, pageable)).thenReturn(orderList);
+
+            // when
+            Page<Order> result = orderManager.getOrdersByMemberId(memberId, pageable);
+
+            // then
+            verify(orderRepository).findOrderByMemberId(memberId, pageable);
+            assertThat(result.getTotalElements()).isEqualTo(orders.size());
         }
     }
 }
