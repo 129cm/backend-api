@@ -1,19 +1,15 @@
 package com.d129cm.backendapi.member.service;
 
 import com.d129cm.backendapi.common.exception.BadRequestException;
-import com.d129cm.backendapi.fixture.BrandFixture;
-import com.d129cm.backendapi.fixture.ItemFixture;
-import com.d129cm.backendapi.fixture.ItemOptionFixture;
-import com.d129cm.backendapi.fixture.MemberFixture;
+import com.d129cm.backendapi.fixture.*;
 import com.d129cm.backendapi.item.domain.Item;
 import com.d129cm.backendapi.item.domain.ItemOption;
 import com.d129cm.backendapi.item.manager.ItemManager;
 import com.d129cm.backendapi.item.manager.ItemOptionManager;
 import com.d129cm.backendapi.member.domain.Member;
-import com.d129cm.backendapi.member.dto.BrandsForOrderResponse;
-import com.d129cm.backendapi.member.dto.ItemWithOptionForOrderResponse;
-import com.d129cm.backendapi.member.dto.OrderFormForMemberResponse;
+import com.d129cm.backendapi.member.dto.*;
 import com.d129cm.backendapi.order.domain.Order;
+import com.d129cm.backendapi.order.domain.OrderItemOption;
 import com.d129cm.backendapi.order.dto.CreateOrderDto;
 import com.d129cm.backendapi.order.dto.OrderFormDto;
 import com.d129cm.backendapi.order.manager.OrderItemOptionManager;
@@ -26,8 +22,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.*;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -161,5 +160,71 @@ public class MemberOrderServiceTest {
                     () -> assertThat(order.getMember()).isEqualTo(member)
             );
         }
+    }
+
+    @Nested
+    class getMyOrders {
+
+        @Test
+        void MyOrderResponse리스트반환_주문_내역_조회() {
+            // given
+            Member member = mock(Member.class);
+            Long memberId = 1L;
+            when(member.getId()).thenReturn(memberId);
+
+            Long orderId1 = 2L;
+            Long orderId2 = 3L;
+
+            int page = 0;
+            int size = 10;
+
+            Sort sortObj = Sort.by(Sort.Direction.DESC, "createdAt");
+            Pageable pageable = PageRequest.of(page, size, sortObj);
+
+            Order order1 = mock(Order.class); // Order를 Mock 객체로 생성
+            Order order2 = mock(Order.class); // Order를 Mock 객체로 생성
+            when(order1.getId()).thenReturn(orderId1);
+            when(order1.getOrderSerial()).thenReturn("20240913-2345678");
+            when(order1.getCreatedAt()).thenReturn(LocalDateTime.now());
+
+            when(order2.getId()).thenReturn(orderId2);
+            when(order2.getOrderSerial()).thenReturn("20240915-2345678");
+            when(order2.getCreatedAt()).thenReturn(LocalDateTime.now());
+
+            List<Order> orders = Arrays.asList(order1, order2);
+            Page<Order> orderList = new PageImpl<>(orders, pageable, orders.size());
+
+            when(orderManager.getOrdersByMemberId(memberId, pageable)).thenReturn(orderList);
+
+            List<OrderItemOption> orderItemOptionList1 = new ArrayList<>();
+            OrderItemOption orderItemOption1 = OrderItemOptionFixture.makeOrderItemOption();
+            OrderItemOption orderItemOption2 = OrderItemOptionFixture.makeOrderItemOption();
+            orderItemOptionList1.add(orderItemOption1);
+            orderItemOptionList1.add(orderItemOption2);
+
+            List<OrderItemOption> orderItemOptionList2 = new ArrayList<>();
+            OrderItemOption orderItemOption3 = OrderItemOptionFixture.makeOrderItemOption();
+            orderItemOptionList2.add(orderItemOption3);
+
+            when(orderItemOptionManager.getOrderItemOptionByOrderId(orderId1)).thenReturn(orderItemOptionList1);
+            when(orderItemOptionManager.getOrderItemOptionByOrderId(orderId2)).thenReturn(orderItemOptionList2);
+
+            // when
+            List<MyOrderResponse> result = memberOrderService.getMyOrders(member, page, size);
+
+            // then
+            assertThat(result).hasSize(2);
+
+            MyOrderResponse response1 = result.get(0);
+            assertThat(response1.orderId()).isEqualTo(orderId1);
+            assertThat(response1.orderSerial()).isEqualTo("20240913-2345678");
+            assertThat(response1.itemInfoList()).hasSize(2);
+
+            MyOrderResponse response2 = result.get(1);
+            assertThat(response2.orderId()).isEqualTo(orderId2);
+            assertThat(response2.orderSerial()).isEqualTo("20240915-2345678");
+            assertThat(response2.itemInfoList()).hasSize(1);
+        }
+
     }
 }
