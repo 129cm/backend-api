@@ -7,7 +7,6 @@ import lombok.Getter;
 import lombok.ToString;
 
 @Getter
-@ToString
 public class OrderItemDto {
     private String itemName;
     private String itemImage;
