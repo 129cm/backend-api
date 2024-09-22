@@ -2,8 +2,10 @@ package com.d129cm.backendapi.order.manager;
 
 import com.d129cm.backendapi.common.domain.CommonCodeId;
 import com.d129cm.backendapi.common.domain.code.CodeName;
+import com.d129cm.backendapi.common.exception.NotFoundException;
 import com.d129cm.backendapi.fixture.MemberFixture;
 import com.d129cm.backendapi.fixture.OrderFixture;
+import com.d129cm.backendapi.fixture.OrderItemOptionFixture;
 import com.d129cm.backendapi.item.domain.ItemOption;
 import com.d129cm.backendapi.item.manager.ItemOptionManager;
 import com.d129cm.backendapi.member.domain.Member;
@@ -11,8 +13,10 @@ import com.d129cm.backendapi.member.dto.BrandsForOrderResponse;
 import com.d129cm.backendapi.member.dto.ItemWithOptionForOrderResponse;
 import com.d129cm.backendapi.order.domain.Order;
 import com.d129cm.backendapi.order.domain.OrderItemOption;
+import com.d129cm.backendapi.order.domain.OrderItemOptionId;
 import com.d129cm.backendapi.order.dto.CreateOrderDto;
 import com.d129cm.backendapi.order.repository.OrderItemOptionRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -23,9 +27,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -112,6 +118,44 @@ public class OrderItemOptionManagerTest {
                     () -> assertThat(capturedOrderItemOption.getCount()).isEqualTo(count),
                     () -> assertThat(capturedOrderItemOption.getCommonCodeId()).isEqualTo(commonCodeId)
             );
+        }
+    }
+
+    @Nested
+    class getOrderItemOptionId {
+
+        @Test
+        void OrderItemOption반환_OrderItemOptionId로_조회() {
+            // given
+            Long orderId = 1L;
+            Long itemOptionId = 2L;
+            OrderItemOptionId orderItemOptionId = new OrderItemOptionId(orderId, itemOptionId);
+
+            OrderItemOption orderItemOption = OrderItemOptionFixture.makeOrderItemOption();
+
+            when(orderItemOptionRepository.findById(orderItemOptionId)).thenReturn(Optional.ofNullable(orderItemOption));
+
+            // when
+            OrderItemOption result = orderItemOptionManager.getOrderItemOptionId(orderItemOptionId);
+
+            // then
+            assertThat(result).isNotNull();
+            verify(orderItemOptionRepository).findById(orderItemOptionId);
+            assertThat(result).isEqualTo(orderItemOption);
+        }
+
+        @Test
+        void 에러반환_OrderItemOptionId로_조회() {
+            // given
+            Long orderId = 1L;
+            Long itemOptionId = 2L;
+            OrderItemOptionId orderItemOptionId = new OrderItemOptionId(orderId, itemOptionId);
+
+            when(orderItemOptionRepository.findById(orderItemOptionId)).thenReturn(Optional.empty());
+
+            // when & then
+            NotFoundException exception = assertThrows(NotFoundException.class,
+                    () -> orderItemOptionManager.getOrderItemOptionId(orderItemOptionId));
         }
     }
 }
