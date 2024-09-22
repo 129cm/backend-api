@@ -1,6 +1,8 @@
 package com.d129cm.backendapi.member.service;
 
 import com.d129cm.backendapi.brand.domain.Brand;
+import com.d129cm.backendapi.common.domain.CommonCodeId;
+import com.d129cm.backendapi.common.domain.code.CodeName;
 import com.d129cm.backendapi.common.exception.BadRequestException;
 import com.d129cm.backendapi.item.domain.Item;
 import com.d129cm.backendapi.item.domain.ItemOption;
@@ -10,6 +12,7 @@ import com.d129cm.backendapi.member.domain.Member;
 import com.d129cm.backendapi.member.dto.*;
 import com.d129cm.backendapi.order.domain.Order;
 import com.d129cm.backendapi.order.domain.OrderItemOption;
+import com.d129cm.backendapi.order.domain.OrderItemOptionId;
 import com.d129cm.backendapi.order.dto.CreateOrderDto;
 import com.d129cm.backendapi.order.dto.OrderFormDto;
 import com.d129cm.backendapi.order.manager.OrderItemOptionManager;
@@ -115,5 +118,11 @@ public class MemberOrderService {
         Integer totalPrice = paymentManager.getTotalPrice(orderId);
         OrderInfoResponse orderInfoResponse = new OrderInfoResponse(member.getName(), member.getEmail(), totalPrice);
         return MyOrderInfoResponse.of(order, itemInfoList, orderInfoResponse);
+    }
+
+    public void withdrawOrder(Long orderId, Long itemOptionId) {
+        OrderItemOptionId orderItemOptionId = new OrderItemOptionId(orderId, itemOptionId);
+        OrderItemOption orderItemOption = orderItemOptionManager.getOrderItemOptionId(orderItemOptionId);
+        orderItemOption.changeOrderState(new CommonCodeId(CodeName.주문취소));
     }
 }
