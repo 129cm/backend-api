@@ -96,14 +96,7 @@ public class MemberOrderService {
                     List<OrderItemOption> orderItemOptionList
                             = orderItemOptionManager.getOrderItemOptionByOrderId(order.getId());
                     List<MyOrderDetailsResponse> itemInfoList = orderItemOptionList.stream()
-                            .map(orderItemOption -> {
-                                ItemOption itemOption = orderItemOption.getItemOption();
-                                Item item = itemOption.getItem();
-                                Brand brand = item.getBrand();
-                                Integer count = orderItemOption.getCount();
-                                CommonCodeId commonCodeId = orderItemOption.getCommonCodeId();
-                                return MyOrderDetailsResponse.of(brand, item, itemOption, count, commonCodeId);
-                            })
+                            .map(MyOrderDetailsResponse::of)
                             .collect(Collectors.toList());
 
                     return new MyOrderResponse(order.getId(), order.getOrderSerial(), order.getCreatedAt(), itemInfoList);

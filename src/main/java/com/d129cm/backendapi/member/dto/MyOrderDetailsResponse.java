@@ -6,6 +6,7 @@ import com.d129cm.backendapi.common.domain.code.CodeName;
 import com.d129cm.backendapi.common.domain.code.GroupName;
 import com.d129cm.backendapi.item.domain.Item;
 import com.d129cm.backendapi.item.domain.ItemOption;
+import com.d129cm.backendapi.order.domain.OrderItemOption;
 
 public record MyOrderDetailsResponse (
         Long brandId,
@@ -20,8 +21,15 @@ public record MyOrderDetailsResponse (
         Integer count,
         String orderState
 ){
-    public static MyOrderDetailsResponse of(Brand brand, Item item, ItemOption itemOption, int count, CommonCodeId commonCodeId) {
+
+    public static MyOrderDetailsResponse of(OrderItemOption orderItemOption) {
+        ItemOption itemOption = orderItemOption.getItemOption();
+        Item item = itemOption.getItem();
+        Brand brand = item.getBrand();
+        Integer count = orderItemOption.getCount();
+        CommonCodeId commonCodeId = orderItemOption.getCommonCodeId();
         String orderState = CodeName.from(commonCodeId.getCodeId(), GroupName.주문);
+
         return new MyOrderDetailsResponse(
                 brand.getId(),
                 brand.getName(),
