@@ -1,29 +1,33 @@
 package com.d129cm.backendapi.member.service;
 
 import com.d129cm.backendapi.brand.domain.Brand;
+import com.d129cm.backendapi.common.domain.CommonCodeId;
 import com.d129cm.backendapi.common.exception.BadRequestException;
 import com.d129cm.backendapi.item.domain.Item;
 import com.d129cm.backendapi.item.domain.ItemOption;
 import com.d129cm.backendapi.item.manager.ItemManager;
 import com.d129cm.backendapi.item.manager.ItemOptionManager;
 import com.d129cm.backendapi.member.domain.Member;
-import com.d129cm.backendapi.member.dto.AddressResponse;
-import com.d129cm.backendapi.member.dto.BrandsForOrderResponse;
-import com.d129cm.backendapi.member.dto.ItemWithOptionForOrderResponse;
-import com.d129cm.backendapi.member.dto.OrderFormForMemberResponse;
+import com.d129cm.backendapi.member.dto.*;
 import com.d129cm.backendapi.order.domain.Order;
+import com.d129cm.backendapi.order.domain.OrderItemOption;
 import com.d129cm.backendapi.order.dto.CreateOrderDto;
 import com.d129cm.backendapi.order.dto.OrderFormDto;
 import com.d129cm.backendapi.order.manager.OrderItemOptionManager;
 import com.d129cm.backendapi.order.manager.OrderManager;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -80,5 +84,31 @@ public class MemberOrderService {
         Order order = orderManager.createOrder(member);
         orderItemOptionManager.createOrderItemOption(order, createOrderDto);
         return order.getOrderSerial();
+    }
+
+    public List<MyOrderResponse> getMyOrders(Member member, int page, int size) {
+        Sort sortObj = Sort.by(Sort.Direction.DESC, "createdAt");
+        Pageable pageable = PageRequest.of(page, size, sortObj);
+        Page<Order> orderList = orderManager.getOrdersByMemberId(member.getId(), pageable);
+
+        return orderList.stream()
+                .map(order -> {
+                    List<OrderItemOption> orderItemOptionList
+                            = orderItemOptionManager.getOrderItemOptionByOrderId(order.getId());
+                    List<MyOrderDetailsResponse> itemInfoList = orderItemOptionList.stream()
+                            .map(orderItemOption -> {
+                                ItemOption itemOption = orderItemOption.getItemOption();
+                                Item item = itemOption.getItem();
+                                Brand brand = item.getBrand();
+                                Integer count = orderItemOption.getCount();
+                                CommonCodeId commonCodeId = orderItemOption.getCommonCodeId();
+                                return MyOrderDetailsResponse.of(brand, item, itemOption, count, commonCodeId);
+                            })
+                            .collect(Collectors.toList());
+
+                    return new MyOrderResponse(order.getId(), order.getOrderSerial(), order.getCreatedAt(), itemInfoList);
+
+                })
+                .collect((Collectors.toList()));
     }
 }
