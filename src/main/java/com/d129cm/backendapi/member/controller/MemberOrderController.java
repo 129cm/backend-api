@@ -53,4 +53,12 @@ public class MemberOrderController {
         MyOrderInfoResponse myOrderInfoResponse = memberOrderService.getMyOrderDetails(memberDetails.member(), orderId);
         return ResponseEntity.ok(CommonResponse.success(myOrderInfoResponse));
     }
+
+    @PostMapping("/orders/{orderId}/{itemOptionId}")
+    public ResponseEntity<CommonResponse<?>> withdrawOrder(
+            @PathVariable Long orderId,
+            @PathVariable Long itemOptionId) {
+        memberOrderService.withdrawOrder(orderId, itemOptionId);
+        return ResponseEntity.ok(CommonResponse.success());
+    }
 }
