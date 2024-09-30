@@ -35,8 +35,11 @@ public class OrderQueryRepositoryImpl implements OrderQueryRepository {
 
         // 1단계: 페이징 처리를 위한 order.id 목록을 가져옴
         List<Long> orderIds = queryFactory
-                .select(order.id)
+                .selectDistinct(order.id)
                 .from(order)
+                .leftJoin(orderItemOption).on(orderItemOption.order.eq(order))
+                .leftJoin(orderItemOption.itemOption, itemOption)
+                .leftJoin(itemOption.item, item)
                 .where(
                         itemNameContains(itemName),
                         orderDateBetween(startDate, endDate)
@@ -132,7 +135,9 @@ public class OrderQueryRepositoryImpl implements OrderQueryRepository {
 
 
     private BooleanExpression itemNameContains(String itemName) {
-        return itemName != null ? QItem.item.name.containsIgnoreCase(itemName) : null;
+        return (itemName != null && !itemName.trim().isEmpty())
+                ? QItem.item.name.containsIgnoreCase(itemName)
+                : null;
     }
 
     private BooleanExpression orderDateBetween(LocalDateTime startDate, LocalDateTime endDate) {
@@ -147,6 +152,8 @@ public class OrderQueryRepositoryImpl implements OrderQueryRepository {
     }
 
     private BooleanExpression orderStateEq(String orderState) {
-        return orderState != null ? QOrderItemOption.orderItemOption.commonCodeId.codeId.eq(orderState) : null;
+        return (orderState != null && !orderState.trim().isEmpty())
+                ? QOrderItemOption.orderItemOption.commonCodeId.codeId.eq(orderState)
+                : null;
     }
 }
