@@ -16,7 +16,6 @@ import com.d129cm.backendapi.order.domain.OrderItemOption;
 import com.d129cm.backendapi.order.domain.OrderItemOptionId;
 import com.d129cm.backendapi.order.dto.CreateOrderDto;
 import com.d129cm.backendapi.order.repository.OrderItemOptionRepository;
-import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -156,6 +155,28 @@ public class OrderItemOptionManagerTest {
             // when & then
             NotFoundException exception = assertThrows(NotFoundException.class,
                     () -> orderItemOptionManager.getOrderItemOptionId(orderItemOptionId));
+        }
+    }
+
+    @Nested
+    class modifyOrderState {
+
+        @Test
+        void 성공_orderItemOption_의_OrderState_변경() {
+            // given
+            OrderItemOptionId orderItemOptionId1 = new OrderItemOptionId(1L, 1L);
+            OrderItemOptionId orderItemOptionId2 = new OrderItemOptionId(1L, 2L);
+            List<OrderItemOptionId> ids = List.of(orderItemOptionId1, orderItemOptionId2);
+            String codeId = CodeName.주문완료.getCodeId();
+
+            when(orderItemOptionRepository.updateOrderItemOptionsCommonCodeId(codeId, ids)).thenReturn(2);
+
+            // when
+            int updated = orderItemOptionManager.modifyOrderState(codeId, ids);
+
+            // then
+            assertThat(updated).isEqualTo(2);
+            verify(orderItemOptionRepository).updateOrderItemOptionsCommonCodeId(codeId, ids);
         }
     }
 }
