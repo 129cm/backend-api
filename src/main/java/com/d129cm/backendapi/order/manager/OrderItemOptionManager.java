@@ -45,4 +45,8 @@ public class OrderItemOptionManager {
     public OrderItemOption getOrderItemOptionId(OrderItemOptionId orderItemOptionId) {
         return orderItemOptionRepository.findById(orderItemOptionId).orElseThrow(NotFoundException::entityNotFound);
     }
+
+    public int modifyOrderState(String codeId, List<OrderItemOptionId> ids) {
+        return orderItemOptionRepository.updateOrderItemOptionsCommonCodeId(codeId, ids);
+    }
 }

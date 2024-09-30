@@ -2,11 +2,14 @@ package com.d129cm.backendapi.partners.controller;
 
 import com.d129cm.backendapi.common.dto.CommonResponse;
 import com.d129cm.backendapi.order.dto.OrderDetailsDto;
+import com.d129cm.backendapi.order.dto.OrderItemOptionIdDto;
 import com.d129cm.backendapi.order.dto.OrdersSearchResultDto;
 import com.d129cm.backendapi.partners.service.PartnersOrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -32,5 +35,19 @@ public class PartnersOrderController {
         OrderDetailsDto response = partnersOrderService.getOrderDetailsByOrderId(orderId);
 
         return ResponseEntity.ok(CommonResponse.success(response));
+    }
+
+    @PutMapping("/accept")
+    public ResponseEntity<?> acceptOrders(@RequestBody List<OrderItemOptionIdDto> request) {
+        int updated = partnersOrderService.acceptOrders(request);
+
+        return ResponseEntity.ok(CommonResponse.success(updated));
+    }
+
+    @PutMapping("/cancel")
+    public ResponseEntity<?> cancelOrders(@RequestBody List<OrderItemOptionIdDto> request) {
+        int updated = partnersOrderService.cancelOrders(request);
+
+        return ResponseEntity.ok(CommonResponse.success(updated));
     }
 }

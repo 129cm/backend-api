@@ -1,9 +1,9 @@
 package com.d129cm.backendapi.partners.service;
 
-import com.d129cm.backendapi.item.manager.ItemManager;
-import com.d129cm.backendapi.item.manager.ItemOptionManager;
-import com.d129cm.backendapi.member.service.MemberOrderService;
+import com.d129cm.backendapi.common.domain.code.CodeName;
+import com.d129cm.backendapi.order.domain.OrderItemOptionId;
 import com.d129cm.backendapi.order.dto.OrderDetailsDto;
+import com.d129cm.backendapi.order.dto.OrderItemOptionIdDto;
 import com.d129cm.backendapi.order.dto.OrdersSearchResponseDto;
 import com.d129cm.backendapi.order.dto.OrdersSearchResultDto;
 import com.d129cm.backendapi.order.manager.OrderItemOptionManager;
@@ -23,7 +23,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
-import static org.mockito.Mockito.times;
 
 @ExtendWith(MockitoExtension.class)
 public class PartnersOrderServiceTest {
@@ -33,6 +32,9 @@ public class PartnersOrderServiceTest {
 
     @Mock
     private OrderManager orderManager;
+
+    @Mock
+    private OrderItemOptionManager orderItemOptionManager;
 
     @Nested
     class searchOrders {
@@ -74,6 +76,72 @@ public class PartnersOrderServiceTest {
             // then
             verify(orderManager, times(1)).getOrderDetailsByOrderId(orderId);
             assertThat(detailsDto.getOrderId()).isEqualTo(orderId);
+        }
+    }
+
+    @Nested
+    class acceptOrders {
+
+        @Test
+        void 성공_주문_상태_주문완료로_변경() {
+            // given
+            OrderItemOptionIdDto orderItemOptionIdDto1 = mock(OrderItemOptionIdDto.class);
+            OrderItemOptionIdDto orderItemOptionIdDto2 = mock(OrderItemOptionIdDto.class);
+            List<OrderItemOptionIdDto> requests = List.of(orderItemOptionIdDto1, orderItemOptionIdDto2);
+
+            OrderItemOptionId orderItemOptionId1 = new OrderItemOptionId(1L, 1L);
+            OrderItemOptionId orderItemOptionId2 = new OrderItemOptionId(1L, 2L);
+
+            when(orderItemOptionIdDto1.toOrderItemOptionId()).thenReturn(orderItemOptionId1);
+            when(orderItemOptionIdDto2.toOrderItemOptionId()).thenReturn(orderItemOptionId2);
+            when(orderItemOptionManager.modifyOrderState(eq(CodeName.주문완료.getCodeId()), any())).thenReturn(2);
+
+            // when
+            int updated = partnersOrderService.acceptOrders(requests);
+
+            // then
+            verify(orderItemOptionIdDto1, times(1)).toOrderItemOptionId();
+            verify(orderItemOptionIdDto2, times(1)).toOrderItemOptionId();
+
+            verify(orderItemOptionManager, times(1)).modifyOrderState(eq(CodeName.주문완료.getCodeId()), argThat(argument -> {
+                List<OrderItemOptionId> expectedIds = List.of(orderItemOptionId1, orderItemOptionId2);
+                return argument.equals(expectedIds);
+            }));
+
+            assertThat(updated).isEqualTo(2);
+        }
+    }
+
+    @Nested
+    class cancelOrder {
+
+        @Test
+        void 성공_주문_상태_주문취소로_변경() {
+            // given
+            OrderItemOptionIdDto orderItemOptionIdDto1 = mock(OrderItemOptionIdDto.class);
+            OrderItemOptionIdDto orderItemOptionIdDto2 = mock(OrderItemOptionIdDto.class);
+            List<OrderItemOptionIdDto> requests = List.of(orderItemOptionIdDto1, orderItemOptionIdDto2);
+
+            OrderItemOptionId orderItemOptionId1 = new OrderItemOptionId(1L, 1L);
+            OrderItemOptionId orderItemOptionId2 = new OrderItemOptionId(1L, 2L);
+
+            when(orderItemOptionIdDto1.toOrderItemOptionId()).thenReturn(orderItemOptionId1);
+            when(orderItemOptionIdDto2.toOrderItemOptionId()).thenReturn(orderItemOptionId2);
+            when(orderItemOptionManager.modifyOrderState(eq(CodeName.주문취소.getCodeId()), any())).thenReturn(2);
+
+            // when
+            int updated = partnersOrderService.cancelOrders(requests);
+
+            // then
+            verify(orderItemOptionIdDto1, times(1)).toOrderItemOptionId();
+            verify(orderItemOptionIdDto2, times(1)).toOrderItemOptionId();
+
+            verify(orderItemOptionManager, times(1)).modifyOrderState(eq(CodeName.주문취소.getCodeId()), argThat(argument -> {
+                List<OrderItemOptionId> expectedIds = List.of(orderItemOptionId1, orderItemOptionId2);
+                return argument.equals(expectedIds);
+            }));
+
+            assertThat(updated).isEqualTo(2);
         }
     }
 }

@@ -2,12 +2,11 @@ package com.d129cm.backendapi.partners.controller;
 
 import com.d129cm.backendapi.auth.domain.PartnersDetails;
 import com.d129cm.backendapi.common.domain.Password;
-import com.d129cm.backendapi.order.dto.OrderAddressDto;
-import com.d129cm.backendapi.order.dto.OrderDetailsDto;
-import com.d129cm.backendapi.order.dto.OrdersSearchResponseDto;
-import com.d129cm.backendapi.order.dto.OrdersSearchResultDto;
+import com.d129cm.backendapi.fixture.PartnersFixture;
+import com.d129cm.backendapi.order.dto.*;
 import com.d129cm.backendapi.partners.domain.Partners;
 import com.d129cm.backendapi.partners.service.PartnersOrderService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -28,7 +27,9 @@ import java.util.List;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.*;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -120,6 +121,74 @@ public class PartnersOrderControllerTest {
                     .andExpect(MockMvcResultMatchers.jsonPath("$.data.memberName").value("John Doe"))
                     .andExpect(MockMvcResultMatchers.jsonPath("$.data.address.roadNameAddress").value("서울시 강남구"))
                     .andExpect(MockMvcResultMatchers.jsonPath("$.data.address.addressDetails").value("아파트 101호"));
+        }
+    }
+
+    @Nested
+    class AcceptOrders {
+
+        @Test
+        void 성공200_주문_상태_주문완료로_변경() throws Exception {
+            // given
+            Partners mockPartners = PartnersFixture.createPartners("email@gmail.com", "123-45-67890");
+
+            List<OrderItemOptionIdDto> requests = List.of(
+                    new OrderItemOptionIdDto(1L, 1L),
+                    new OrderItemOptionIdDto(1L, 2L)
+            );
+
+            when(partnersOrderService.acceptOrders(anyList())).thenReturn(2);
+
+            String jsonContent = new ObjectMapper().writeValueAsString(requests);
+
+            // when
+            ResultActions result = mockMvc.perform(put("/partners/brands/orders/accept")
+                    .with(SecurityMockMvcRequestPostProcessors.user(new PartnersDetails(mockPartners)))
+                    .with(csrf())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(jsonContent)
+                    .characterEncoding(StandardCharsets.UTF_8)
+            );
+
+            // then
+            result.andExpect(status().isOk())
+                    .andExpect(jsonPath("$.status").value(200))
+                    .andExpect(jsonPath("$.message").value("성공"))
+                    .andExpect(jsonPath("$.data").value(2));
+        }
+    }
+
+    @Nested
+    class CancelOrders {
+
+        @Test
+        void 성공200_주문_상태_주문취소로_변경() throws Exception {
+            // given
+            Partners mockPartners = PartnersFixture.createPartners("email@gmail.com", "123-45-67890");
+
+            List<OrderItemOptionIdDto> requests = List.of(
+                    new OrderItemOptionIdDto(1L, 1L),
+                    new OrderItemOptionIdDto(1L, 2L)
+            );
+
+            when(partnersOrderService.cancelOrders(anyList())).thenReturn(2);
+
+            String jsonContent = new ObjectMapper().writeValueAsString(requests);
+
+            // when
+            ResultActions result = mockMvc.perform(put("/partners/brands/orders/cancel")
+                    .with(SecurityMockMvcRequestPostProcessors.user(new PartnersDetails(mockPartners)))
+                    .with(csrf())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(jsonContent)
+                    .characterEncoding(StandardCharsets.UTF_8)
+            );
+
+            // then
+            result.andExpect(status().isOk())
+                    .andExpect(jsonPath("$.status").value(200))
+                    .andExpect(jsonPath("$.message").value("성공"))
+                    .andExpect(jsonPath("$.data").value(2));
         }
     }
 }
