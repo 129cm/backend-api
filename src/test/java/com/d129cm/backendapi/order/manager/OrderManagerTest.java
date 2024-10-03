@@ -159,7 +159,7 @@ public class OrderManagerTest {
         void 주문반환_주분_번호로_조회() {
             // given
             String orderSerial = "20240914-1234567";
-            Order order = OrderFixture.makeOrderWithOrderSerial(mock(Member.class), orderSerial);
+            Order order = OrderFixture.makeOrderWithOrderSerial(mock(Member.class), orderSerial, 0);
 
             when(orderRepository.findByOrderSerial(orderSerial)).thenReturn(Optional.of(order));
 
@@ -168,13 +168,13 @@ public class OrderManagerTest {
 
             // then
             verify(orderRepository).findByOrderSerial(orderSerial);
+            assertThat(result.getOrderSerial()).isEqualTo(orderSerial);
         }
 
         @Test
         void 에러반환_주문_번호로_조회_실패() {
             // given
             String orderSerial = "20240914-1234567";
-            Order order = OrderFixture.makeOrderWithOrderSerial(mock(Member.class), orderSerial);
             String message = "정보를 찾을 수 없습니다.";
 
             when(orderRepository.findByOrderSerial(orderSerial)).thenReturn(Optional.empty());

@@ -13,7 +13,6 @@ import com.d129cm.backendapi.order.domain.OrderItemOption;
 import com.d129cm.backendapi.order.manager.OrderItemOptionManager;
 import com.d129cm.backendapi.order.manager.OrderManager;
 import com.d129cm.backendapi.partners.domain.Partners;
-import com.d129cm.backendapi.payment.manager.PaymentManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -26,7 +25,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -47,9 +45,6 @@ public class PaymentServiceTest {
     @Mock
     private OrderItemOptionManager orderItemOptionManager;
 
-    @Mock
-    private PaymentManager paymentManager;
-
     private Member member;
     private Item item;
     private ItemOption itemOption;
@@ -62,30 +57,12 @@ public class PaymentServiceTest {
     }
 
     @Nested
-    class getTotalPrice {
-
-        @Test
-        void 총금액반환_주문한_아이템_가격을_모두_합한_총_금액_조회() {
-            // given
-            Long orderId = 1L;
-
-            // when
-            Integer result = paymentService.getTotalPrice(orderId);
-
-            // then
-            assertAll(
-                    () -> verify(paymentManager).getTotalPrice(orderId)
-            );
-        }
-    }
-
-    @Nested
     class prepareOrder {
 
         @Test
         void 주문_준비() {
             // given
-            Order order = OrderFixture.makeOrderWithOrderSerial(mock(Member.class), "20240916-2345678");
+            Order order = OrderFixture.makeOrderWithOrderSerial(mock(Member.class), "20240916-2345678", 0);
             String paymentKey = "paymentKey";
             Integer beforeQuantity1 = 100;
             Integer beforeQuantity2 = 100;
@@ -134,7 +111,7 @@ public class PaymentServiceTest {
         @Test
         void 주문상태변경_주문_완료() {
             // given
-            Order order = OrderFixture.makeOrderWithOrderSerial(mock(Member.class), "20240916-2345678");
+            Order order = OrderFixture.makeOrderWithOrderSerial(mock(Member.class), "20240916-2345678", 0);
             Long orderId = 1L;
             CommonCodeId newCommonCodeId = new CommonCodeId(CodeName.결제완료);
 
@@ -166,7 +143,7 @@ public class PaymentServiceTest {
         @Test
         void 주문상태변경_주문_취소() {
             // given
-            Order order = OrderFixture.makeOrderWithOrderSerial(mock(Member.class), "20240916-2345678");
+            Order order = OrderFixture.makeOrderWithOrderSerial(mock(Member.class), "20240916-2345678", 0);
             Long orderId = 1L;
             CommonCodeId newCommonCodeId = new CommonCodeId(CodeName.주문취소);
 
@@ -199,7 +176,7 @@ public class PaymentServiceTest {
         void Order반환_orderSerial로_order_조회() {
             // given
             String orderSerial = "20240916-2345678";
-            Order order = OrderFixture.makeOrderWithOrderSerial(mock(Member.class), orderSerial);
+            Order order = OrderFixture.makeOrderWithOrderSerial(mock(Member.class), orderSerial, 0);
 
             when(orderManager.getOrderByOrderSerial(orderSerial)).thenReturn(order);
 

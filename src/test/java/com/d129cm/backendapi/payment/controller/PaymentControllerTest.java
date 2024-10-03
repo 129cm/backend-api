@@ -64,7 +64,7 @@ public class PaymentControllerTest {
             Long orderId = 1L;
             when(paymentService.getOrderByOrderSerial(tossOrderId)).thenReturn(mockOrder);
             when(mockOrder.getId()).thenReturn(orderId);
-            when(paymentService.getTotalPrice(orderId)).thenReturn(amount);
+            when(mockOrder.getTotalSalesPrice()).thenReturn(amount);
 
             doNothing().when(paymentService).prepareOrder(eq(mockOrder), eq(paymentKey));
 
@@ -95,7 +95,6 @@ public class PaymentControllerTest {
                     .andExpect(jsonPath("$.message").value("결제에 성공하였습니다!"));
 
             verify(paymentService).getOrderByOrderSerial(tossOrderId);
-            verify(paymentService).getTotalPrice(1L);
             verify(paymentService).prepareOrder(mockOrder, paymentKey);
             verify(paymentService).completeOrder(orderId);
         }
@@ -109,7 +108,7 @@ public class PaymentControllerTest {
             Order mockOrder = mock(Order.class);
             when(paymentService.getOrderByOrderSerial(tossOrderId)).thenReturn(mockOrder);
             when(mockOrder.getId()).thenReturn(orderId);
-            when(paymentService.getTotalPrice(orderId)).thenReturn(wrongAmount);
+            when(mockOrder.getTotalSalesPrice()).thenReturn(wrongAmount);
 
             // when
             ResultActions result = mockMvc.perform(post("/members/payments/confirm")
@@ -154,7 +153,7 @@ public class PaymentControllerTest {
 
             when(paymentService.getOrderByOrderSerial(tossOrderId)).thenReturn(mockOrder);
             when(mockOrder.getId()).thenReturn(orderId);
-            when(paymentService.getTotalPrice(orderId)).thenReturn(amount);
+            when(mockOrder.getTotalSalesPrice()).thenReturn(amount);
 
             doNothing().when(paymentService).prepareOrder(eq(mockOrder), eq(paymentKey));
 
@@ -191,7 +190,7 @@ public class PaymentControllerTest {
 
             when(paymentService.getOrderByOrderSerial(tossOrderId)).thenReturn(mockOrder);
             when(mockOrder.getId()).thenReturn(orderId);
-            when(paymentService.getTotalPrice(orderId)).thenReturn(amount);
+            when(mockOrder.getTotalSalesPrice()).thenReturn(amount);
 
             doNothing().when(paymentService).prepareOrder(eq(mockOrder), eq(paymentKey));
 

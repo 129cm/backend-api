@@ -17,7 +17,6 @@ import com.d129cm.backendapi.order.dto.OrderFormDto;
 import com.d129cm.backendapi.order.manager.OrderItemOptionManager;
 import com.d129cm.backendapi.order.manager.OrderManager;
 import com.d129cm.backendapi.partners.domain.Partners;
-import com.d129cm.backendapi.payment.manager.PaymentManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -50,9 +49,6 @@ public class MemberOrderServiceTest {
 
     @Mock
     private OrderManager orderManager;
-
-    @Mock
-    private PaymentManager paymentManager;
 
     @Mock
     private OrderItemOptionManager orderItemOptionManager;
@@ -240,7 +236,8 @@ public class MemberOrderServiceTest {
         void MyOrderInfoResponse반환_주문내역_상세조회() {
             // given
             Member member = MemberFixture.createMember("abc@example.com");
-            Order order = OrderFixture.makeOrderWithOrderSerial(member, "20240915-2345678");
+            Integer totalPrice = 3500;
+            Order order = OrderFixture.makeOrderWithOrderSerial(member, "20240915-2345678", totalPrice);
             Long orderId = 1L;
             when(orderManager.getOrderById(orderId)).thenReturn(order);
 
@@ -248,9 +245,6 @@ public class MemberOrderServiceTest {
             OrderItemOption orderItemOption2 = OrderItemOptionFixture.makeOrderItemOption();
             List<OrderItemOption> orderItemOptionList = List.of(orderItemOption1, orderItemOption2);
             when(orderItemOptionManager.getOrderItemOptionByOrderId(orderId)).thenReturn(orderItemOptionList);
-
-            Integer totalPrice = 3500;
-            when(paymentManager.getTotalPrice(orderId)).thenReturn(totalPrice);
 
             // when
             MyOrderInfoResponse result = memberOrderService.getMyOrderDetails(member, orderId);
