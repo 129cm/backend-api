@@ -18,18 +18,21 @@ public class OrderItemOptionFixture {
     }
 
     public static OrderItemOption makeOrderItemOption() {
+        int count = 1;
+        int price = 1000;
+
         Member member = MemberFixture.createMember("aaa@example.com");
         Brand brand = BrandFixture.createBrand(mock(Partners.class));
         Item item = ItemFixture.createItem(brand);
         ItemOption itemOption = ItemOptionFixture.createItemOption(item);
-        Order order = OrderFixture.makeOrderWithOrderSerial(member, "20240922-1234567");
-        OrderItemOption orderItemOption = OrderItemOption.builder()
+        Order order = OrderFixture.makeOrderWithOrderSerial(member, "20240922-1234567", count * price);
+
+        return OrderItemOption.builder()
                 .itemOption(itemOption)
-                .count(1)
+                .count(count)
                 .commonCodeId(new CommonCodeId(CodeName.결제완료))
                 .order(order)
-                .salesPrice(1000)
+                .salesPrice(price)
                 .build();
-        return orderItemOption;
     }
 }

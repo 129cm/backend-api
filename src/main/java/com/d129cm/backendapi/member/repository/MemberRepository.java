@@ -9,6 +9,6 @@ import java.util.Optional;
 public interface MemberRepository extends JpaRepository<Member, Long> {
     boolean existsByEmail(String email);
 
-    @Query(value = "select m from Member m join Address a on m.id = a.member.id")
+    @Query(value = "select m from Member m join fetch m.address join fetch m.cart where m.email = :email")
     Optional<Member> findByEmailWithAddress(String email);
 }

@@ -8,8 +8,9 @@ public class OrderFixture {
     private OrderFixture() {
     }
 
-    public static Order makeOrderWithOrderSerial(Member member, String orderSerial) {
+    public static Order makeOrderWithOrderSerial(Member member, String orderSerial, Integer totalPrice) {
         Order order = new Order(member, orderSerial);
+        order.updateTotalSalesPrice(totalPrice);
         return order;
     }
 }

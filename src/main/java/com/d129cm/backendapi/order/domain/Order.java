@@ -23,6 +23,8 @@ public class Order extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     private Member member;
 
+    private Integer totalSalesPrice;
+
     public Order(Member member, String orderSerial) {
         this.member = member;
         this.orderSerial = orderSerial;
@@ -30,6 +32,10 @@ public class Order extends BaseEntity {
 
     public void updatePayAuthKey(String payAuthKey) {
         this.payAuthKey = payAuthKey;
+    }
+
+    public void updateTotalSalesPrice(int totalSalesPrice) {
+        this.totalSalesPrice = totalSalesPrice;
     }
 }
 

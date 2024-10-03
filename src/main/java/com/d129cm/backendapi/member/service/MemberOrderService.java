@@ -17,7 +17,6 @@ import com.d129cm.backendapi.order.dto.CreateOrderDto;
 import com.d129cm.backendapi.order.dto.OrderFormDto;
 import com.d129cm.backendapi.order.manager.OrderItemOptionManager;
 import com.d129cm.backendapi.order.manager.OrderManager;
-import com.d129cm.backendapi.payment.manager.PaymentManager;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -41,7 +40,6 @@ public class MemberOrderService {
     private final ItemOptionManager itemOptionManager;
     private final OrderManager orderManager;
     private final OrderItemOptionManager orderItemOptionManager;
-    private final PaymentManager paymentManager;
 
     public OrderFormForMemberResponse getOrderForm(List<OrderFormDto> orderFormDto, Member member) {
         String username = member.getName();
@@ -87,6 +85,7 @@ public class MemberOrderService {
     public String createOrder(CreateOrderDto createOrderDto, Member member) {
         Order order = orderManager.createOrder(member);
         orderItemOptionManager.createOrderItemOption(order, createOrderDto);
+
         return order.getOrderSerial();
     }
 
@@ -115,7 +114,7 @@ public class MemberOrderService {
         List<MyOrderDetailsResponse> itemInfoList = orderItemOptionList.stream()
                 .map(MyOrderDetailsResponse::of)
                 .collect(Collectors.toList());
-        Integer totalPrice = paymentManager.getTotalPrice(orderId);
+        Integer totalPrice = order.getTotalSalesPrice();
         OrderInfoResponse orderInfoResponse = new OrderInfoResponse(member.getName(), member.getEmail(), totalPrice);
         return MyOrderInfoResponse.of(order, itemInfoList, orderInfoResponse);
     }

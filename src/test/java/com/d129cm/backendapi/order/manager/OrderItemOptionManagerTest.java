@@ -91,7 +91,7 @@ public class OrderItemOptionManagerTest {
 
             Member member = MemberFixture.createMember("abc@example.com");
             String orderSerial = "20240915-2345678";
-            Order order = OrderFixture.makeOrderWithOrderSerial(member, orderSerial);
+            Order order = OrderFixture.makeOrderWithOrderSerial(member, orderSerial, 0);
 
             ItemOption itemOption = ItemOption.builder()
                     .id(itemOptionId)

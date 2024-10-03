@@ -3,12 +3,10 @@ package com.d129cm.backendapi.payment.service;
 import com.d129cm.backendapi.common.domain.CommonCodeId;
 import com.d129cm.backendapi.common.domain.code.CodeName;
 import com.d129cm.backendapi.item.domain.ItemOption;
-import com.d129cm.backendapi.item.manager.ItemOptionManager;
 import com.d129cm.backendapi.order.domain.Order;
 import com.d129cm.backendapi.order.domain.OrderItemOption;
 import com.d129cm.backendapi.order.manager.OrderItemOptionManager;
 import com.d129cm.backendapi.order.manager.OrderManager;
-import com.d129cm.backendapi.payment.manager.PaymentManager;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,11 +20,6 @@ public class PaymentService {
 
     private final OrderManager orderManager;
     private final OrderItemOptionManager orderItemOptionManager;
-    private final PaymentManager paymentManager;
-
-    public Integer getTotalPrice(Long orderId) {
-        return paymentManager.getTotalPrice(orderId);
-    }
 
     public void prepareOrder(Order order, String paymentKey) {
         order.updatePayAuthKey(paymentKey);
