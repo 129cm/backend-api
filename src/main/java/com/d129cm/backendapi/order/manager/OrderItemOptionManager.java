@@ -27,19 +27,27 @@ public class OrderItemOptionManager {
     }
 
     public void createOrderItemOption(Order order, CreateOrderDto createOrderDto) {
+        int totalPrice = 0;
+
         for (BrandsForOrderResponse response : createOrderDto.brandsForOrderResponse()) {
             List<ItemWithOptionForOrderResponse> itemResponseList = response.itemResponse();
             for (ItemWithOptionForOrderResponse itemResponse : itemResponseList) {
+                int salesPrice = itemResponse.itemPrice() + itemResponse.itemOptionPrice();
+
                 OrderItemOption orderItemOption = OrderItemOption.builder()
                         .itemOption(itemOptionManager.getItemOption(itemResponse.itemOptionId()))
                         .order(order)
-                        .salesPrice(itemResponse.itemPrice() + itemResponse.itemOptionPrice())
+                        .salesPrice(salesPrice)
                         .count(itemResponse.count())
                         .commonCodeId(new CommonCodeId(CodeName.주문대기))
                         .build();
+
+                totalPrice += salesPrice * itemResponse.count();
                 orderItemOptionRepository.save(orderItemOption);
             }
         }
+
+        order.updateTotalSalesPrice(totalPrice);
     }
 
     public OrderItemOption getOrderItemOptionId(OrderItemOptionId orderItemOptionId) {
