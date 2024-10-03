@@ -40,8 +40,7 @@ public class PaymentController {
         Order order = paymentService.getOrderByOrderSerial(tossOrderId);
         Long orderId = order.getId();
 
-        Integer totalPrice = paymentService.getTotalPrice(orderId);
-        if (!Objects.equals(amount, totalPrice)) {
+        if (!Objects.equals(amount, order.getTotalSalesPrice())) {
             throw BadRequestException.wrongOrder("결제 금액");
         }
 
