@@ -1,1 +1,3 @@
-rootProject.name = 'backend-api'
+rootProject.name = '129cm'
+
+include '129cm-core'
