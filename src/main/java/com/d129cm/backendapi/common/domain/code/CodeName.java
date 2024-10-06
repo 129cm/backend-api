@@ -12,7 +12,7 @@ public enum CodeName {
     배송중("010", GroupName.배송), 배송완료("020", GroupName.배송),
 
     // 등급 (300)
-    실버("010", GroupName.회원등급), 골드("020", GroupName.회원등급), VIP("030", GroupName.회원등급);
+    브론즈("000", GroupName.회원등급), 실버("010", GroupName.회원등급), 골드("020", GroupName.회원등급), VIP("030", GroupName.회원등급);
 
     private final String codeId;
     private final GroupName groupName;

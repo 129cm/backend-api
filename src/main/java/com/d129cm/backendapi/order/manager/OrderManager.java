@@ -6,7 +6,9 @@ import com.d129cm.backendapi.member.domain.Member;
 import com.d129cm.backendapi.order.domain.Order;
 import com.d129cm.backendapi.order.dto.OrderDetailsDto;
 import com.d129cm.backendapi.order.dto.OrdersSearchResultDto;
+import com.d129cm.backendapi.order.repository.OrderItemOptionRepository;
 import com.d129cm.backendapi.order.repository.OrderRepository;
+import com.d129cm.backendapi.payment.service.PaymentService;
 import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.data.domain.Page;
@@ -18,6 +20,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -81,5 +84,16 @@ public class OrderManager {
 
     public Page<Order> getOrdersByMemberId(Long memberId, Pageable pageable) {
         return orderRepository.findOrderByMemberId(memberId, pageable);
+    }
+
+    public Integer getAmountOfOrder(Long memberId, LocalDateTime startDate, LocalDateTime endDate) {
+        List<Order> orders =  orderRepository.findOrdersByMemberIdBetween(memberId, startDate, endDate);
+        Integer amountSpent = 0;
+
+        for (Order order : orders) {
+            // order 테이블에서 getTotalSalePrice 하기!
+//            amountSpent += order;
+        }
+        return amountSpent;
     }
 }

@@ -39,6 +39,8 @@ public class Member {
     @OneToOne(mappedBy = "member", cascade = CascadeType.ALL)
     private Cart cart;
 
+    private String membershipLevelCode;
+
     @Builder
     public Member (String email, Password password, String name, Address address) {
         Assert.notNull(email, "이메일은 null일 수 없습니다.");
@@ -56,5 +58,9 @@ public class Member {
     public void setCart(Cart cart) {
         this.cart = cart;
         cart.setMember(this);
+    }
+
+    public void updateMembershipLevel(String name) {
+        this.membershipLevelCode = name;
     }
 }
