@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <bytecodeTargetLevel>
+      <module name="129cm.129cm-core" target="17" />
+      <module name="129cm.129cm-core.main" target="17" />
+      <module name="129cm.129cm-core.test" target="17" />
+      <module name="backend-api" target="17" />
+      <module name="backend-api.main" target="17" />
+      <module name="backend-api.test" target="17" />
+    </bytecodeTargetLevel>
+  </component>
+</project>

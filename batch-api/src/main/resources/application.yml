@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: batch-api
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/db_core_129cm
+    username: root
+    password: root
+
+  batch:
+    job:
+      enabled: false
+
+server:
+  port: 8081
+

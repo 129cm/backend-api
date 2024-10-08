@@ -1,1 +1,3 @@
-rootProject.name = 'backend-api'
+rootProject.name = '129CM'
+include 'core-api'
+include 'batch-api'
