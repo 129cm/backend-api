@@ -1,4 +1,4 @@
-package com.d129cm.backendapi.batch.step.membership;
+package com.d129cm.batchapi.batch.step.membership;
 
 
 import com.d129cm.backendapi.member.domain.Member;

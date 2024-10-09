@@ -1,7 +1,7 @@
-package com.d129cm.backendapi.batch.config;
+package com.d129cm.batchapi.batch.config;
 
-import com.d129cm.backendapi.batch.step.membership.MembershipCsvFileWriter;
-import com.d129cm.backendapi.batch.step.membership.MembershipWriter;
+import com.d129cm.batchapi.batch.step.membership.MembershipCsvFileWriter;
+import com.d129cm.batchapi.batch.step.membership.MembershipWriter;
 import com.d129cm.backendapi.member.domain.Member;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;

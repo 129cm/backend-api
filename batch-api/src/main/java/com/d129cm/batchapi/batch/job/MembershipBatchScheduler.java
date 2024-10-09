@@ -1,4 +1,4 @@
-package com.d129cm.backendapi.batch.job;
+package com.d129cm.batchapi.batch.job;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
