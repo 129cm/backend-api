@@ -2,7 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/backend-api/129CM.backend-api.main.iml" filepath="$PROJECT_DIR$/.idea/modules/backend-api/129CM.backend-api.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/batch-api/129CM.batch-api.main.iml" filepath="$PROJECT_DIR$/.idea/modules/batch-api/129CM.batch-api.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/core-api/129CM.core-api.main.iml" filepath="$PROJECT_DIR$/.idea/modules/core-api/129CM.core-api.main.iml" />
     </modules>
   </component>
 </project>
