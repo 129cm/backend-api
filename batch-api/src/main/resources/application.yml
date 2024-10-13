@@ -1,0 +1,31 @@
+spring:
+  application:
+    name: batch-api
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/db_batch_129cm
+    username: root
+    password: root
+  batch:
+    job:
+      enabled: false
+    jdbc:
+      initialize-schema: always
+
+server:
+  port: 8081
+
+jwt:
+  token:
+    secretKey: 7Iqk7YyM66W07YOA7L2U65Sp7YG065+9U3ByaW5n6rCV7J2Y7Yqc7YSw7LWc7JuQ67mI7J6F64uI64ukLg==
+    expiration:
+      time: 86400000
+
+payment:
+  toss:
+    test_client_api_key: test_ck_0RnYX2w53270kzQ0Y6nPVNeyqApQ
+    test_secret_api_key: test_sk_4yKeq5bgrpPdRYpyg1zJrGX0lzW6
+    success_url: "http://localhost:8080/members/payments/confirm"
+    fail_url: "http://localhost:8080/members/payments/fail"
+
